@@ -1,0 +1,19 @@
+{
+  "name": "equities-voyage-chronicle",
+  "version": "0.0.1",
+  "description": "Journal of daily stock watchlist and trades",
+  "main": "index.js",
+  "authors": {
+    "name": "Jimmy McCann",
+    "email": "14042259+jabez007@users.noreply.github.com"
+  },
+  "repository": "https://github.com/jabez007/equities-voyage-chronicle.git/equities-voyage-chronicle",
+  "scripts": {
+    "dev": "vuepress dev src",
+    "build": "vuepress build src"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "vuepress": "^1.5.3"
+  }
+}
