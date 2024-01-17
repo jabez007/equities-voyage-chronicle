@@ -16,6 +16,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@vuepress/plugin-medium-zoom": "^1.9.10",
     "push-dir": "^0.4.1",
     "vuepress": "^1.5.3"
   }
