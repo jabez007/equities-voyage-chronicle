@@ -10,10 +10,13 @@
   "repository": "https://github.com/jabez007/equities-voyage-chronicle.git/equities-voyage-chronicle",
   "scripts": {
     "dev": "vuepress dev src",
-    "build": "vuepress build src"
+    "build": "vuepress build src",
+    "predeploy": "npm run build",
+    "deploy": "push-dir --dir=dist --branch=dist --cleanup"
   },
   "license": "MIT",
   "devDependencies": {
+    "push-dir": "^0.4.1",
     "vuepress": "^1.5.3"
   }
 }
