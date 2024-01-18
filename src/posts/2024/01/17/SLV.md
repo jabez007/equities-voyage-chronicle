@@ -1,6 +1,7 @@
 ---
-title: SLV for 01-17-2024
-categories: 
+date: 2024-01-17
+title: SLV on 01-17-2024
+tags: 
     - SLV
     - silver
 ---

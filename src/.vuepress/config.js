@@ -72,7 +72,35 @@ module.exports = {
    * Apply plugins，ref：https://v1.vuepress.vuejs.org/zh/plugin/
    */
   plugins: [
+    '@vuepress/search',
     '@vuepress/plugin-back-to-top',
-    '@vuepress/plugin-medium-zoom',
-  ]
+    [
+      '@vuepress/medium-zoom',
+      {
+        selector: '.content__default :not(a) > img',
+      }
+    ],
+    [
+      '@vuepress/blog',
+      {
+        directories: [
+          {
+            id: 'post',
+            dirname: 'posts',
+            path: '/',
+          }
+        ],
+        frontmatters: [
+          {
+            id: 'tag',
+            keys: [
+              'tag',
+              'tags'
+            ],
+            path: '/tags/',
+          },
+        ],
+      }
+    ]
+  ],
 }

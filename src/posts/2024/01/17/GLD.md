@@ -1,6 +1,7 @@
 ---
-title: GLD for 01-17-2024
-categories: 
+date: 2024-01-17
+title: GLD on 01-17-2024
+tags: 
     - GLD
     - gold
 ---

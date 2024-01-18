@@ -1,7 +1,10 @@
 <template>
     <div>
         <span class="label">{{ label }}</span>
-        <img :alt="label" :src="$withBase(`/assets/img/${fileName}`)">
+        <img
+            class="medium-zoom-image" 
+            :alt="label" 
+            :src="$withBase(`/assets/img/${fileName}`)">
     </div>
 </template>
 
@@ -15,6 +18,6 @@ export default {
             const parts = this.fileName.split('.')
             return `${parts[0]} for ${parts[2]} as of ${parts[1]}`
         }
-    }
+    },
 }
 </script>

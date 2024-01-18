@@ -1,6 +1,7 @@
 ---
-title: GDX for 01-17-2024
-categories: 
+date: 2024-01-17
+title: GDX on 01-17-2024
+tags: 
     - GDX
     - gold
     - miners
