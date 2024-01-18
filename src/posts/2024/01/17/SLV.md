@@ -4,6 +4,7 @@ title: SLV on 01-17-2024
 tags: 
     - SLV
     - silver
+    - commodities
 ---
 <div class="post">
 <snapshot-grid 

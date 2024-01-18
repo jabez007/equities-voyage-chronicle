@@ -97,7 +97,7 @@ module.exports = {
               'tag',
               'tags'
             ],
-            path: '/tags/',
+            path: '/tag/',
           },
         ],
       }

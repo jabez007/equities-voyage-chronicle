@@ -5,6 +5,7 @@ tags:
     - GDX
     - gold
     - miners
+    - equities
 ---
 <div class="post">
 <snapshot-grid 

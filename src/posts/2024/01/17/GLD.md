@@ -4,6 +4,7 @@ title: GLD on 01-17-2024
 tags: 
     - GLD
     - gold
+    - commodities
 ---
 <div class="post">
 <snapshot-grid 
