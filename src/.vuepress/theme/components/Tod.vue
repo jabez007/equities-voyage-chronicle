@@ -9,7 +9,7 @@
         { active: activeIndex === index },
       ]"
     >
-      <a :href="`${item.path}`" :title="item.title">{{ item.title }}</a>
+      <a :href="$withBase(`${item.path}`)" :title="item.title">{{ item.title }}</a>
     </div>
   </Sticker>
 </template>
