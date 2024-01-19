@@ -4,7 +4,7 @@
         <img
             class="medium-zoom-image" 
             :alt="label" 
-            :src="$withBase(`/assets/img/${fileName}`)">
+            :src="$withBase(`/assets/img/${fileName}.png`)">
     </div>
 </template>
 
@@ -15,8 +15,8 @@ export default {
     },
     computed: {
         label() {
-            const parts = this.fileName.split('.')
-            return `${parts[0]} for ${parts[2]} as of ${parts[1]}`
+            const parts = this.fileName.split('/')
+            return `${parts[3]} for ${parts[4]} as of ${parts.slice(0, 3).join('-')}`
         }
     },
 }

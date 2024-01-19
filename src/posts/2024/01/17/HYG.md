@@ -9,8 +9,8 @@ tags:
 ---
 <div class="post">
 <snapshot-grid 
-    :reports="['CTA.01-17-2024.HYG.png', 'MTP.01-17-2024.HYG.png']"
-    chart="Chart.2024-01-17.HYG.png"
+    :reports="['2024/01/17/CTA/HYG', '2024/01/17/MTP/HYG']"
+    chart="2024/01/17/Chart/HYG"
 />
 <p>
 No activity on the CTA report, but a first sell signal on the MTP report

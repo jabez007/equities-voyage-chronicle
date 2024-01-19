@@ -9,8 +9,8 @@ tags:
 ---
 <div class="post">
 <snapshot-grid 
-    :reports="['CTA.01-13-2024.dollar.png', 'CTA.01-16-2024.dollar.png', 'CTA.01-17-2024.dollar.png', 'CTA.01-18-2024.dollar.png', 'MTP.01-18-2024.UUP.png']"
-    chart="Chart.2024-01-18.UUP.png"
+    :reports="['2024/01/13/CTA/dollar', '2024/01/16/CTA/dollar', '2024/01/17/CTA/dollar', '2024/01/18/CTA/dollar', '2024/01/18/MTP/UUP']"
+    chart="2024/01/18/Chart/UUP"
 />
 <p>
 

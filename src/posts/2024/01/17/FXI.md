@@ -9,8 +9,8 @@ tags:
 ---
 <div class="post">
 <snapshot-grid 
-    :reports="['CTA.01-16-2024.FXI.png', 'CTA.01-17-2024.FXI.png', 'MTP.01-17-2024.FXI.png']"
-    chart="Chart.2024-01-17.FXI.png"
+    :reports="['2024/01/16/CTA/FXI', '2024/01/17/CTA/FXI', '2024/01/17/MTP/FXI']"
+    chart="2024/01/17/Chart/FXI"
 />
 <p>
 The CTA report suggests the shorts may be increasing their pressure,

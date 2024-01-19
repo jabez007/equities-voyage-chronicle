@@ -9,8 +9,8 @@ tags:
 ---
 <div class="post">
 <snapshot-grid 
-    :reports="['CTA.01-16-2024.EFA.png', 'CTA.01-17-2024.EFA.png', 'MTP.01-17-2024.EFA.png']"
-    chart="Chart.2024-01-17.EFA.png"
+    :reports="['2024/01/16/CTA/EFA', '2024/01/17/CTA/EFA', '2024/01/17/MTP/EFA']"
+    chart="2024/01/17/Chart/EFA"
 />
 <p>
 It looks the CTA report suggests positions might be coming off their longs at the same time the MTP report got it's first sell signal. 

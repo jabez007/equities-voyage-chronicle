@@ -8,8 +8,8 @@ tags:
 ---
 <div class="post">
 <snapshot-grid 
-    :reports="['CTA.01-13-2024.silver.png', 'CTA.01-16-2024.silver.png', 'CTA.01-17-2024.silver.png', 'MTP.01-17-2024.SLV.png']"
-    chart="Chart.2024-01-17.SLV.png"
+    :reports="['2024/01/13/CTA/silver', '2024/01/16/CTA/silver', '2024/01/17/CTA/silver', '2024/01/17/MTP/SLV']"
+    chart="2024/01/17/Chart/SLV"
 />
 <p>
 Tuesday (the 16th) originally looked like we might be hitting the bottom on SLV if the CTAs had flipped to short-covering,

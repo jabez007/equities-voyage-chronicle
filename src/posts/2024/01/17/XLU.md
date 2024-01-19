@@ -9,8 +9,8 @@ tags:
 ---
 <div class="post">
 <snapshot-grid 
-    :reports="['CTA.01-16-2024.XLU.png', 'CTA.01-17-2024.XLU.png', 'MTP.01-17-2024.XLU.png']"
-    chart="Chart.2024-01-17.XLU.png"
+    :reports="['2024/01/16/CTA/XLU', '2024/01/17/CTA/XLU', '2024/01/17/MTP/XLU']"
+    chart="2024/01/17/Chart/XLU"
 />
 <p>
 The CTA report suggests the longs may be reducing their positions,

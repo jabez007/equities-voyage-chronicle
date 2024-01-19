@@ -9,8 +9,8 @@ tags:
 ---
 <div class="post">
 <snapshot-grid 
-    :reports="['CTA.01-16-2024.GDX.png', 'CTA.01-17-2024.GDX.png', 'MTP.01-17-2024.GDX.png']"
-    chart="Chart.2024-01-17.GDX.png"
+    :reports="['2024/01/16/CTA/GDX', '2024/01/17/CTA/GDX', '2024/01/17/MTP/GDX']"
+    chart="2024/01/17/Chart/GDX"
 />
 <p>
 It looks like with Tuesday's (the 16th) drop, we might be seeing a fresh round of shorting according to the CTA report.
