@@ -24,5 +24,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Configure git
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+
       - name: Run deploy script
         run: npm run deploy
