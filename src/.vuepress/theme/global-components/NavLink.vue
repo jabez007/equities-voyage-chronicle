@@ -10,6 +10,7 @@
   <a
     v-else
     :href="normalizedlink"
+    :title="title"
     class="nav-link external"
     :target="
       isMailto(normalizedlink) || isTel(normalizedlink) ? null : '_blank'
@@ -32,6 +33,7 @@ export default {
     link: {
       required: true,
     },
+    title: String
   },
 
   computed: {

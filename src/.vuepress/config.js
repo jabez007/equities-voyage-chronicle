@@ -50,6 +50,15 @@ module.exports = {
         link: 'https://v1.vuepress.vuejs.org'
       }
     ],
+    footer: {
+      contact: [
+        {
+          type: "gift",
+          link: "https://a.webull.com/TfjteFx13oyvRL6SfX",
+          title: "Join me on Webull",
+        }
+      ]
+    }
   },
 
   /**

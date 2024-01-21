@@ -7,7 +7,7 @@
           :key="item.iconComponent"
           class="contact-item"
         >
-          <NavLink :link="item.link">
+          <NavLink :link="item.link" :title="item.title">
             <component :is="item.iconComponent"></component>
             {{ item.text }}
           </NavLink>
@@ -31,6 +31,7 @@ import {
   CodepenIcon,
   CodesandboxIcon,
   FacebookIcon,
+  GiftIcon,
   GithubIcon,
   GitlabIcon,
   GlobeIcon,
@@ -50,6 +51,7 @@ export default {
     CodepenIcon,
     CodesandboxIcon,
     FacebookIcon,
+    GiftIcon,
     GithubIcon,
     GitlabIcon,
     GlobeIcon,
@@ -70,10 +72,12 @@ export default {
         (this.$themeConfig.footer && this.$themeConfig.footer.contact) ||
         []
       )
-        .map(({ type, link }) => {
+        .map(({ type, link, title, text}) => {
           return {
             iconComponent: this.getIconComponentName(type),
             link,
+            title,
+            text,
           }
         })
         .filter(({ iconComponent }) => iconComponent)
@@ -95,6 +99,8 @@ export default {
           return 'CodesandboxIcon'
         case 'facebook':
           return 'FacebookIcon'
+        case 'gift':
+          return 'GiftIcon'
         case 'github':
           return 'GithubIcon'
         case 'gitlab':
@@ -134,6 +140,10 @@ ol, ul
   padding 0
 
 .footer
+  position fixed
+  bottom 0
+  min-width 100vw
+  z-index 12
   min-height 60px
   box-sizing border-box
   background-color $footerBgColor
