@@ -19,6 +19,6 @@ and one of the longer timeframes received a downgrade.
 Will we see lower lows or are we starting to consolidate at a bottom?
 </p>
 <p>
-Still holding my long PUT position.
+I'm still holding my long PUT position.
 </p>
 </div>
