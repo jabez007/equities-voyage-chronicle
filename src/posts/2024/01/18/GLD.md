@@ -12,11 +12,10 @@ tags:
     chart="2024/01/18/Chart/GLD"
 />
 <p>
-
-</p>
 No activity on the CTA report,
 but we got our downgrade for one of the longer timeframes on the MTP report.
 Will we see the long positions on the CTA report flip short next and continue this sell off?
+</p>
 <p>
 I still have a long PUT open.
 </p>

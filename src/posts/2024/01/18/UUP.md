@@ -13,11 +13,10 @@ tags:
     chart="2024/01/18/Chart/UUP"
 />
 <p>
-
-</p>
 The CTA report has been consistently growing long positions,
 while the MTP report has a streak of buy signals despite the minimum sell signal on some of the larger timescales.
 The chart shows how slow the progress has been, but it does seem to be building bit by bit.
+</p>
 <p>
 I've been in on a CALL since the start of the year
 </p>

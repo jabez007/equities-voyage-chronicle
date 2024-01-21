@@ -12,12 +12,11 @@ tags:
     chart="2024/01/19/Chart/GLD"
 />
 <p>
-
-</p>
 Another "no change" on the CTA report,
 but continuing sell signals on the MTP report.
 We did see a pop above the 9SMA today,
 but is it another head fake like last Friday (the 12th)?
+</p>
 <p>
 We'll see how Monday (the 22nd) opens if I'm going to close out my long PUT position.
 </p>
