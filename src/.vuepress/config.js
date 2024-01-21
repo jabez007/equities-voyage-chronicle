@@ -93,6 +93,9 @@ module.exports = {
             path: '/tag/',
           },
         ],
+        globalPagination: {
+          lengthPerPage: 5,
+        },
       }
     ]
   ],
