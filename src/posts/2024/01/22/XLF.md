@@ -19,6 +19,6 @@ tags:
 And we did see a run up past the recent high despite the divergence on the MACD and, to a lesser extent, the RSI.
 </p>
 <p>
-Closed my long PUT as open for a 45% loss
+Closed my long PUT at open for a 45% loss
 </p>
 </div>
