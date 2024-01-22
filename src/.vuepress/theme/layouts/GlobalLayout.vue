@@ -61,4 +61,8 @@ export default {
     &
       padding 100px 15px 20px 15px
       min-height calc(100vh - 20px - 60px - 100px)
+  
+  @media (max-width: 740px)
+    &
+      max-width 740px
 </style>

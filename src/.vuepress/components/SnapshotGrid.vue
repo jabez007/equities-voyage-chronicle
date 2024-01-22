@@ -40,6 +40,7 @@ export default {
     gap: 2rem;
 }
 .column {
+    min-width: 50%;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;

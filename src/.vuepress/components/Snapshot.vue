@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <span class="label">{{ label }}</span>
+    <div class="snapshot">
+        <div class="label">{{ label }}</div>
         <img
             class="medium-zoom-image" 
             :alt="label" 
@@ -21,3 +21,12 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+.snapshot {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+</style>
