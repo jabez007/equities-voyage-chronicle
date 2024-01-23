@@ -1,4 +1,5 @@
 const fs = require('fs');
+const tickerTags = require('./ticker-tags.js')
 
 
 const date = (new Date()).toLocaleDateString('en-ZA'); // yyyy/MM/dd
@@ -24,6 +25,7 @@ date: ${date.replace(/\//g, '-')}
 title: ${ticker} on ${(new Date(date)).toLocaleDateString()}
 tags: 
   - ${ticker}
+  ${tickerTags[ticker] || ''}
 ---
 <div class="post">
 <snapshot-grid 
