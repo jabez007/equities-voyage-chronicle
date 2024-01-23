@@ -36,10 +36,6 @@ export default {
       return (this.daysPosts && this.daysPosts.length);
     },
   },
-
-  mounted() {
-    console.log(this.daysPosts);
-  }
 };
 </script>
   

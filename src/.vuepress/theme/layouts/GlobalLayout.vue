@@ -39,7 +39,6 @@ export default {
   },
 
   mounted() {
-    console.log('In GlobalLayout mounted')
     this.$router.afterEach(() => {
       this.isMobileHeaderOpen = false
     })
