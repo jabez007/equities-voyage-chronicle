@@ -13,24 +13,49 @@ if (!fs.existsSync(`./src/posts/${date}`)) {
     fs.mkdirSync(`./src/posts/${date}`)
 }
 
+function getReportTickers(ticker) {
+    if (['SLV', 'silver'].includes(ticker)) {
+        return {
+            MTP: 'SLV',
+            CTA: 'silver'
+        }
+    }
+    if (['GLD', 'gold'].includes(ticker)) {
+        return {
+            MTP: 'GLD',
+            CTA: 'gold'
+        }
+    }
+    if (['UUP', 'dollar'].includes(ticker)) {
+        return {
+            MTP: 'UUP',
+            CTA: 'dollar'
+        }
+    }
+    return {
+        MTP: ticker,
+        CTA: ticker
+    }
+}
+
 reports.forEach(report => {
     fs.readdir(`./src/.vuepress/public/assets/img/${date}/${report}`, (err, files) => {
         files.forEach(file => {
-            const ticker = (file.split('.'))[0];
-            const postPath = `./src/posts/${date}/${ticker}.md`;
+            const tickers = getReportTickers((file.split('.'))[0]);
+            const postPath = `./src/posts/${date}/${tickers.MTP}.md`;
             if (!fs.existsSync(postPath)) {
                 fs.writeFile(postPath, `
 ---
 date: ${date.replace(/\//g, '-')}
-title: ${ticker} on ${(new Date(date)).toLocaleDateString()}
+title: ${tickers.MTP} on ${(new Date(date)).toLocaleDateString()}
 tags: 
-  - ${ticker}
-  ${tickerTags[ticker] || ''}
+  - ${tickers.MTP}
+  ${tickerTags[tickers.MTP] || ''}
 ---
 <div class="post">
 <snapshot-grid 
-    :reports="['${yesterdate}/CTA/${ticker}', '${date}/CTA/${ticker}', '${date}/MTP/${ticker}']"
-    chart="${date}/Chart/${ticker}"
+    :reports="['${yesterdate}/CTA/${tickers.CTA}', '${date}/CTA/${tickers.CTA}', '${date}/MTP/${tickers.MTP}']"
+    chart="${date}/Chart/${tickers.MTP}"
 />
 <p>
 
@@ -41,10 +66,10 @@ tags:
 </div>
                 `.trim(), err => {
                     if (err) {
-                        console.log(`${ticker}: ${err}`);
+                        console.log(`${tickers.MTP}: ${err}`);
                         return;
                     }
-                    console.log(`post created for ${ticker}`);
+                    console.log(`post created for ${tickers.MTP}`);
                 })
             }
         });

@@ -109,4 +109,9 @@ module.exports = {
   - sector
   - equities
 `.trim(),
+
+    SLV: `
+  - silver
+  - commodities
+`.trim(),
 }
