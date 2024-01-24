@@ -114,4 +114,10 @@ module.exports = {
   - silver
   - commodities
 `.trim(),
+
+    GDX: `
+  - gold
+  - miners
+  - equities
+`.trim(),
 }
