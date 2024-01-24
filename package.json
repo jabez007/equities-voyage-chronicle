@@ -10,6 +10,7 @@
   "repository": "https://github.com/jabez007/equities-voyage-chronicle.git/equities-voyage-chronicle",
   "scripts": {
     "new": "node ./new-posts.js",
+    "predev": "npm run new",
     "dev": "vuepress dev src",
     "build": "vuepress build src",
     "predeploy": "npm run build",

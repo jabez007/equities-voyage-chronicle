@@ -120,4 +120,9 @@ module.exports = {
   - miners
   - equities
 `.trim(),
+
+    UNG: `
+  - natural gas
+  - commodities
+`.trim(),
 }
