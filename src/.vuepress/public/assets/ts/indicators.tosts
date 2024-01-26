@@ -1,0 +1,163 @@
+#hint: Trend Advisor Market Phases Swing Trader;
+
+###
+#Credits
+#  - Chuck Dukas for creating the Market Phases system
+#  - the author of VolumeTrendLabels whose study was use to create this indicator.
+#
+### 
+
+#Ensure you set the correct aggregation period to then chart, this helps calculate the correct volume and price action.
+input vPeriod = AggregationPeriod.Day; #hint vPeriod: Enter the chart time you use here. Required to properly caluclate volume and price strength.
+
+def O = open(period = vPeriod);
+def H = high(period = vPeriod);
+def C = close(period = vPeriod);
+def L = low(period = vPeriod);
+def V = volume(period = vPeriod);
+
+def SV = V * (H - C) / (H - L);
+def BV = V * (C - L) / (H - L);
+
+####
+# below determines if volume supports the move, adds conviction
+####
+
+AddLabel(yes, " Buyer Vol Strong ", if high > high[1] and low > low[1] and BV*1.05 > SV then Color.GREEN else color.black);
+
+AddLabel(yes, " Seller Vol Strong ", if high < high[1] and low < low[1] and SV*1.05 > BV then Color.MAGENTA else color.black);
+
+####
+# below determines if price supports the move
+####
+
+AddLabel(yes, " Price Strong ", if high > high[1] and high[1] > high[2] and low > low[1] and low[1] > low[2] then Color.GREEN else color.black);
+
+AddLabel(yes, " Price Weak ", if high < high[1] and high[1] < high[2] and low < low[1] and low[1] < low[2] then Color.MAGENTA else color.black);
+
+####
+# Moving Averages used to determine Bullish or Bearish
+####
+
+input price = FundamentalType.CLOSE; #hint price: which value to use for the moving averages
+
+input fastavgType = AverageType.EXPONENTIAL;
+input fastavg = 50;
+
+input slowavgType = AverageType.SIMPLE;
+input slowavg = 200;
+
+plot fastsma = MovingAverage(fastavgType, fundamental(price, period = vPeriod), fastavg);
+fastsma.SetDefaultColor(Color.DARK_ORANGE);
+fastsma.SetLineWeight(3);
+
+plot slowsma = MovingAverage(slowavgType, fundamental(price, period = vPeriod), slowavg);
+slowsma.SetDefaultColor(Color.YELLOW);
+slowsma.SetLineWeight(5);
+
+####
+# Bullish criteria define below
+####
+
+# Define criteria for Bullish Phase : close > 50 SMA, close > 200 SMA, 50 SMA > 200 SMA
+
+def bullphase = fastsma > slowsma && fundamental(price, period = vPeriod) > fastsma && fundamental(price, period = vPeriod) > slowsma;
+
+# Define criteria for Accumulation Phase : close > 50 SMA, close > 200 SMA, 50 SMA < 200 SMA
+
+def accphase = fastsma < slowsma && fundamental(price, period = vPeriod) > fastsma && fundamental(price, period = vPeriod) > slowsma;
+
+# Define criteria for Recovery Phase : close > 50 SMA, close < 200 SMA, 50 SMA < 200 SMA
+
+def recphase = fastsma < slowsma && fundamental(price, period = vPeriod) < slowsma && fundamental(price, period = vPeriod) > fastsma;
+
+
+####
+# Bearish Criteria define below
+####
+
+# Define criteria for Bearish Phase : close < 50 SMA, close < 200 SMA, 50 SMA < 200 SMA
+
+def bearphase = fastsma < slowsma && fundamental(price, period = vPeriod) < fastsma && fundamental(price, period = vPeriod) < slowsma;
+
+# Define criteria for Distribution Phase : close < 50 SMA, close < 200 SMA, 50 SMA > 200 SMA
+
+def distphase = fastsma > slowsma && fundamental(price, period = vPeriod) < fastsma && fundamental(price, period = vPeriod) < slowsma;
+
+# Define criteria for Warning Phase : close < 50 SMA, close > 200 SMA, 50 SMA > 200 SMA
+
+def warnphase = fastsma > slowsma && fundamental(price, period = vPeriod) > slowsma && fundamental(price, period = vPeriod) < fastsma;
+
+
+####
+# The conditions below are for a possible entries when price pulls back
+####
+
+input pbfastavgType = AverageType.SIMPLE; #hint pbfastavgType: The fast moving average type to use for pullback entries.
+input pbfastavg = 9; #hint pbfastavg: The length of the fast moving average to use for pullback entries.
+input pbfastdisplace = 0; #hint pbfastdisplace: The displacement of the fast moving average to use for pullback entries.
+
+plot pbfastsma = MovingAverage(pbfastavgType, data = fundamental(price, period = vPeriod)[-pbfastdisplace], length = pbfastavg);
+pbfastsma.SetDefaultColor(Color.LIME);
+pbfastsma.SetLineWeight(2);
+
+input pbslowavgType = AverageType.EXPONENTIAL; #hint pbslowavgType: The slow moving average type to use for pullback entries.
+input pbslowavg = 20; #hint pbslowavg: The length of the slow moving average to use for pullback entries.
+input pbslowdisplace = 0; #hint pbslowdisplace: The displacement of the slow moving average to use for pullback entries.
+
+plot pbslowsma = MovingAverage(pbslowavgType, data = fundamental(price, period = vPeriod)[-pbslowdisplace], length = pbslowavg);
+pbslowsma.SetDefaultColor(Color.VIOLET);
+pbslowsma.SetLineWeight(3);
+
+input bullpullback = yes;  #hint bullpullback: Do you want to display the pullback arrows for bullish fast ema entries.
+input bearpullback = yes; #hint bearpullback: Do you want to display the pullback arrows for bearish fast ema entries.
+
+def bullishpb = pbfastsma < pbslowsma && fundamental(FundamentalType.OPEN, period = vPeriod) > pbfastsma && fundamental(FundamentalType.CLOSE, period = vPeriod) > pbfastsma;
+
+def bearishpb = pbfastsma > pbslowsma && fundamental(FundamentalType.OPEN, period = vPeriod) < pbfastsma && fundamental(FundamentalType.CLOSE, period = vPeriod) < pbfastsma;
+
+def bullpb = (bullphase is true or accphase is true or recphase is true) && bullishpb is true;
+def bearpb = (bearphase is true or distphase is true or warnphase is true) && bearishpb is true;
+
+####
+# Plot Signals
+####
+
+plot bullpb1 = if bullpullback then bullpb else 0;
+bullpb1.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
+bullpb1.SetDefaultColor(Color.CYAN);
+bullpb1.SetLineWeight(1);
+
+plot bearpb1 = if bearpullback then bearpb else 0;
+bearpb1.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
+bearpb1.SetDefaultColor(Color.MAGENTA);
+bearpb1.SetLineWeight(1);
+
+####
+#plot buphase = bullphase is true;
+#plot acphase = accphase is true;
+#plot rephase = recphase is true;
+####
+#plot bephase = bearphase is true;
+#plot dphase = distphase is true;
+#plot wphase = warnphase is true;
+####
+
+####
+# Below adds labels to the chart to identify what phase the underlying is in
+####
+
+AddLabel(bullphase, " Bull Phase " , if bullphase is true then Color.GREEN else Color.BLACK);
+
+AddLabel(accphase, " Accumation Phase ", if accphase is true then Color.LIGHT_GREEN else Color.BLACK);
+
+AddLabel(recphase, " Recovery Phase ", if recphase is true then Color.LIGHT_ORANGE else Color.BLACK);
+
+AddLabel(warnphase, " Warning Phase ", if warnphase is true then Color.ORANGE else Color.BLACK);
+
+AddLabel(distphase, " Distribution Phase ", if distphase is true then Color.LIGHT_RED else Color.BLACK);
+
+AddLabel(bearphase, " Bear Phase ", if bearphase is true then Color.RED else Color.BLACK);
+
+####
+assignPriceColor(if bullphase then Color.GREEN else if bearphase then Color.RED else Color.ORANGE);
