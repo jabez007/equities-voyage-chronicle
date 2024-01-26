@@ -1,7 +1,7 @@
 #hint: Trend Advisor Market Phases Swing Trader;
 
 ###
-#Credits
+# Credits
 #  - Chuck Dukas for creating the Market Phases system
 #  - the author of VolumeTrendLabels whose study was use to create this indicator.
 #
@@ -19,6 +19,7 @@ def V = volume(period = vPeriod);
 def SV = V * (H - C) / (H - L);
 def BV = V * (C - L) / (H - L);
 
+
 ####
 # below determines if volume supports the move, adds conviction
 ####
@@ -27,6 +28,7 @@ AddLabel(yes, " Buyer Vol Strong ", if high > high[1] and low > low[1] and BV*1.
 
 AddLabel(yes, " Seller Vol Strong ", if high < high[1] and low < low[1] and SV*1.05 > BV then Color.MAGENTA else color.black);
 
+
 ####
 # below determines if price supports the move
 ####
@@ -34,6 +36,7 @@ AddLabel(yes, " Seller Vol Strong ", if high < high[1] and low < low[1] and SV*1
 AddLabel(yes, " Price Strong ", if high > high[1] and high[1] > high[2] and low > low[1] and low[1] > low[2] then Color.GREEN else color.black);
 
 AddLabel(yes, " Price Weak ", if high < high[1] and high[1] < high[2] and low < low[1] and low[1] < low[2] then Color.MAGENTA else color.black);
+
 
 ####
 # Moving Averages used to determine Bullish or Bearish
@@ -54,6 +57,7 @@ fastsma.SetLineWeight(3);
 plot slowsma = MovingAverage(slowavgType, fundamental(price, period = vPeriod), slowavg);
 slowsma.SetDefaultColor(Color.YELLOW);
 slowsma.SetLineWeight(5);
+
 
 ####
 # Bullish criteria define below
@@ -88,6 +92,16 @@ def distphase = fastsma > slowsma && fundamental(price, period = vPeriod) < fast
 
 def warnphase = fastsma > slowsma && fundamental(price, period = vPeriod) > slowsma && fundamental(price, period = vPeriod) < fastsma;
 
+####
+#plot buphase = bullphase is true;
+#plot acphase = accphase is true;
+#plot rephase = recphase is true;
+####
+#plot bephase = bearphase is true;
+#plot dphase = distphase is true;
+#plot wphase = warnphase is true;
+####
+
 
 ####
 # The conditions below are for a possible entries when price pulls back
@@ -117,31 +131,86 @@ def bullishpb = pbfastsma < pbslowsma && fundamental(FundamentalType.OPEN, perio
 def bearishpb = pbfastsma > pbslowsma && fundamental(FundamentalType.OPEN, period = vPeriod) < pbfastsma && fundamental(FundamentalType.CLOSE, period = vPeriod) < pbfastsma;
 
 def bullpb = (bullphase is true or accphase is true or recphase is true) && bullishpb is true;
+def bullstp = fundamental(FundamentalType.OPEN, period = vPeriod) < pbfastsma && fundamental(FundamentalType.CLOSE, period = vPeriod) < pbfastsma;
+
 def bearpb = (bearphase is true or distphase is true or warnphase is true) && bearishpb is true;
+def bearstp = fundamental(FundamentalType.OPEN, period = vPeriod) > pbfastsma && fundamental(FundamentalType.CLOSE, period = vPeriod) > pbfastsma;
 
-####
-# Plot Signals
-####
 
-plot bullpb1 = if bullpullback then bullpb else 0;
-bullpb1.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
-bullpb1.SetDefaultColor(Color.CYAN);
-bullpb1.SetLineWeight(1);
+#######################################
+##  Maintain the position of trades
+#######################################
 
-plot bearpb1 = if bearpullback then bearpb else 0;
-bearpb1.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
-bearpb1.SetDefaultColor(Color.MAGENTA);
-bearpb1.SetLineWeight(1);
+def CurrentPosition;  # holds whether flat = 0 long = 1 short = -1
 
-####
-#plot buphase = bullphase is true;
-#plot acphase = accphase is true;
-#plot rephase = recphase is true;
-####
-#plot bephase = bearphase is true;
-#plot dphase = distphase is true;
-#plot wphase = warnphase is true;
-####
+if ((BarNumber()==1) OR isNaN(CurrentPosition[1])) {
+    CurrentPosition = 0;
+} else {
+    if (CurrentPosition[1] == 0) {            # FLAT
+        if (bullpb) {
+            CurrentPosition = 1;
+        } else if (bearpb){
+            CurrentPosition = -1;
+        } else {
+            CurrentPosition = CurrentPosition[1];
+        }
+    } else if (CurrentPosition[1] == 1) {      # LONG
+        if (bearpb){
+            CurrentPosition = -1;
+        } else if (bullstp){
+            CurrentPosition = 0;
+        } else {
+            CurrentPosition = CurrentPosition[1];
+        }
+    } else if (CurrentPosition[1] == -1) {     # SHORT
+        if (bullpb){
+            CurrentPosition = 1;
+        } else if (bearstp){
+            CurrentPosition = 0;
+        } else {
+            CurrentPosition = CurrentPosition[1];
+        }
+    } else {
+        CurrentPosition = CurrentPosition[1];
+    }
+}
+
+def isLong  = if CurrentPosition == 1 then 1 else 0;
+def isShort = if CurrentPosition == -1 then 1 else 0;
+def isFlat  = if CurrentPosition == 0 then 1 else 0;
+
+input useAlerts = no;
+
+# If not already long and get a BuySignal
+Plot BuySig = if (!isLong[1] and bullpb) then 1 else 0;
+BuySig.AssignValueColor(color.CYAN);
+BuySig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
+BuySig.SetLineWeight(5);
+
+Alert(BuySig and useAlerts, "Buy Signal", Alert.bar, sound.Ding);
+Alert(BuySig and useAlerts, "Buy Signal", Alert.bar, sound.Ding);
+
+# If not already short and get a SellSignal
+Plot SellSig = if (!isShort[1] and bearpb) then 1 else 0;
+SellSig.AssignValueColor(color.MAGENTA);
+SellSig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
+SellSig.SetLineWeight(5);
+
+Alert(SellSig and useAlerts, "Sell Signal",Alert.bar,sound.Ding);
+Alert(SellSig and useAlerts, "Sell Signal",Alert.bar,sound.Ding);
+
+# If long and get a BuyStop
+Plot BuyStpSig = if (bullstp and isLong[1]) then 1 else 0;
+BuyStpSig.AssignValueColor(color.LIGHT_GRAY);
+BuyStpSig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
+BuyStpSig.SetLineWeight(3);
+
+# If short and get a SellStop
+Plot SellStpSig = if (bearstp and isShort[1]) then 1 else 0;
+SellStpSig.AssignValueColor(color.LIGHT_GRAY);
+SellStpSig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
+SellStpSig.SetLineWeight(3);
+
 
 ####
 # Below adds labels to the chart to identify what phase the underlying is in
