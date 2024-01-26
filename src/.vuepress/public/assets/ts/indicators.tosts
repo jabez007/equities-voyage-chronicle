@@ -109,6 +109,7 @@ def warnphase = fastsma > slowsma && fundamental(price, period = vPeriod) > slow
 
 ####
 # The conditions below are for possible entries when price pulls back
+# Inspired by the Bravo9
 ####
 
 input pbfastavgType = AverageType.SIMPLE; #hint pbfastavgType: The fast moving average type to use for pullback entries.
@@ -127,17 +128,84 @@ plot pbslowsma = MovingAverage(pbslowavgType, data = fundamental(price, period =
 pbslowsma.SetDefaultColor(Color.VIOLET);
 pbslowsma.SetLineWeight(3);
 
+input MACDfastLength = 12;
+input MACDslowLength = 26;
+input MACDLength = 9;
+input MACDaverageType = AverageType.EXPONENTIAL;
+
+def Value = MovingAverage(MACDaverageType, close(period = vPeriod), MACDfastLength) - MovingAverage(MACDaverageType, close(period = vPeriod), MACDslowLength);
+def Avg = MovingAverage(MACDaverageType, Value, MACDLength);
+
+def Diff = Value - Avg;
+
 ####
 
-def bullishpb = pbfastsma < pbslowsma && Min(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) > pbfastsma;
+def bullishpb = (
+    Min(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) > pbfastsma # full candle close above
+    &&
+    (Diff > 0 && Diff > Diff[1] && Diff[1] > Diff[2]) # Positive and rising MACD
+);
+def bullpb = (
+    if (bullphase) then (
+        (pbfastavg < pbslowavg or buyerVol)
+        &&
+        bullishpb
+    ) else if (accphase) then (
+        bullishpb
+    ) else if (recphase) then (
+        #strongPrice
+        #&&
+        bullishpb
+    ) else (
+        0
+    )
+);
 
-def bearishpb = pbfastsma > pbslowsma && Max(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) < pbfastsma;
+def bearishpb = (
+    Max(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) < pbfastsma # full candle close below
+    &&
+    (Diff < 0 && Diff < Diff[1] && Diff[1] < Diff[2]) # Negative and falling MACD
+);
+def bearpb = (
+    if (bearphase) then (
+        (pbfastavg > pbslowavg or sellerVol)
+        &&
+        bearishpb
+    ) else if (distphase) then (
+        bearishpb
+    ) else if (warnphase) then (
+        #weakPrice
+        #&&
+        bearishpb
+    ) else (
+        0
+    )
+);
 
-def bullpb = (bullphase is true or accphase is true or recphase is true) && bullishpb is true;
-def bullstp = Max(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) < pbfastsma;
+####
+# The conditions below are for stop losses
+# Inspired by the Accurate Swing Trading System
+####
 
-def bearpb = (bearphase is true or distphase is true or warnphase is true) && bearishpb is true;
-def bearstp = Min(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) > pbfastsma;
+input stplength = 3;
+input stpdisplace = -1;
+
+def stpDailyHigh = Highest(high(period = vPeriod)[-stpdisplace], stplength);
+def stpDailyLow = Lowest(low(period = vPeriod)[-stpdisplace], stplength);
+
+####
+
+def bullstp = (
+    Max(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) < pbfastsma # full candle close below
+    or
+    (Diff < 0 && Diff < Diff[1]) # Negative and falling MACD
+);
+
+def bearstp = (
+    Min(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) > pbfastsma # full candle close above
+    or
+    (Diff > 0 && Diff > Diff[1]) # Positive and rising MACD
+);
 
 
 #######################################
