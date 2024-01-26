@@ -125,4 +125,17 @@ module.exports = {
   - natural gas
   - commodities
 `.trim(),
+
+    XLF: `
+  - financial
+  - select
+  - sector
+  - equities
+`.trim(),
+
+    HYG: `
+  - high yield
+  - corporate
+  - bonds
+`.trim(),
 }
