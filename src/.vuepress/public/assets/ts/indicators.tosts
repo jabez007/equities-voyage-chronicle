@@ -126,9 +126,9 @@ pbslowsma.SetLineWeight(3);
 input bullpullback = yes;  #hint bullpullback: Do you want to display the pullback arrows for bullish fast ema entries.
 input bearpullback = yes; #hint bearpullback: Do you want to display the pullback arrows for bearish fast ema entries.
 
-def bullishpb = pbfastsma < pbslowsma && fundamental(FundamentalType.OPEN, period = vPeriod) > pbfastsma && fundamental(FundamentalType.CLOSE, period = vPeriod) > pbfastsma;
+def bullishpb = pbfastsma < pbslowsma && Min(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) > pbfastsma;
 
-def bearishpb = pbfastsma > pbslowsma && fundamental(FundamentalType.OPEN, period = vPeriod) < pbfastsma && fundamental(FundamentalType.CLOSE, period = vPeriod) < pbfastsma;
+def bearishpb = pbfastsma > pbslowsma && Max(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) < pbfastsma;
 
 def bullpb = (bullphase is true or accphase is true or recphase is true) && bullishpb is true;
 def bullstp = fundamental(FundamentalType.OPEN, period = vPeriod) < pbfastsma && fundamental(FundamentalType.CLOSE, period = vPeriod) < pbfastsma;
