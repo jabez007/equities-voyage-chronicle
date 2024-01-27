@@ -197,7 +197,7 @@ def Diff = Value - Avg;
 def bullishpb = (
     Min(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) > pbfastsma # full candle close above
     &&
-    (Diff > 0 && Diff > Diff[1] && Diff[1] > Diff[2]) # Positive and rising MACD
+    (Diff > 0 && Lowest(Diff[1], 3) < 0) # recent positive cross on the MACD
 );
 def bullpb = (
     if (bullphase) then (
@@ -211,14 +211,14 @@ def bullpb = (
         #&&
         bullishpb
     ) else (
-        0
+        !bearphase && !distphase && !warnphase && (pbfastavg < pbslowavg) && bullishpb
     )
 );
 
 def bearishpb = (
     Max(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) < pbfastsma # full candle close below
     &&
-    (Diff < 0 && Diff < Diff[1] && Diff[1] < Diff[2]) # Negative and falling MACD
+    (Diff < 0 && Highest(Diff[1], 3) > 0) # recent negative cross on the MACD
 );
 def bearpb = (
     if (bearphase) then (
@@ -232,7 +232,7 @@ def bearpb = (
         #&&
         bearishpb
     ) else (
-        0
+       !bullphase && !accphase && !recphase && (pbfastavg > pbslowavg) && bearishpb
     )
 );
 
