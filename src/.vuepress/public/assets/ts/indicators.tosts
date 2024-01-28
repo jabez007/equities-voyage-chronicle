@@ -268,31 +268,31 @@ def stpDailyLow = Lowest(low(period = vPeriod)[-stpdisplace], stplength);
 ####
 
 def bullstp = (
-    close(period = vPeriod) < stpDailyLow
-    or
     (
         (
             Max(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) < pbfastsma # full candle close below 
             or
             fundamental(FundamentalType.CLOSE, period = vPeriod) < pbslowsma # close below
         )
-        #&&
-        #(MACDhist < 0 && Highest(MACDhist[1], 3) > 0) # recent negative cross on the MACD
+        &&
+        (MACDhist <= MACDhist[1]) # MACD not rising
     )
+    or
+    close(period = vPeriod) < stpDailyLow    
 );
 
 def bearstp = (
-    close(period = vPeriod) > stpDailyHigh
-    or
     (
         (
             Min(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) > pbfastsma # full candle close above
             or
             fundamental(FundamentalType.CLOSE, period = vPeriod) > pbslowsma # close above
         )
-        #&&
-        #(MACDhist > 0 && Lowest(MACDhist[1], 3) < 0) # recent positive cross on the MACD
+        &&
+        (MACDhist >= MACDhist[1]) # MACD not falling
     )
+    or
+    close(period = vPeriod) > stpDailyHigh
 );
 
 ####
