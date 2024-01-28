@@ -1,11 +1,17 @@
 const fs = require('fs');
 const tickerTags = require('./ticker-tags.js')
 
+const today = new Date();
+if (today.getDay() == 6) {
+    today.setDate(today.getDate() - 1);
+} else if (today.getDay() == 0) {
+    today.setDate(today.getDate() - 2);
+}
+const date = today.toLocaleDateString('en-ZA'); // yyyy/MM/dd
 
-const date = (new Date()).toLocaleDateString('en-ZA'); // yyyy/MM/dd
 const reports = ['MTP', 'CTA'];
 
-const yesterday = new Date();
+const yesterday = new Date(date);
 yesterday.setDate(yesterday.getDate() - 1);
 const yesterdate = yesterday.toLocaleDateString('en-ZA'); // yyyy/MM/dd
 
@@ -40,7 +46,7 @@ function getReportTickers(ticker) {
 
 reports.forEach(report => {
     fs.readdir(`./src/.vuepress/public/assets/img/${date}/${report}`, (err, files) => {
-        files.forEach(file => {
+        (files || []).forEach(file => {
             const tickers = getReportTickers((file.split('.'))[0]);
             const postPath = `./src/posts/${date}/${tickers.MTP}.md`;
             if (!fs.existsSync(postPath)) {

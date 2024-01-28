@@ -138,4 +138,9 @@ module.exports = {
   - corporate
   - bonds
 `.trim(),
+
+    USO: `
+  - oil
+  - commodities
+`.trim(),
 }
