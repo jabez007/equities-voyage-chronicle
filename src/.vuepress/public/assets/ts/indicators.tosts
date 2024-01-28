@@ -186,18 +186,34 @@ input MACDfastLength = 12;
 input MACDslowLength = 26;
 input MACDLength = 9;
 input MACDaverageType = AverageType.EXPONENTIAL;
+input MACDlookback = 5;
 
-def Value = MovingAverage(MACDaverageType, close(period = vPeriod), MACDfastLength) - MovingAverage(MACDaverageType, close(period = vPeriod), MACDslowLength);
-def Avg = MovingAverage(MACDaverageType, Value, MACDLength);
+def MACDline = MovingAverage(MACDaverageType, fundamental(price, period = vPeriod), MACDfastLength) - MovingAverage(MACDaverageType, fundamental(price, period = vPeriod), MACDslowLength);
+def MACDsig = MovingAverage(MACDaverageType, MACDline, MACDLength);
 
-def Diff = Value - Avg;
+def MACDhist = MACDline - MACDsig;
+
+input RSIlength = 14;
+input RSIaverageType = AverageType.WILDERS;
+
+def NetChgAvg = MovingAverage(RSIaverageType, fundamental(price, period = vPeriod) - fundamental(price, period = vPeriod)[1], RSIlength);
+def TotChgAvg = MovingAverage(RSIaverageType, AbsValue(fundamental(price, period = vPeriod) - fundamental(price, period = vPeriod)[1]), RSIlength);
+def ChgRatio = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
+def RSI = 50 * (ChgRatio + 1);
+
+input avgRSIlength = 3;
+input avgRSIaverageType = AverageType.WILDERS;
+
+def avgRSI = MovingAverage(avgRSIaverageType, RSI, avgRSIlength);
 
 ####
 
 def bullishpb = (
     Min(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) > pbfastsma # full candle close above
     &&
-    (Diff > 0 && Lowest(Diff[1], 3) < 0) # recent positive cross on the MACD
+    (MACDhist > 0 && Lowest(MACDhist[1], MACDlookback) < 0) # recent positive cross on the MACD
+    &&
+    (RSI > 40 && avgRSI > avgRSI[1]) # bullish and rising RSI
 );
 def bullpb = (
     if (bullphase) then (
@@ -218,7 +234,9 @@ def bullpb = (
 def bearishpb = (
     Max(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) < pbfastsma # full candle close below
     &&
-    (Diff < 0 && Highest(Diff[1], 3) > 0) # recent negative cross on the MACD
+    (MACDhist < 0 && Highest(MACDhist[1], MACDlookback) > 0) # recent negative cross on the MACD
+    &&
+    (RSI < 60 && avgRSI < avgRSI[1]) # bearish and falling RSI
 );
 def bearpb = (
     if (bearphase) then (
@@ -259,7 +277,7 @@ def bullstp = (
             fundamental(FundamentalType.CLOSE, period = vPeriod) < pbslowsma # close below
         )
         #&&
-        #(Diff < 0 && Highest(Diff[1], 3) > 0) # recent negative cross on the MACD
+        #(MACDhist < 0 && Highest(MACDhist[1], 3) > 0) # recent negative cross on the MACD
     )
 );
 
@@ -273,7 +291,7 @@ def bearstp = (
             fundamental(FundamentalType.CLOSE, period = vPeriod) > pbslowsma # close above
         )
         #&&
-        #(Diff > 0 && Lowest(Diff[1], 3) < 0) # recent positive cross on the MACD
+        #(MACDhist > 0 && Lowest(MACDhist[1], 3) < 0) # recent positive cross on the MACD
     )
 );
 
