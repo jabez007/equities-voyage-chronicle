@@ -462,8 +462,8 @@ addlabel(yes, "            ", color.BLACK);
 
 def isOrder = if CurrentPosition == CurrentPosition[1] then 0 else 1; # Position changed so it's a new order
 
-# If there is an order, then the price is the next days close
-def orderPrice = if (isOrder and (bullpb or bearpb)) then close else orderPrice[1];
+# If there is an order to open, then the price is the next day's open
+def orderPrice = if (isOrder and (bullpb or bearpb)) then open(period = vPeriod)[-1] else orderPrice[1];
 
 
 #######################################
@@ -472,12 +472,13 @@ def orderPrice = if (isOrder and (bullpb or bearpb)) then close else orderPrice[
 
 def profitLoss;
 
-if (!isOrder or orderPRice[1]==0){
+if (!isOrder or orderPRice == 0){
     profitLoss = 0;
+# If there is an order to close, 
 } else if ((isOrder and isLong[1]) and (SellSig or BuyStpSig)){
-    profitLoss = close - orderPrice[1];
+    profitLoss = open(period = vPeriod)[-1] - orderPrice; # then the price is the next day's open
 } else if ((isOrder and isShort[1]) and (BuySig or SellStpSig)) {
-    profitLoss = orderPrice[1] - close;
+    profitLoss = orderPrice - open(period = vPeriod)[-1]; # then the price is the next day's open
 } else {
     profitLoss = 0;
 }
