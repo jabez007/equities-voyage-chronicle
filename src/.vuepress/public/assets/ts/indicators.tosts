@@ -265,6 +265,38 @@ input stpdisplace = -1;
 def stpDailyHigh = Highest(high(period = vPeriod)[-stpdisplace], stplength);
 def stpDailyLow = Lowest(low(period = vPeriod)[-stpdisplace], stplength);
 
+def UT9X = compoundValue(1, if (close(period = vPeriod) > close(period = vPeriod)[4]) then UT9X[1] + 1 else 0, 0);
+plot UT9 = (
+    if (UT9X == 1 && !isNaN(UT9X[-8]) && UT9X[-8] == 9) then UT9X
+    else if (UT9X == 2 && !isNaN(UT9X[-7]) && UT9X[-7] == 9) then UT9X
+    else if (UT9X == 3 && !isNaN(UT9X[-6]) && UT9X[-6] == 9) then UT9X
+    else if (UT9X == 4 && !isNaN(UT9X[-5]) && UT9X[-5] == 9) then UT9X
+    else if (UT9X == 5 && !isNaN(UT9X[-4]) && UT9X[-4] == 9) then UT9X
+    else if (UT9X == 6 && !isNaN(UT9X[-3]) && UT9X[-3] == 9) then UT9X
+    else if (UT9X == 7 && !isNaN(UT9X[-2]) && UT9X[-2] == 9) then UT9X
+    else if (UT9X == 8 && !isNaN(UT9X[-1]) && UT9X[-1] == 9) then UT9X
+    else if (UT9X >= 9) then UT9X
+    else Double.NaN
+);
+UT9.SetPaintingStrategy(PaintingStrategy.Values_Above);
+UT9.AssignValueColor(if UT9 < 9 then Color.CYAN else Color.MAGENTA);
+
+def DT9X = compoundValue(1, if (close(period = vPeriod) < close(period = vPeriod)[4]) then DT9X[1] + 1 else 0, 0);
+plot DT9 = (
+    if (DT9X == 1 && !isNaN(DT9X[-8]) && DT9X[-8] == 9) then DT9X
+    else if (DT9X == 2 && !isNaN(DT9X[-7]) && DT9X[-7] == 9) then DT9X
+    else if (DT9X == 3 && !isNaN(DT9X[-6]) && DT9X[-6] == 9) then DT9X
+    else if (DT9X == 4 && !isNaN(DT9X[-5]) && DT9X[-5] == 9) then DT9X
+    else if (DT9X == 5 && !isNaN(DT9X[-4]) && DT9X[-4] == 9) then DT9X
+    else if (DT9X == 6 && !isNaN(DT9X[-3]) && DT9X[-3] == 9) then DT9X
+    else if (DT9X == 7 && !isNaN(DT9X[-2]) && DT9X[-2] == 9) then DT9X
+    else if (DT9X == 8 && !isNaN(DT9X[-1]) && DT9X[-1] == 9) then DT9X
+    else if (DT9X >= 9) then DT9X
+    else Double.NaN
+);
+DT9.SetPaintingStrategy(PaintingStrategy.Values_Below);
+DT9.AssignValueColor(if DT9 < 9 then Color.MAGENTA else Color.CYAN);
+
 ####
 
 def bullstp = (
