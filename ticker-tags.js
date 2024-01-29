@@ -143,4 +143,18 @@ module.exports = {
   - oil
   - commodities
 `.trim(),
+
+    XOP: `
+  - oil
+  - gas
+  - sector
+  - equities
+`.trim(),
+
+    XLV: `
+  - healthcare
+  - select
+  - sector
+  - equities
+`.trim(),
 }
