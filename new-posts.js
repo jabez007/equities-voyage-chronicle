@@ -13,6 +13,9 @@ const reports = ['MTP', 'CTA'];
 
 const yesterday = new Date(date);
 yesterday.setDate(yesterday.getDate() - 1);
+if (yesterday.getDay() == 0) {
+    yesterday.setDate(yesterday.getDate() - 2);
+}
 const yesterdate = yesterday.toLocaleDateString('en-ZA'); // yyyy/MM/dd
 
 if (!fs.existsSync(`./src/posts/${date}`)) {
