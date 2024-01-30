@@ -59,14 +59,14 @@ fastsma.SetDefaultColor(Color.DARK_ORANGE);
 fastsma.SetLineWeight(3);
 
 def fastsmaheight = fastsma - fastsma[1];
-def fastsmaAngle = Atan(fastsmaheight / fastavg) * 180 / Double.Pi;
+def fastsmaAngle = Atan(fastsmaheight) * 180 / Double.Pi;
 
 plot slowsma = MovingAverage(slowavgType, fundamental(price, period = vPeriod), slowavg);
 slowsma.SetDefaultColor(Color.YELLOW);
 slowsma.SetLineWeight(5);
 
 def slowsmaheight = slowsma - slowsma[1];
-def slowsmaAngle = Atan(slowsmaheight / slowavg) * 180 / Double.Pi;
+def slowsmaAngle = Atan(slowsmaheight) * 180 / Double.Pi;
 
 
 ####
@@ -166,91 +166,96 @@ def warnphase = (
 # Inspired by the Bravo9
 ####
 
-input pbfastavgType = AverageType.SIMPLE; #hint pbfastavgType: The fast moving average type to use for pullback entries.
-input pbfastavg = 9; #hint pbfastavg: The length of the fast moving average to use for pullback entries.
-input pbfastdisplace = 0; #hint pbfastdisplace: The displacement of the fast moving average to use for pullback entries.
+input pbavgType = AverageType.SIMPLE; #hint pbavgType: The fast moving average type to use for pullback entries.
+input pbavg = 9; #hint pbavg: The length of the fast moving average to use for pullback entries.
+input pbdisplace = 0; #hint pbdisplace: The displacement of the fast moving average to use for pullback entries.
 
-plot pbfastsma = MovingAverage(pbfastavgType, data = fundamental(price, period = vPeriod)[-pbfastdisplace], length = pbfastavg);
-pbfastsma.SetDefaultColor(Color.LIME);
-pbfastsma.SetLineWeight(2);
+plot pbsma = MovingAverage(pbavgType, data = fundamental(price, period = vPeriod)[-pbdisplace], length = pbavg);
+pbsma.SetDefaultColor(Color.LIME);
+pbsma.SetLineWeight(2);
 
-input pbslowavgType = AverageType.EXPONENTIAL; #hint pbslowavgType: The slow moving average type to use for pullback entries.
-input pbslowavg = 20; #hint pbslowavg: The length of the slow moving average to use for pullback entries.
-input pbslowdisplace = 0; #hint pbslowdisplace: The displacement of the slow moving average to use for pullback entries.
+def pbsmaheight = pbsma - pbsma[1];
+def pbsmaAngle = Atan(pbsmaheight) * 180 / Double.Pi;
 
-plot pbslowsma = MovingAverage(pbslowavgType, data = fundamental(price, period = vPeriod)[-pbslowdisplace], length = pbslowavg);
-pbslowsma.SetDefaultColor(Color.VIOLET);
-pbslowsma.SetLineWeight(3);
-
-input MACDfastLength = 12;
-input MACDslowLength = 26;
+input MACDFastLength = 12;
+input MACDSlowLength = 26;
 input MACDLength = 9;
-input MACDaverageType = AverageType.EXPONENTIAL;
-input MACDlookback = 5;
+input MACDAverageType = AverageType.EXPONENTIAL;
 
-def MACDline = MovingAverage(MACDaverageType, fundamental(price, period = vPeriod), MACDfastLength) - MovingAverage(MACDaverageType, fundamental(price, period = vPeriod), MACDslowLength);
-def MACDsig = MovingAverage(MACDaverageType, MACDline, MACDLength);
+def MACDline = MovingAverage(MACDAverageType, fundamental(price, period = vPeriod), MACDFastLength) - MovingAverage(MACDAverageType, fundamental(price, period = vPeriod), MACDSlowLength);
+def MACDsig = MovingAverage(MACDAverageType, MACDLine, MACDLength);
 
 def MACDhist = MACDline - MACDsig;
 
-input RSIlength = 14;
-input RSIaverageType = AverageType.WILDERS;
+input RSILength = 14;
+input RSIAverageType = AverageType.WILDERS;
 
-def NetChgAvg = MovingAverage(RSIaverageType, fundamental(price, period = vPeriod) - fundamental(price, period = vPeriod)[1], RSIlength);
-def TotChgAvg = MovingAverage(RSIaverageType, AbsValue(fundamental(price, period = vPeriod) - fundamental(price, period = vPeriod)[1]), RSIlength);
+def NetChgAvg = MovingAverage(RSIAverageType, fundamental(price, period = vPeriod) - fundamental(price, period = vPeriod)[1], RSILength);
+def TotChgAvg = MovingAverage(RSIAverageType, AbsValue(fundamental(price, period = vPeriod) - fundamental(price, period = vPeriod)[1]), RSILength);
 def ChgRatio = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
 def RSI = 50 * (ChgRatio + 1);
 
-input avgRSIlength = 3;
-input avgRSIaverageType = AverageType.WILDERS;
+input avgRSILength = 3;
+input avgRSIAverageType = AverageType.WILDERS;
 
-def avgRSI = MovingAverage(avgRSIaverageType, RSI, avgRSIlength);
+def avgRSI = MovingAverage(avgRSIAverageType, RSI, avgRSILength);
+
+input OBVLength = 7;
+input OBVSignalLength = 10;
+input OBVAverageType = AverageType.EXPONENTIAL;
+
+def obv = reference OnBalanceVolume();
+
+def OBVM = MovingAverage(OBVAverageType, obv, OBVLength);
+def OBVSignal = MovingAverage(OBVAverageType, OBVM, OBVSignalLength);
 
 ####
 
-def bullishpb = (
-    Min(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) > pbfastsma # full candle close above
+def bullishpb = ( # low(period = vPeriod) < pbsma && open(period = vPeriod) > pbsma;
+    Min(open(period = vPeriod), close(period = vPeriod)) >= pbsma # full candle close above
     &&
-    (MACDhist > 0 && Lowest(MACDhist[1], MACDlookback) < 0) # recent positive cross on the MACD
+    pbsmaAngle > pbsmaAngle[1] # rising moving average
     &&
-    (RSI > 40 && avgRSI > avgRSI[1]) # bullish and rising RSI
+    (MACDhist > 0 && MACDLine > MACDLine[1]) # positive cross and rising MACD
+    &&
+    (RSI > 40 && RSI < 63 && avgRSI > avgRSI[1]) # bullish but not overbought and rising RSI
+    &&
+    OBVM > OBVM[1] # On Balance Volume is rising
 );
+
+def bearishpb = ( # high(period = vPeriod) > pbsma && open(period = vPeriod) < pbsma;
+    Max(open(period = vPeriod), close(period = vPeriod)) <= pbsma # full candle close below
+    &&
+    pbsmaAngle < pbsmaAngle[1] # falling moving average
+    &&
+    (MACDhist < 0 && MACDLine < MACDLine[1]) # negative cross and falling MACD
+    &&
+    (RSI < 60 && RSI > 37 && avgRSI < avgRSI[1]) # bearish but not oversold and falling RSI
+    &&
+    OBVM < OBVM[1] # On Balance Volume is falling
+);
+
 def bullpb = (
     if (bullphase) then (
-        #(pbfastavg < pbslowavg or buyerVol)
-        #&&
         bullishpb
     ) else if (accphase) then (
         bullishpb
     ) else if (recphase) then (
-        #strongPrice
-        #&&
-        bullishpb
+        0
     ) else (
-        !bearphase && !distphase && !warnphase && (pbfastavg < pbslowavg) && bullishpb
+        !bearphase && !distphase && bullishpb
     )
 );
 
-def bearishpb = (
-    Max(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) < pbfastsma # full candle close below
-    &&
-    (MACDhist < 0 && Highest(MACDhist[1], MACDlookback) > 0) # recent negative cross on the MACD
-    &&
-    (RSI < 60 && avgRSI < avgRSI[1]) # bearish and falling RSI
-);
 def bearpb = (
     if (bearphase) then (
-        #(pbfastavg > pbslowavg or sellerVol)
-        #&&
         bearishpb
     ) else if (distphase) then (
         bearishpb
     ) else if (warnphase) then (
-        #weakPrice
-        #&&
-        bearishpb
+        0
     ) else (
-       !bullphase && !accphase && !recphase && (pbfastavg > pbslowavg) && bearishpb
+        !bullphase && !accphase && bearishpb
     )
 );
 
@@ -299,33 +304,9 @@ DT9.AssignValueColor(if DT9 < 9 then Color.MAGENTA else Color.CYAN);
 
 ####
 
-def bullstp = 0; #(
-#    (
-#        (
-#            Max(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) < pbfastsma # full candle close below 
-#            or
-#            fundamental(FundamentalType.CLOSE, period = vPeriod) < pbslowsma # close below
-#        )
-#        &&
-#       (MACDhist <= MACDhist[1]) # MACD not rising
-#    )
-#    or
-#    close(period = vPeriod) < stpDailyLow    
-#);
+def bullstp = 0;
 
-def bearstp = 0; #(
-#    (
-#        (
-#            Min(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) > pbfastsma # full candle close above
-#            or
-#            fundamental(FundamentalType.CLOSE, period = vPeriod) > pbslowsma # close above
-#        )
-#        &&
-#        (MACDhist >= MACDhist[1]) # MACD not falling
-#    )
-#    or
-#    close(period = vPeriod) > stpDailyHigh
-#);
+def bearstp = 0;
 
 ####
 
