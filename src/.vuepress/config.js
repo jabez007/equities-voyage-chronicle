@@ -30,6 +30,15 @@ module.exports = {
   ],
 
   /**
+   * Whether to show line numbers to the left of each code blocks.
+   * 
+   * ref: https://v1.vuepress.vuejs.org/config/#markdown-linenumbers
+   */
+  markdown: {
+    lineNumbers: true
+  },
+
+  /**
    * Theme configuration, here is the default theme configuration for VuePress.
    *
    * ref：https://v1.vuepress.vuejs.org/theme/default-theme-config.html
@@ -44,6 +53,10 @@ module.exports = {
       {
         text: 'Tags',
         link: '/tag/',
+      },
+      {
+        text: 'Indicators',
+        link: '/indicators.html',
       },
       {
         text: 'VuePress',
