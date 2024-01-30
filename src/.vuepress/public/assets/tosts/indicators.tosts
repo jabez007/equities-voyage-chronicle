@@ -299,40 +299,40 @@ DT9.AssignValueColor(if DT9 < 9 then Color.MAGENTA else Color.CYAN);
 
 ####
 
-def bullstp = (
-    (
-        (
-            Max(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) < pbfastsma # full candle close below 
-            or
-            fundamental(FundamentalType.CLOSE, period = vPeriod) < pbslowsma # close below
-        )
-        &&
-        (MACDhist <= MACDhist[1]) # MACD not rising
-    )
-    or
-    close(period = vPeriod) < stpDailyLow    
-);
+def bullstp = 0; #(
+#    (
+#        (
+#            Max(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) < pbfastsma # full candle close below 
+#            or
+#            fundamental(FundamentalType.CLOSE, period = vPeriod) < pbslowsma # close below
+#        )
+#        &&
+#       (MACDhist <= MACDhist[1]) # MACD not rising
+#    )
+#    or
+#    close(period = vPeriod) < stpDailyLow    
+#);
 
-def bearstp = (
-    (
-        (
-            Min(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) > pbfastsma # full candle close above
-            or
-            fundamental(FundamentalType.CLOSE, period = vPeriod) > pbslowsma # close above
-        )
-        &&
-        (MACDhist >= MACDhist[1]) # MACD not falling
-    )
-    or
-    close(period = vPeriod) > stpDailyHigh
-);
+def bearstp = 0; #(
+#    (
+#        (
+#            Min(fundamental(FundamentalType.OPEN, period = vPeriod), fundamental(FundamentalType.CLOSE, period = vPeriod)) > pbfastsma # full candle close above
+#            or
+#            fundamental(FundamentalType.CLOSE, period = vPeriod) > pbslowsma # close above
+#        )
+#        &&
+#        (MACDhist >= MACDhist[1]) # MACD not falling
+#    )
+#    or
+#    close(period = vPeriod) > stpDailyHigh
+#);
 
 ####
 
 input trailType = {default modified, unmodified};
 input ATRPeriod = 5;
-input ATRFactor = 3.5;
-input ATRaverageType = AverageType.WILDERS;
+input ATRFactor = 2.1;
+input ATRAverageType = AverageType.WILDERS;
 
 Assert(ATRFactor > 0, "'atr factor' must be positive: " + ATRFactor);
 
@@ -351,7 +351,7 @@ switch (trailType) {
     case unmodified:
         trueRange = TrueRange(high(period = vPeriod), close(period = vPeriod), low(period = vPeriod));
 }
-def loss = ATRFactor * MovingAverage(ATRaverageType, trueRange, ATRPeriod);
+def loss = ATRFactor * MovingAverage(ATRAverageType, trueRange, ATRPeriod);
 
 
 #######################################
