@@ -157,4 +157,9 @@ module.exports = {
   - sector
   - equities
 `.trim(),
+
+    IBB: `
+  - biotech
+  - equities
+`.trim(),
 }
