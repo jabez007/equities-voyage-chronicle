@@ -504,13 +504,13 @@ def orderPrice = if (isOrder and (bullpb or bearpb)) then open(period = vPeriod)
 
 def profitLoss;
 
-if (!isOrder or orderPRice == 0){
+if (!isOrder or orderPrice[1] == 0){
     profitLoss = 0;
 # If there is an order to close, 
 } else if ((isOrder and isLong[1]) and (SellSig or BuyStpSig)){
-    profitLoss = open(period = vPeriod)[-1] - orderPrice; # then the price is the next day's open
+    profitLoss = open(period = vPeriod)[-1] - orderPrice[1]; # then the price is the next day's open
 } else if ((isOrder and isShort[1]) and (BuySig or SellStpSig)) {
-    profitLoss = orderPrice - open(period = vPeriod)[-1]; # then the price is the next day's open
+    profitLoss = orderPrice[1] - open(period = vPeriod)[-1]; # then the price is the next day's open
 } else {
     profitLoss = 0;
 }
