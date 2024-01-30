@@ -162,6 +162,63 @@ def warnphase = (
 
 
 ####
+# Smoothed Heiken Ashi
+####
+
+input haPeriod = 20;
+input hideCandles = no;
+input haCandleSmoothing = {default Valcu, Vervoort};
+
+input haMovingAverageType = AverageType.EXPONENTIAL;
+
+def openMA  = compoundValue(1, MovingAverage(haMovingAverageType, open(period = vPeriod),  haPeriod), open(period = vPeriod));
+def closeMA = compoundValue(1, MovingAverage(haMovingAverageType, close(period = vPeriod), haPeriod), close(period = vPeriod));
+def highMA  = compoundValue(1, MovingAverage(haMovingAverageType, high(period = vPeriod),  haPeriod), high(period = vPeriod));
+def lowMA   = compoundValue(1, MovingAverage(haMovingAverageType, low(period = vPeriod),   haPeriod), low(period = vPeriod));
+
+hidePricePlot(hideCandles);
+
+def haOpen;
+def haClose;
+
+switch(haCandleSmoothing) {
+case Valcu:
+    haOpen = CompoundValue(1, ( (haOpen[1] + (openMA[1] + highMA[1] + lowMA[1] + closeMA[1]) /4.0)/2.0), open(period = vPeriod));
+    haClose = ((OpenMA + HighMA + LowMA + CloseMA)/4.0) ;
+
+case Vervoort:
+    haOpen = CompoundValue(1, ( (haOpen[1] + (openMA[1] + highMA[1] + lowMA[1] + closeMA[1]) /4.0)/2.0), open(period = vPeriod));
+    haClose = ((((OpenMA + HighMA + LowMA + CloseMA)/4.0) + haOpen + Max(HighMA, haOpen) + Min(LowMA, haOpen))/4.0);
+}
+
+#plot hao = haOpen + 0;
+#hao.hide();
+
+### Wicks and Shadows
+
+def haLow = min(lowMA, haOpen);
+def haHigh = max(highMA,haOpen);
+
+#Red Candlesticks -----------------------------------------------------------------|
+
+def haOpen_fall  = if haOpen >  haClose then haOpen  else double.nan;
+def haHigh_fall  = if haOpen >= haClose then haHigh  else double.nan;
+def haLow_fall   = if haOpen >= haClose then haLow   else double.nan;
+def haClose_fall = if haOpen >= haClose then haClose else double.nan;
+
+AddChart(growColor = Color.plum, fallColor = Color.blue, neutralColor = Color.current, high = haHigh_fall, low = haLow_fall, open = haOpen_fall, close = haClose_fall , type = ChartType.CANDLE);
+
+#Green Candlesticks ---------------------------------------------------------------|
+
+def haOpen_rise  = if haOpen <  haClose then haClose else double.nan;
+def haHigh_rise  = if haOpen <= haClose then haHigh  else double.nan;
+def haLow_rise   = if haOpen <= haClose then haLow   else double.nan;
+def haClose_rise = if haOpen <= haClose then haOpen  else double.nan;
+
+AddChart(growColor = Color.blue, fallColor = Color.plum, neutralColor = Color.current, high = haHigh_rise, low = haLow_rise, open = haOpen_rise, close = HAclose_rise, type = ChartType.CANDLE);
+
+
+####
 # The conditions below are for possible entries when price pulls back
 # Inspired by the Bravo9
 ####
