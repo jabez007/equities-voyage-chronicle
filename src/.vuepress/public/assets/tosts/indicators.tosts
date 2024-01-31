@@ -183,12 +183,12 @@ def haClose;
 
 switch(haCandleSmoothing) {
 case Valcu:
-    haOpen = CompoundValue(1, ( (haOpen[1] + (openMA[1] + highMA[1] + lowMA[1] + closeMA[1]) /4.0)/2.0), open(period = vPeriod));
-    haClose = ((OpenMA + HighMA + LowMA + CloseMA)/4.0) ;
+    haOpen = CompoundValue(1, ((haOpen[1] + (openMA[1] + highMA[1] + lowMA[1] + closeMA[1]) /4.0) / 2.0), open(period = vPeriod));
+    haClose = ((OpenMA + HighMA + LowMA + CloseMA) / 4.0) ;
 
 case Vervoort:
-    haOpen = CompoundValue(1, ( (haOpen[1] + (openMA[1] + highMA[1] + lowMA[1] + closeMA[1]) /4.0)/2.0), open(period = vPeriod));
-    haClose = ((((OpenMA + HighMA + LowMA + CloseMA)/4.0) + haOpen + Max(HighMA, haOpen) + Min(LowMA, haOpen))/4.0);
+    haOpen = CompoundValue(1, ((haOpen[1] + (openMA[1] + highMA[1] + lowMA[1] + closeMA[1]) /4.0) / 2.0), open(period = vPeriod));
+    haClose = ((((OpenMA + HighMA + LowMA + CloseMA) / 4.0) + haOpen + Max(HighMA, haOpen) + Min(LowMA, haOpen)) / 4.0);
 }
 
 #plot hao = haOpen + 0;
@@ -197,7 +197,7 @@ case Vervoort:
 ### Wicks and Shadows
 
 def haLow = min(lowMA, haOpen);
-def haHigh = max(highMA,haOpen);
+def haHigh = max(highMA, haOpen);
 
 #Red Candlesticks -----------------------------------------------------------------|
 
@@ -231,9 +231,6 @@ plot pbsma = MovingAverage(pbavgType, data = fundamental(price, period = vPeriod
 pbsma.SetDefaultColor(Color.LIME);
 pbsma.SetLineWeight(2);
 
-def pbsmaheight = pbsma - pbsma[1];
-def pbsmaAngle = Atan(pbsmaheight) * 180 / Double.Pi;
-
 input MACDFastLength = 12;
 input MACDSlowLength = 26;
 input MACDLength = 9;
@@ -243,6 +240,8 @@ def MACDline = MovingAverage(MACDAverageType, fundamental(price, period = vPerio
 def MACDsig = MovingAverage(MACDAverageType, MACDLine, MACDLength);
 
 def MACDhist = MACDline - MACDsig;
+
+input MACDLookback = 5;
 
 input RSILength = 14;
 input RSIAverageType = AverageType.WILDERS;
@@ -269,27 +268,27 @@ def OBVSignal = MovingAverage(OBVAverageType, OBVM, OBVSignalLength);
 ####
 
 def bullishpb = ( # low(period = vPeriod) < pbsma && open(period = vPeriod) > pbsma;
-    Min(open(period = vPeriod), close(period = vPeriod)) >= pbsma # full candle close above
-    &&
-    pbsmaAngle > pbsmaAngle[1] # rising moving average
-    &&
-    (MACDhist > 0 && MACDLine > MACDLine[1]) # positive cross and rising MACD
-    &&
-    (RSI > 40 && RSI < 63 && avgRSI > avgRSI[1]) # bullish but not overbought and rising RSI
-    &&
-    OBVM > OBVM[1] # On Balance Volume is rising
+    #Min(open(period = vPeriod), close(period = vPeriod)) >= pbsma # full candle close above
+    #&&
+    (haOpen < haClose) and (haOpen[1] < haClose[1])
+    #&&
+    #(MACDhist > 0 && Lowest(MACDhist, MACDLookback) < 0 && MACDLine > MACDLine[1]) # recent positive cross on the MACD and rising
+    #&&
+    #(RSI > 40 && RSI < 63 && avgRSI > avgRSI[1]) # bullish but not overbought and rising RSI
+    #&&
+    #OBVM > OBVM[1] # On Balance Volume is rising
 );
 
 def bearishpb = ( # high(period = vPeriod) > pbsma && open(period = vPeriod) < pbsma;
-    Max(open(period = vPeriod), close(period = vPeriod)) <= pbsma # full candle close below
-    &&
-    pbsmaAngle < pbsmaAngle[1] # falling moving average
-    &&
-    (MACDhist < 0 && MACDLine < MACDLine[1]) # negative cross and falling MACD
-    &&
-    (RSI < 60 && RSI > 37 && avgRSI < avgRSI[1]) # bearish but not oversold and falling RSI
-    &&
-    OBVM < OBVM[1] # On Balance Volume is falling
+    #Max(open(period = vPeriod), close(period = vPeriod)) <= pbsma # full candle close below
+    #&&
+    (haOpen > haClose) and (haOpen[1] > haClose[1])
+    #&&
+    #(MACDhist < 0 && Highest(MACDhist, MACDLookback) > 0 && MACDLine < MACDLine[1]) # recent negative cross on the MACD and falling
+    #&&
+    #(RSI < 60 && RSI > 37 && avgRSI < avgRSI[1]) # bearish but not oversold and falling RSI
+    #&&
+    #OBVM < OBVM[1] # On Balance Volume is falling
 );
 
 def bullpb = (
@@ -298,9 +297,9 @@ def bullpb = (
     ) else if (accphase) then (
         bullishpb
     ) else if (recphase) then (
-        0
+        bullishpb
     ) else (
-        !bearphase && !distphase && bullishpb
+        0
     )
 );
 
@@ -310,9 +309,9 @@ def bearpb = (
     ) else if (distphase) then (
         bearishpb
     ) else if (warnphase) then (
-        0
+        bearishpb
     ) else (
-        !bullphase && !accphase && bearishpb
+        0
     )
 );
 
@@ -361,15 +360,31 @@ DT9.AssignValueColor(if DT9 < 9 then Color.MAGENTA else Color.CYAN);
 
 ####
 
-def bullstp = 0;
+def bullstp = (
+    #close(period = vPeriod) < stpDailyLow
+    #or
+    #Max(open(period = vPeriod), close(period = vPeriod)) < pbsma # full candle close below
+    #or
+    #close(period = vPeriod) < haLow
+    #or
+    haOpen > haClose
+);
 
-def bearstp = 0;
+def bearstp = (
+    #close(period = vPeriod) > stpDailyHigh
+    #or
+    #Min(open(period = vPeriod), close(period = vPeriod)) > pbsma # full candle close above
+    #or
+    #close(period = vPeriod) > haHigh
+    #or
+    haOpen < haClose
+);
 
 ####
 
 input trailType = {default modified, unmodified};
 input ATRPeriod = 5;
-input ATRFactor = 2.1;
+input ATRFactor = 2.9;
 input ATRAverageType = AverageType.WILDERS;
 
 Assert(ATRFactor > 0, "'atr factor' must be positive: " + ATRFactor);
@@ -546,9 +561,9 @@ if (!isOrder or orderPrice[1] == 0){
     profitLoss = 0;
 # If there is an order to close, 
 } else if ((isOrder and isLong[1]) and (SellSig or BuyStpSig)){
-    profitLoss = open(period = vPeriod)[-1] - orderPrice[1]; # then the price is the next day's open
+    profitLoss = (if (isNaN(open(period = vPeriod)[-1])) then close(period = vPeriod) else open(period = vPeriod)[-1])  - orderPrice[1]; # then the price is the next day's open
 } else if ((isOrder and isShort[1]) and (BuySig or SellStpSig)) {
-    profitLoss = orderPrice[1] - open(period = vPeriod)[-1]; # then the price is the next day's open
+    profitLoss = orderPrice[1] - (if (isNaN(open(period = vPeriod)[-1])) then close(period = vPeriod) else open(period = vPeriod)[-1]); # then the price is the next day's open
 } else {
     profitLoss = 0;
 }
