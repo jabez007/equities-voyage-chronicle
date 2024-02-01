@@ -6,6 +6,7 @@ tags:
     - financial
     - sector
     - equities
+    - sell
 ---
 <div class="post">
 <snapshot-grid 

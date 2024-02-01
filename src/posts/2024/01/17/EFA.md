@@ -6,6 +6,7 @@ tags:
     - MSCI
     - EAFE
     - foreign
+    - sell
 ---
 <div class="post">
 <snapshot-grid 
