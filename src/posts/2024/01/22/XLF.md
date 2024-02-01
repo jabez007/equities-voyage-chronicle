@@ -9,6 +9,7 @@ tags:
     - equities
     - loss
     - watchlist
+    - buy
 ---
 <div class="post">
 <snapshot-grid 
