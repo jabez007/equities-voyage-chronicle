@@ -5,6 +5,7 @@ tags:
   - IBB
   - biotech
   - equities
+  - buy
 ---
 <div class="post">
 <snapshot-grid 

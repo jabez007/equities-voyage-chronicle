@@ -6,6 +6,7 @@ tags:
   - emerging markets
   - MSCI
   - foreign
+  - sell
 ---
 <div class="post">
 <snapshot-grid 

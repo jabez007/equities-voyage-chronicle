@@ -7,6 +7,7 @@ tags:
   - mining
   - sector
   - equities
+  - buy
 ---
 <div class="post">
 <snapshot-grid 

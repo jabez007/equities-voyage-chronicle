@@ -6,6 +6,7 @@ tags:
   - investment grade
   - corporate
   - bonds
+  - buy
 ---
 <div class="post">
 <snapshot-grid 
