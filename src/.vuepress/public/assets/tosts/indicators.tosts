@@ -166,9 +166,6 @@ def warnphase = (
 ####
 
 input haPeriod = 20;
-input hideCandles = no;
-input haCandleSmoothing = {default Valcu, Vervoort};
-
 input haMovingAverageType = AverageType.EXPONENTIAL;
 
 def openMA  = compoundValue(1, MovingAverage(haMovingAverageType, open(period = vPeriod),  haPeriod), open(period = vPeriod));
@@ -176,10 +173,13 @@ def closeMA = compoundValue(1, MovingAverage(haMovingAverageType, close(period =
 def highMA  = compoundValue(1, MovingAverage(haMovingAverageType, high(period = vPeriod),  haPeriod), high(period = vPeriod));
 def lowMA   = compoundValue(1, MovingAverage(haMovingAverageType, low(period = vPeriod),   haPeriod), low(period = vPeriod));
 
+input hideCandles = no;
 hidePricePlot(hideCandles);
 
 def haOpen;
 def haClose;
+
+input haCandleSmoothing = {default Valcu, Vervoort};
 
 switch(haCandleSmoothing) {
 case Valcu:
@@ -295,9 +295,9 @@ def bullpb = (
     if (bullphase) then (
         bullishpb
     ) else if (accphase) then (
-        bullishpb
+        0
     ) else if (recphase) then (
-        bullishpb
+        0
     ) else (
         0
     )
@@ -307,9 +307,9 @@ def bearpb = (
     if (bearphase) then (
         bearishpb
     ) else if (distphase) then (
-        bearishpb
+        0
     ) else if (warnphase) then (
-        bearishpb
+        0
     ) else (
         0
     )
@@ -360,24 +360,24 @@ DT9.AssignValueColor(if DT9 < 9 then Color.MAGENTA else Color.CYAN);
 
 ####
 
-def bullstp = (
+def bullstp = ( 0
     #close(period = vPeriod) < stpDailyLow
     #or
     #Max(open(period = vPeriod), close(period = vPeriod)) < pbsma # full candle close below
     #or
     #close(period = vPeriod) < haLow
     #or
-    haOpen > haClose
+    #haOpen > haClose
 );
 
-def bearstp = (
+def bearstp = ( 0
     #close(period = vPeriod) > stpDailyHigh
     #or
     #Min(open(period = vPeriod), close(period = vPeriod)) > pbsma # full candle close above
     #or
     #close(period = vPeriod) > haHigh
     #or
-    haOpen < haClose
+    #haOpen < haClose
 );
 
 ####

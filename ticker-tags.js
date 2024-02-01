@@ -162,4 +162,12 @@ module.exports = {
   - biotech
   - equities
 `.trim(),
+
+    XLY: `
+  - consumer
+  - discretionary
+  - select
+  - sector
+  - equities
+`.trim(),
 }
