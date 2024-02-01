@@ -218,6 +218,38 @@ def haClose_rise = if haOpen <= haClose then haOpen  else double.nan;
 AddChart(growColor = Color.blue, fallColor = Color.plum, neutralColor = Color.current, high = haHigh_rise, low = haLow_rise, open = haOpen_rise, close = HAclose_rise, type = ChartType.CANDLE);
 
 
+#############################################################
+###   Determine a flat market
+#############################################################
+
+input TradeInFlatRange = yes;
+input BarsForFlatRange = 15;
+input BarsReqToStayInRange = 13;
+
+def HH = Highest(high[1], BarsForFlatRange);
+def LL = Lowest(low[1], BarsForFlatRange);
+def maxH = Highest(HH, BarsReqToStayInRange);
+def maxL = Lowest(LL, BarsReqToStayInRange);
+def HHn = if maxH == maxH[1] or maxL == maxL then maxH else HHn[1];
+def LLn = if maxH == maxH[1] or maxL == maxL then maxL else LLn[1];
+def Bh = if high <= HHn and HHn == HHn[1] then HHn else Double.NaN;
+def Bl = if low >= LLn and LLn == LLn[1] then LLn else Double.NaN;
+def CountH = if IsNaN(Bh) or IsNaN(Bl) then 2 else CountH[1] + 1;
+def CountL = if IsNaN(Bh) or IsNaN(Bl) then 2 else CountL[1] + 1;
+def ExpH = if BarNumber() == 1 then Double.NaN else
+    if CountH[-BarsReqToStayInRange] >= BarsReqToStayInRange then HHn[-BarsReqToStayInRange] else
+    if high <= ExpH[1] then ExpH[1] else Double.NaN;
+def ExpL = if BarNumber() == 1 then Double.NaN else
+    if CountL[-BarsReqToStayInRange] >= BarsReqToStayInRange then LLn[-BarsReqToStayInRange] else
+    if low >= ExpL[1] then ExpL[1] else Double.NaN;
+
+plot BoxHigh = if !isnan(expL) and !isnan(ExpH) then ExpH else double.nan;
+plot BoxLow = if !isnan(expL) and !isnan(ExpH) then ExpL else double.nan;
+
+addcloud(BoxHigh, BoxLow, color.gray, color.gray);
+
+def Flat = if (!isNan(BoxHigh[1]) and !isNan(BoxLow[1])) and !TradeInFlatRange then 1 else 0;
+
 ####
 # The conditions below are for possible entries when price pulls back
 # Inspired by the Bravo9
@@ -265,12 +297,19 @@ def obv = reference OnBalanceVolume();
 def OBVM = MovingAverage(OBVAverageType, obv, OBVLength);
 def OBVSignal = MovingAverage(OBVAverageType, OBVM, OBVSignalLength);
 
+input ADXLength = 14;
+input ADXAverageType = AverageType.WILDERS;
+
+def ADX = DMI(ADXLength, ADXAverageType).ADX;
+
+input ADXTrendThreshold = 13;
+
 ####
 
 def bullishpb = ( # low(period = vPeriod) < pbsma && open(period = vPeriod) > pbsma;
     #Min(open(period = vPeriod), close(period = vPeriod)) >= pbsma # full candle close above
     #&&
-    (haOpen < haClose) and (haOpen[1] < haClose[1])
+    ((haOpen < haClose) and (haOpen[1] < haClose[1]) and !Flat)
     #&&
     #(MACDhist > 0 && Lowest(MACDhist, MACDLookback) < 0 && MACDLine > MACDLine[1]) # recent positive cross on the MACD and rising
     #&&
@@ -282,7 +321,7 @@ def bullishpb = ( # low(period = vPeriod) < pbsma && open(period = vPeriod) > pb
 def bearishpb = ( # high(period = vPeriod) > pbsma && open(period = vPeriod) < pbsma;
     #Max(open(period = vPeriod), close(period = vPeriod)) <= pbsma # full candle close below
     #&&
-    (haOpen > haClose) and (haOpen[1] > haClose[1])
+    ((haOpen > haClose) and (haOpen[1] > haClose[1]) and !Flat)
     #&&
     #(MACDhist < 0 && Highest(MACDhist, MACDLookback) > 0 && MACDLine < MACDLine[1]) # recent negative cross on the MACD and falling
     #&&
@@ -295,11 +334,11 @@ def bullpb = (
     if (bullphase) then (
         bullishpb
     ) else if (accphase) then (
-        0
+        bullishpb
     ) else if (recphase) then (
-        0
+        bullishpb
     ) else (
-        0
+        !bearphase && !distphase && !warnphase && bullishpb
     )
 );
 
@@ -307,11 +346,11 @@ def bearpb = (
     if (bearphase) then (
         bearishpb
     ) else if (distphase) then (
-        0
+        bearishpb
     ) else if (warnphase) then (
-        0
+        bearishpb
     ) else (
-        0
+        !bullphase && !accphase && !recphase && bearishpb
     )
 );
 
@@ -319,6 +358,8 @@ def bearpb = (
 # The conditions below are for stop losses
 # Inspired by the Accurate Swing Trading System
 ####
+
+input useStops = no;
 
 input stplength = 3;
 input stpdisplace = -1;
@@ -360,24 +401,24 @@ DT9.AssignValueColor(if DT9 < 9 then Color.MAGENTA else Color.CYAN);
 
 ####
 
-def bullstp = ( 0
-    #close(period = vPeriod) < stpDailyLow
-    #or
-    #Max(open(period = vPeriod), close(period = vPeriod)) < pbsma # full candle close below
-    #or
-    #close(period = vPeriod) < haLow
-    #or
-    #haOpen > haClose
+def bullstp = if !useStops then 0 else (
+    close(period = vPeriod) < stpDailyLow
+    or
+    Max(open(period = vPeriod), close(period = vPeriod)) < pbsma # full candle close below
+    or
+    close(period = vPeriod) < haLow
+    or
+    (haOpen > haClose && Flat)
 );
 
-def bearstp = ( 0
-    #close(period = vPeriod) > stpDailyHigh
-    #or
-    #Min(open(period = vPeriod), close(period = vPeriod)) > pbsma # full candle close above
-    #or
-    #close(period = vPeriod) > haHigh
-    #or
-    #haOpen < haClose
+def bearstp = if !useStops then 0 else (
+    close(period = vPeriod) > stpDailyHigh
+    or
+    Min(open(period = vPeriod), close(period = vPeriod)) > pbsma # full candle close above
+    or
+    close(period = vPeriod) > haHigh
+    or
+    (haOpen < haClose && Flat)
 );
 
 ####
