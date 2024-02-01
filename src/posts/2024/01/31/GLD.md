@@ -5,6 +5,7 @@ tags:
   - GLD
   - gold
   - commodities
+  - buy
 ---
 <div class="post">
 <snapshot-grid 
