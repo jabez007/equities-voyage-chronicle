@@ -6,6 +6,7 @@ tags:
   - Hong Kong
   - MSCI
   - foreign
+  - buy
 ---
 <div class="post">
 <snapshot-grid 

@@ -6,6 +6,7 @@ tags:
   - Mexico
   - MSCI
   - foreign
+  - buy
 ---
 <div class="post">
 <snapshot-grid 

@@ -5,6 +5,7 @@ tags:
   - SLV
   - silver
   - commodities
+  - buy
 ---
 <div class="post">
 <snapshot-grid 
