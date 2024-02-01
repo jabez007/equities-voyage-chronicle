@@ -302,7 +302,7 @@ input ADXAverageType = AverageType.WILDERS;
 
 def ADX = DMI(ADXLength, ADXAverageType).ADX;
 
-input ADXTrendThreshold = 13;
+input ADXTrendThreshold = 20;
 
 ####
 
