@@ -18,9 +18,14 @@ if (yesterday.getDay() == 0) {
 }
 const yesterdate = yesterday.toLocaleDateString('en-ZA'); // yyyy/MM/dd
 
-if (!fs.existsSync(`./src/posts/${date}`)) {
-    fs.mkdirSync(`./src/posts/${date}`)
-}
+date.split("/").reduce((acc, curr) => {
+    const newPath = `${acc}/${curr}`;
+    if (!fs.existsSync(`./src/posts${newPath}`)) {
+        fs.mkdirSync(`./src/posts${newPath}`);
+        console.log(`directory created for ${newPath}`);
+    }
+    return newPath;
+}, "")
 
 function getReportTickers(ticker) {
     if (['SLV', 'silver'].includes(ticker)) {

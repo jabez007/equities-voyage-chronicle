@@ -51,8 +51,12 @@ module.exports = {
     lastUpdated: false,
     nav: [
       {
-        text: 'Tags',
-        link: '/tag/',
+        text: 'Buys',
+        link: '/tag/buy/',
+      },
+      {
+        text: 'Sells',
+        link: '/tag/sell/',
       },
       {
         text: 'Indicators',
