@@ -8,6 +8,7 @@ tags:
   - select
   - sector
   - equities
+  - sell
 ---
 <div class="post">
 <snapshot-grid 

@@ -6,6 +6,7 @@ tags:
   - China
   - large cap
   - foreign
+  - buy
 ---
 <div class="post">
 <snapshot-grid 

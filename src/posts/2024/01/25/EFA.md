@@ -6,6 +6,7 @@ tags:
   - EAFE
   - MSCI
   - foreign
+  - buy
 ---
 <div class="post">
 <snapshot-grid 
