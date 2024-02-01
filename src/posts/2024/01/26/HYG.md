@@ -6,6 +6,7 @@ tags:
   - high yield
   - corporate
   - bonds
+  - buy
 ---
 <div class="post">
 <snapshot-grid 
