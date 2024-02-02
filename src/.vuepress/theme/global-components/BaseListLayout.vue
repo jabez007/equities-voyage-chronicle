@@ -146,9 +146,10 @@ export default {
     padding-bottom 80px
 
 .ui-post
-  padding-bottom 25px
+  padding 25px
   margin-bottom 25px
   border-bottom 1px solid $borderColor
+  background-color lighten($bgColor, 10%)
 
   &:last-child
     border-bottom 0px

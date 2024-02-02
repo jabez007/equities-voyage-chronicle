@@ -71,7 +71,7 @@ export default {
     text-transform uppercase
 
     a
-      color $darkTextColor
+      color $headerTextColor
       font-weight bold
       font-family PT Serif, Serif
       text-decoration none
@@ -93,9 +93,15 @@ export default {
         a
           font-family PT Serif, Serif
           font-size 20px
-          // color lighten(#3eaf7c, 30%)
+          color lighten($headerTextColor, 30%)
           text-decoration none
           transition color 0.3s
+
+          &:hover
+            color darken($headerTextColor, 30%)
+          
+          &.router-link-active
+            color darken($headerTextColor, 50%)
 
     .search-box
       font-family PT Serif, Serif

@@ -53,6 +53,7 @@ export default {
   font-size 16px
   letter-spacing 0px
   font-family PT Serif, Serif
+  background-color darken($bgColor, 10%)
   color $textColor
   position relative
 
