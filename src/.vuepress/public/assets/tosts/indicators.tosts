@@ -319,6 +319,18 @@ def bullishpb = ( # low(period = vPeriod) < pbsma && open(period = vPeriod) > pb
     #&&
     #OBVM > OBVM[1] # On Balance Volume is rising
 );
+def bullpb = (
+    if (bullphase) then (
+        bullishpb
+    ) else if (accphase) then (
+        bullishpb
+    ) else if (recphase) then (
+        bullishpb
+    ) else (
+        !bearphase && !distphase && !warnphase && bullishpb
+    )
+);
+
 
 def bearishpb = ( # high(period = vPeriod) > pbsma && open(period = vPeriod) < pbsma;
     !Flat
@@ -333,19 +345,6 @@ def bearishpb = ( # high(period = vPeriod) > pbsma && open(period = vPeriod) < p
     #&&
     #OBVM < OBVM[1] # On Balance Volume is falling
 );
-
-def bullpb = (
-    if (bullphase) then (
-        bullishpb
-    ) else if (accphase) then (
-        bullishpb
-    ) else if (recphase) then (
-        bullishpb
-    ) else (
-        !bearphase && !distphase && !warnphase && bullishpb
-    )
-);
-
 def bearpb = (
     if (bearphase) then (
         bearishpb
