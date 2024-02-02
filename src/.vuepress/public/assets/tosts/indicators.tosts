@@ -405,23 +405,39 @@ DT9.AssignValueColor(if DT9 < 9 then Color.MAGENTA else Color.CYAN);
 ####
 
 def bullstp = if !useStops then 0 else (
-    close(period = vPeriod) < stpDailyLow
+    (
+        UT9X > 9
+        &&
+        close(period = vPeriod) < stpDailyLow
+    )
     or
-    Max(open(period = vPeriod), close(period = vPeriod)) < pbsma # full candle close below
-    or
-    close(period = vPeriod) < haLow
-    or
-    (haOpen > haClose && Flat)
+    #Max(open(period = vPeriod), close(period = vPeriod)) < pbsma # full candle close below
+    #or
+    #close(period = vPeriod) < haOpen
+    #or
+    (
+        Flat
+        &&
+        (haClose < haOpen or (haClose - haOpen < haClose[1] - haOpen[1]))
+    )
 );
 
 def bearstp = if !useStops then 0 else (
-    close(period = vPeriod) > stpDailyHigh
+    (
+        DT9X > 9
+        &&
+        close(period = vPeriod) > stpDailyHigh
+    )
     or
-    Min(open(period = vPeriod), close(period = vPeriod)) > pbsma # full candle close above
-    or
-    close(period = vPeriod) > haHigh
-    or
-    (haOpen < haClose && Flat)
+    #Min(open(period = vPeriod), close(period = vPeriod)) > pbsma # full candle close above
+    #or
+    #close(period = vPeriod) > haOpen
+    #or
+    (
+        Flat
+        &&
+        (haOpen < haClose or (haOpen - haClose < haOpen[1] - haClose[1]))
+    )
 );
 
 ####

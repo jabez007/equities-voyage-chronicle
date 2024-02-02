@@ -170,4 +170,11 @@ module.exports = {
   - sector
   - equities
 `.trim(),
+
+    XLK: `
+  - technology
+  - select
+  - sector
+  - equities
+`.trim(),
 }
