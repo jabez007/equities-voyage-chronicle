@@ -59,8 +59,12 @@ module.exports = {
         link: '/tag/sell/',
       },
       {
+        text: 'Seasonality',
+        link: '/seasonality',
+      },
+      {
         text: 'Indicators',
-        link: '/indicators.html',
+        link: '/indicators',
       },
       {
         text: 'VuePress',
