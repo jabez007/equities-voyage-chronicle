@@ -670,7 +670,7 @@ def avgTrade = round((dollarPLSum/orderCount),2);
 
 input showLabels = yes;
 
-AddLabel(showLabels, GetSymbol()+" Tick Size: "+TickSize()+" Value: "+TickValue(), color.white);
+AddLabel(showLabels, GetSymbol()+" Tick Size: "+TickSize()+" Value: "+TickValue()+" HODL: "+AsDollars(close(period = vPeriod)-First(open(period = vPeriod))), color.white);
 AddLabel(showLabels, "Closed Orders: " + orderCount + " P/L: " + AsDollars(dollarPLSum), if dollarPLSum > 0 then Color.GREEN else if dollarPLSum< 0 then Color.RED else Color.GRAY);
 AddLabel(if !IsNan(orderPrice) and showLabels then 1 else 0, "Closed+Open P/L: "+ AsDollars(TradePL+dollarPLSum), if ((TradePL+dollarPLSum) > 0) then color.green else if ((TradePL+dollarPLSum) < 0) then color.red else color.gray);
 
