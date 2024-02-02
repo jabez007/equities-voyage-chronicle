@@ -7,6 +7,7 @@ on:
     paths:
       - 'src/posts/**'
       - 'src/.vuepress/public/assets/tosts/**'
+      - 'src/.vuepress/styles/**'
   workflow_dispatch:
 
 jobs:
