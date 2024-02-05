@@ -269,7 +269,9 @@ def Flat = if (!isNan(BoxHigh[1]) and !isNan(BoxLow[1])) and !TradeInFlatRange t
 ####
 
 def haClose = (open(period = vPeriod) + high(period = vPeriod) + low(period = vPeriod) + close(period = vPeriod)) / 4;
-rec haOpen = compoundValue(1, (haOpen[1] + haClose[1]) / 2, (open(period = vPeriod)[1] + close(period = vPeriod)[1]) / 2);
+def haOpen = compoundValue(1, (haOpen[1] + haClose[1]) / 2, (open(period = vPeriod)[1] + close(period = vPeriod)[1]) / 2);
+def haHigh = Max(Max(high(period = vPeriod), haOpen), haClose);
+def haLow = Min(Min(low(period = vPeriod), haOpen), haClose);
 
 ####
 # The conditions below are for possible entries when price pulls back
@@ -328,17 +330,17 @@ input ADXTrendThreshold = 20;
 ####
 
 def bullishpb = ( # low(period = vPeriod) < pbsma && open(period = vPeriod) > pbsma;
+    #Min(open(period = vPeriod), close(period = vPeriod)) >= pbsma # full candle close above
+    #&&
     !Flat
     &&
     (shaClose > shaOpen and (shaClose - shaOpen) > (shaClose[1] - shaOpen[1]))
     &&
     (haClose > haOpen and (haClose - haOpen) > (haClose[1] - haOpen[1]))
-    #&&
-    #Min(open(period = vPeriod), close(period = vPeriod)) >= pbsma # full candle close above
+    &&
+    ((39 < RSI && RSI < 63) and avgRSI > avgRSI[1]) # bullish but not overbought and rising RSI
     #&&
     #(MACDhist > 0 and Lowest(MACDhist, MACDLookback) < 0 and MACDLine > MACDLine[1]) # recent positive cross on the MACD and rising
-    #&&
-    #(RSI > 40 && RSI < 63 and avgRSI > avgRSI[1]) # bullish but not overbought and rising RSI
     #&&
     #OBVM > OBVM[1] # On Balance Volume is rising
 );
@@ -358,17 +360,17 @@ def bullpb = (
 
 
 def bearishpb = ( # high(period = vPeriod) > pbsma && open(period = vPeriod) < pbsma;
+    #Max(open(period = vPeriod), close(period = vPeriod)) <= pbsma # full candle close below
+    #&&
     !Flat
     &&
     (shaOpen > shaClose and (shaOpen - shaClose) > (shaOpen[1] - shaClose[1]))
     &&
     (haOpen > haClose and (haOpen - haClose) > (haOpen[1] - haClose[1]))
-    #&&
-    #Max(open(period = vPeriod), close(period = vPeriod)) <= pbsma # full candle close below
+    &&
+    ((36 < RSI && RSI < 60) and avgRSI < avgRSI[1]) # bearish but not oversold and falling RSI
     #&&
     #(MACDhist < 0 and Highest(MACDhist, MACDLookback) > 0 and MACDLine < MACDLine[1]) # recent negative cross on the MACD and falling
-    #&&
-    #(RSI < 60 && RSI > 37 and avgRSI < avgRSI[1]) # bearish but not oversold and falling RSI
     #&&
     #OBVM < OBVM[1] # On Balance Volume is falling
 );
@@ -391,7 +393,7 @@ def bearpb = (
 # Inspired by the Accurate Swing Trading System
 ####
 
-input useStops = no;
+input useStops = yes;
 
 input stplength = 3;
 input stpdisplace = -1;
@@ -434,39 +436,11 @@ DT9.AssignValueColor(if DT9 < 9 then Color.MAGENTA else Color.CYAN);
 ####
 
 def bullstp = if !useStops then 0 else (
-    (
-        UT9X > 9
-        &&
-        close(period = vPeriod) < stpDailyLow
-    )
-    or
-    #Max(open(period = vPeriod), close(period = vPeriod)) < pbsma # full candle close below
-    #or
-    #close(period = vPeriod) < shaOpen
-    #or
-    (
-        Flat
-        &&
-        (shaClose < shaOpen or (shaClose - shaOpen) < (shaClose[1] - shaOpen[1]))
-    )
+    0
 );
 
 def bearstp = if !useStops then 0 else (
-    (
-        DT9X > 9
-        &&
-        close(period = vPeriod) > stpDailyHigh
-    )
-    or
-    #Min(open(period = vPeriod), close(period = vPeriod)) > pbsma # full candle close above
-    #or
-    #close(period = vPeriod) > shaOpen
-    #or
-    (
-        Flat
-        &&
-        (shaOpen < shaClose or (shaOpen - shaClose) < (shaOpen[1] - shaClose[1]))
-    )
+    0
 );
 
 ####
