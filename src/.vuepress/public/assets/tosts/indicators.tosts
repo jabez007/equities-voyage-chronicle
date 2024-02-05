@@ -8,7 +8,7 @@
 ### 
 
 #Ensure you set the correct aggregation period to then chart, this helps calculate the correct volume and price action.
-input vPeriod = AggregationPeriod.Day; #hint vPeriod: Enter the chart time you use here. Required to properly caluclate volume and price strength.
+input vPeriod = AggregationPeriod.DAY; #hint vPeriod: Enter the chart time you use here. Required to properly caluclate volume and price strength.
 
 def O = open(period = vPeriod);
 def H = high(period = vPeriod);
@@ -160,64 +160,78 @@ def warnphase = (
 #plot wphase = warnphase is true;
 ####
 
+input bPeriod = AggregationPeriod.WEEK;
+input bSource = FundamentalType.CLOSE;
+input bullSMALength = 20;
+input bullEMALength = 21;
+
+def bullSMA = Average(fundamental(bSource, period = bPeriod), bullSMALength);
+def bullEMA = ExpAverage(fundamental(bSource, period = bPeriod), bullEMALength);
+
+addCloud(
+    bullSMA,
+    bullEMA,
+    color.RED,
+    color.GREEN
+);
 
 ####
 # Smoothed Heiken Ashi
 ####
 
-input haPeriod = 20;
+input shaPeriod = 20;
 input haMovingAverageType = AverageType.EXPONENTIAL;
 
-def openMA  = compoundValue(1, MovingAverage(haMovingAverageType, open(period = vPeriod),  haPeriod), open(period = vPeriod));
-def closeMA = compoundValue(1, MovingAverage(haMovingAverageType, close(period = vPeriod), haPeriod), close(period = vPeriod));
-def highMA  = compoundValue(1, MovingAverage(haMovingAverageType, high(period = vPeriod),  haPeriod), high(period = vPeriod));
-def lowMA   = compoundValue(1, MovingAverage(haMovingAverageType, low(period = vPeriod),   haPeriod), low(period = vPeriod));
+def openMA  = compoundValue(1, MovingAverage(haMovingAverageType, open(period = vPeriod),  shaPeriod), open(period = vPeriod));
+def closeMA = compoundValue(1, MovingAverage(haMovingAverageType, close(period = vPeriod), shaPeriod), close(period = vPeriod));
+def highMA  = compoundValue(1, MovingAverage(haMovingAverageType, high(period = vPeriod),  shaPeriod), high(period = vPeriod));
+def lowMA   = compoundValue(1, MovingAverage(haMovingAverageType, low(period = vPeriod),   shaPeriod), low(period = vPeriod));
 
 input hideCandles = no;
 hidePricePlot(hideCandles);
 
-def haOpen;
-def haClose;
+def shaOpen;
+def shaClose;
 
 input haCandleSmoothing = {default Valcu, Vervoort};
 
 switch(haCandleSmoothing) {
 case Valcu:
-    haOpen = CompoundValue(1, ((haOpen[1] + (openMA[1] + highMA[1] + lowMA[1] + closeMA[1]) /4.0) / 2.0), open(period = vPeriod));
-    haClose = ((OpenMA + HighMA + LowMA + CloseMA) / 4.0) ;
+    shaOpen = CompoundValue(1, ((shaOpen[1] + (openMA[1] + highMA[1] + lowMA[1] + closeMA[1]) /4.0) / 2.0), open(period = vPeriod));
+    shaClose = ((OpenMA + HighMA + LowMA + CloseMA) / 4.0) ;
 
 case Vervoort:
-    haOpen = CompoundValue(1, ((haOpen[1] + (openMA[1] + highMA[1] + lowMA[1] + closeMA[1]) /4.0) / 2.0), open(period = vPeriod));
-    haClose = ((((OpenMA + HighMA + LowMA + CloseMA) / 4.0) + haOpen + Max(HighMA, haOpen) + Min(LowMA, haOpen)) / 4.0);
+    shaOpen = CompoundValue(1, ((shaOpen[1] + (openMA[1] + highMA[1] + lowMA[1] + closeMA[1]) /4.0) / 2.0), open(period = vPeriod));
+    shaClose = ((((OpenMA + HighMA + LowMA + CloseMA) / 4.0) + shaOpen + Max(HighMA, shaOpen) + Min(LowMA, shaOpen)) / 4.0);
 }
 
-#plot hao = haOpen + 0;
+#plot hao = shaOpen + 0;
 #hao.hide();
 
 ### Wicks and Shadows
 
-def haLow = min(lowMA, haOpen);
-def haHigh = max(highMA, haOpen);
+def shaLow = min(lowMA, shaOpen);
+def shaHigh = max(highMA, shaOpen);
 
 #Red Candlesticks -----------------------------------------------------------------|
 
-def haOpen_fall  = if haOpen >  haClose then haOpen  else double.nan;
-def haHigh_fall  = if haOpen >= haClose then haHigh  else double.nan;
-def haLow_fall   = if haOpen >= haClose then haLow   else double.nan;
-def haClose_fall = if haOpen >= haClose then haClose else double.nan;
+def shaOpen_fall  = if shaOpen >  shaClose then shaOpen  else double.nan;
+def shaHigh_fall  = if shaOpen >= shaClose then shaHigh  else double.nan;
+def shaLow_fall   = if shaOpen >= shaClose then shaLow   else double.nan;
+def shaClose_fall = if shaOpen >= shaClose then shaClose else double.nan;
 
 # royalBlue = createColor(65, 105, 225)
-AddChart(growColor = Color.plum, fallColor = createColor(65, 105, 225), neutralColor = Color.current, high = haHigh_fall, low = haLow_fall, open = haOpen_fall, close = haClose_fall , type = ChartType.CANDLE);
+AddChart(growColor = Color.plum, fallColor = createColor(65, 105, 225), neutralColor = Color.current, high = shaHigh_fall, low = shaLow_fall, open = shaOpen_fall, close = shaClose_fall , type = ChartType.CANDLE);
 
 #Green Candlesticks ---------------------------------------------------------------|
 
-def haOpen_rise  = if haOpen <  haClose then haClose else double.nan;
-def haHigh_rise  = if haOpen <= haClose then haHigh  else double.nan;
-def haLow_rise   = if haOpen <= haClose then haLow   else double.nan;
-def haClose_rise = if haOpen <= haClose then haOpen  else double.nan;
+def shaOpen_rise  = if shaOpen <  shaClose then shaClose else double.nan;
+def shaHigh_rise  = if shaOpen <= shaClose then shaHigh  else double.nan;
+def shaLow_rise   = if shaOpen <= shaClose then shaLow   else double.nan;
+def shaClose_rise = if shaOpen <= shaClose then shaOpen  else double.nan;
 
 # royalBlue = createColor(65, 105, 225)
-AddChart(growColor = createColor(65, 105, 225), fallColor = Color.plum, neutralColor = Color.current, high = haHigh_rise, low = haLow_rise, open = haOpen_rise, close = HAclose_rise, type = ChartType.CANDLE);
+AddChart(growColor = createColor(65, 105, 225), fallColor = Color.plum, neutralColor = Color.current, high = shaHigh_rise, low = shaLow_rise, open = shaOpen_rise, close = shaClose_rise, type = ChartType.CANDLE);
 
 
 #############################################################
@@ -245,12 +259,17 @@ def ExpL = if BarNumber() == 1 then Double.NaN else
     if CountL[-BarsReqToStayInRange] >= BarsReqToStayInRange then LLn[-BarsReqToStayInRange] else
     if low >= ExpL[1] then ExpL[1] else Double.NaN;
 
-plot BoxHigh = if !isnan(expL) and !isnan(ExpH) then ExpH else double.nan;
-plot BoxLow = if !isnan(expL) and !isnan(ExpH) then ExpL else double.nan;
+def BoxHigh = if !isnan(expL) and !isnan(ExpH) then ExpH else double.nan;
+def BoxLow = if !isnan(expL) and !isnan(ExpH) then ExpL else double.nan;
 
 addcloud(BoxHigh, BoxLow, color.gray, color.gray);
 
 def Flat = if (!isNan(BoxHigh[1]) and !isNan(BoxLow[1])) and !TradeInFlatRange then 1 else 0;
+
+####
+
+def haClose = (open(period = vPeriod) + high(period = vPeriod) + low(period = vPeriod) + close(period = vPeriod)) / 4;
+rec haOpen = compoundValue(1, (haOpen[1] + haClose[1]) / 2, (open(period = vPeriod)[1] + close(period = vPeriod)[1]) / 2);
 
 ####
 # The conditions below are for possible entries when price pulls back
@@ -311,6 +330,8 @@ input ADXTrendThreshold = 20;
 def bullishpb = ( # low(period = vPeriod) < pbsma && open(period = vPeriod) > pbsma;
     !Flat
     &&
+    (shaClose > shaOpen and (shaClose - shaOpen) > (shaClose[1] - shaOpen[1]))
+    &&
     (haClose > haOpen and (haClose - haOpen) > (haClose[1] - haOpen[1]))
     #&&
     #Min(open(period = vPeriod), close(period = vPeriod)) >= pbsma # full candle close above
@@ -329,13 +350,17 @@ def bullpb = (
     ) else if (recphase) then (
         bullishpb
     ) else (
-        !bearphase && !distphase && !warnphase && bullishpb
+        (!bearphase and !distphase and !warnphase)
+        &&
+        bullishpb
     )
 );
 
 
 def bearishpb = ( # high(period = vPeriod) > pbsma && open(period = vPeriod) < pbsma;
     !Flat
+    &&
+    (shaOpen > shaClose and (shaOpen - shaClose) > (shaOpen[1] - shaClose[1]))
     &&
     (haOpen > haClose and (haOpen - haClose) > (haOpen[1] - haClose[1]))
     #&&
@@ -355,7 +380,9 @@ def bearpb = (
     ) else if (warnphase) then (
         bearishpb
     ) else (
-        !bullphase && !accphase && !recphase && bearishpb
+        (!bullphase and !accphase and !recphase)
+        &&
+        bearishpb
     )
 );
 
@@ -415,12 +442,12 @@ def bullstp = if !useStops then 0 else (
     or
     #Max(open(period = vPeriod), close(period = vPeriod)) < pbsma # full candle close below
     #or
-    #close(period = vPeriod) < haOpen
+    #close(period = vPeriod) < shaOpen
     #or
     (
         Flat
         &&
-        (haClose < haOpen or (haClose - haOpen < haClose[1] - haOpen[1]))
+        (shaClose < shaOpen or (shaClose - shaOpen) < (shaClose[1] - shaOpen[1]))
     )
 );
 
@@ -433,12 +460,12 @@ def bearstp = if !useStops then 0 else (
     or
     #Min(open(period = vPeriod), close(period = vPeriod)) > pbsma # full candle close above
     #or
-    #close(period = vPeriod) > haOpen
+    #close(period = vPeriod) > shaOpen
     #or
     (
         Flat
         &&
-        (haOpen < haClose or (haOpen - haClose < haOpen[1] - haClose[1]))
+        (shaOpen < shaClose or (shaOpen - shaClose) < (shaOpen[1] - shaClose[1]))
     )
 );
 
