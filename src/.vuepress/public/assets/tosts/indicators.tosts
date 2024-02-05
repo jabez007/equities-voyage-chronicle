@@ -206,7 +206,8 @@ def haHigh_fall  = if haOpen >= haClose then haHigh  else double.nan;
 def haLow_fall   = if haOpen >= haClose then haLow   else double.nan;
 def haClose_fall = if haOpen >= haClose then haClose else double.nan;
 
-AddChart(growColor = Color.plum, fallColor = Color.blue, neutralColor = Color.current, high = haHigh_fall, low = haLow_fall, open = haOpen_fall, close = haClose_fall , type = ChartType.CANDLE);
+# royalBlue = createColor(65, 105, 225)
+AddChart(growColor = Color.plum, fallColor = createColor(65, 105, 225), neutralColor = Color.current, high = haHigh_fall, low = haLow_fall, open = haOpen_fall, close = haClose_fall , type = ChartType.CANDLE);
 
 #Green Candlesticks ---------------------------------------------------------------|
 
@@ -215,7 +216,8 @@ def haHigh_rise  = if haOpen <= haClose then haHigh  else double.nan;
 def haLow_rise   = if haOpen <= haClose then haLow   else double.nan;
 def haClose_rise = if haOpen <= haClose then haOpen  else double.nan;
 
-AddChart(growColor = Color.blue, fallColor = Color.plum, neutralColor = Color.current, high = haHigh_rise, low = haLow_rise, open = haOpen_rise, close = HAclose_rise, type = ChartType.CANDLE);
+# royalBlue = createColor(65, 105, 225)
+AddChart(growColor = createColor(65, 105, 225), fallColor = Color.plum, neutralColor = Color.current, high = haHigh_rise, low = haLow_rise, open = haOpen_rise, close = HAclose_rise, type = ChartType.CANDLE);
 
 
 #############################################################
