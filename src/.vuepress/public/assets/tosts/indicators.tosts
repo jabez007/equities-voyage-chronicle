@@ -48,7 +48,7 @@ AddLabel(yes, " Price Weak ", if weakPrice then Color.MAGENTA else color.black);
 
 input price = FundamentalType.CLOSE; #hint price: which value to use for the moving averages
 
-input fastavgType = AverageType.EXPONENTIAL;
+input fastavgType = AverageType.SIMPLE;
 input fastavg = 50;
 
 input slowavgType = AverageType.SIMPLE;
