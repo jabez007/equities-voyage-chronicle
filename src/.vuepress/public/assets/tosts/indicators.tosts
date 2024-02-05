@@ -176,37 +176,30 @@ addCloud(
 );
 
 ####
+
+def haClose = (open(period = vPeriod) + high(period = vPeriod) + low(period = vPeriod) + close(period = vPeriod)) / 4.0;
+def haOpen = compoundValue(1, (haOpen[1] + haClose[1]) / 2.0, (open(period = vPeriod)[1] + close(period = vPeriod)[1]) / 2.0);
+def haHigh = Max(Max(high(period = vPeriod), haOpen), haClose);
+def haLow = Min(Min(low(period = vPeriod), haOpen), haClose);
+
+####
 # Smoothed Heiken Ashi
 ####
 
 input shaPeriod = 20;
 input haMovingAverageType = AverageType.EXPONENTIAL;
-
-def openMA  = compoundValue(1, MovingAverage(haMovingAverageType, open(period = vPeriod),  shaPeriod), open(period = vPeriod));
-def closeMA = compoundValue(1, MovingAverage(haMovingAverageType, close(period = vPeriod), shaPeriod), close(period = vPeriod));
-def highMA  = compoundValue(1, MovingAverage(haMovingAverageType, high(period = vPeriod),  shaPeriod), high(period = vPeriod));
-def lowMA   = compoundValue(1, MovingAverage(haMovingAverageType, low(period = vPeriod),   shaPeriod), low(period = vPeriod));
-
 input hideCandles = no;
 hidePricePlot(hideCandles);
 
-def shaOpen;
-def shaClose;
+def openMA  = MovingAverage(haMovingAverageType, open(period = vPeriod),  shaPeriod); #compoundValue(1, , open(period = vPeriod));
+def closeMA = MovingAverage(haMovingAverageType, close(period = vPeriod), shaPeriod); #compoundValue(1, , close(period = vPeriod));
+def highMA  = MovingAverage(haMovingAverageType, high(period = vPeriod),  shaPeriod); #compoundValue(1, , high(period = vPeriod));
+def lowMA   = MovingAverage(haMovingAverageType, low(period = vPeriod),   shaPeriod); #compoundValue(1, , low(period = vPeriod));
 
-input haCandleSmoothing = {default Valcu, Vervoort};
+### Open and Close
 
-switch(haCandleSmoothing) {
-case Valcu:
-    shaOpen = CompoundValue(1, ((shaOpen[1] + (openMA[1] + highMA[1] + lowMA[1] + closeMA[1]) /4.0) / 2.0), open(period = vPeriod));
-    shaClose = ((OpenMA + HighMA + LowMA + CloseMA) / 4.0) ;
-
-case Vervoort:
-    shaOpen = CompoundValue(1, ((shaOpen[1] + (openMA[1] + highMA[1] + lowMA[1] + closeMA[1]) /4.0) / 2.0), open(period = vPeriod));
-    shaClose = ((((OpenMA + HighMA + LowMA + CloseMA) / 4.0) + shaOpen + Max(HighMA, shaOpen) + Min(LowMA, shaOpen)) / 4.0);
-}
-
-#plot hao = shaOpen + 0;
-#hao.hide();
+def shaClose = ((OpenMA + HighMA + LowMA + CloseMA) / 4.0);
+def shaOpen = CompoundValue(1, (shaOpen[1] + shaClose[1]) / 2.0, (openMA[1] + closeMA[1] / 2.0));
 
 ### Wicks and Shadows
 
@@ -262,16 +255,10 @@ def ExpL = if BarNumber() == 1 then Double.NaN else
 def BoxHigh = if !isnan(expL) and !isnan(ExpH) then ExpH else double.nan;
 def BoxLow = if !isnan(expL) and !isnan(ExpH) then ExpL else double.nan;
 
-addcloud(BoxHigh, BoxLow, color.gray, color.gray);
+addcloud(BoxHigh, BoxLow, color.gray, color.gray, yes);
 
 def Flat = if (!isNan(BoxHigh[1]) and !isNan(BoxLow[1])) and !TradeInFlatRange then 1 else 0;
 
-####
-
-def haClose = (open(period = vPeriod) + high(period = vPeriod) + low(period = vPeriod) + close(period = vPeriod)) / 4;
-def haOpen = compoundValue(1, (haOpen[1] + haClose[1]) / 2, (open(period = vPeriod)[1] + close(period = vPeriod)[1]) / 2);
-def haHigh = Max(Max(high(period = vPeriod), haOpen), haClose);
-def haLow = Min(Min(low(period = vPeriod), haOpen), haClose);
 
 ####
 # The conditions below are for possible entries when price pulls back
@@ -286,18 +273,6 @@ plot pbsma = MovingAverage(pbavgType, data = fundamental(price, period = vPeriod
 pbsma.SetDefaultColor(Color.LIME);
 pbsma.SetLineWeight(2);
 
-input MACDFastLength = 12;
-input MACDSlowLength = 26;
-input MACDLength = 9;
-input MACDAverageType = AverageType.EXPONENTIAL;
-
-def MACDline = MovingAverage(MACDAverageType, fundamental(price, period = vPeriod), MACDFastLength) - MovingAverage(MACDAverageType, fundamental(price, period = vPeriod), MACDSlowLength);
-def MACDsig = MovingAverage(MACDAverageType, MACDLine, MACDLength);
-
-def MACDhist = MACDline - MACDsig;
-
-input MACDLookback = 5;
-
 input RSILength = 14;
 input RSIAverageType = AverageType.WILDERS;
 
@@ -311,22 +286,6 @@ input avgRSIAverageType = AverageType.WILDERS;
 
 def avgRSI = MovingAverage(avgRSIAverageType, RSI, avgRSILength);
 
-input OBVLength = 7;
-input OBVSignalLength = 10;
-input OBVAverageType = AverageType.EXPONENTIAL;
-
-def obv = reference OnBalanceVolume();
-
-def OBVM = MovingAverage(OBVAverageType, obv, OBVLength);
-def OBVSignal = MovingAverage(OBVAverageType, OBVM, OBVSignalLength);
-
-input ADXLength = 14;
-input ADXAverageType = AverageType.WILDERS;
-
-def ADX = DMI(ADXLength, ADXAverageType).ADX;
-
-input ADXTrendThreshold = 20;
-
 ####
 
 def bullishpb = ( # low(period = vPeriod) < pbsma && open(period = vPeriod) > pbsma;
@@ -338,7 +297,7 @@ def bullishpb = ( # low(period = vPeriod) < pbsma && open(period = vPeriod) > pb
     &&
     (haClose > haOpen and (haClose - haOpen) > (haClose[1] - haOpen[1]))
     &&
-    ((39 < RSI && RSI < 63) and avgRSI > avgRSI[1]) # bullish but not overbought and rising RSI
+    ((45 < RSI && RSI < 69) and avgRSI > avgRSI[1]) # bullish but not overbought and rising RSI
     #&&
     #(MACDhist > 0 and Lowest(MACDhist, MACDLookback) < 0 and MACDLine > MACDLine[1]) # recent positive cross on the MACD and rising
     #&&
