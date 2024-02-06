@@ -273,6 +273,12 @@ plot pbsma = MovingAverage(pbavgType, data = fundamental(price, period = vPeriod
 pbsma.SetDefaultColor(Color.LIME);
 pbsma.SetLineWeight(2);
 
+input ROCLength = 11;
+assert(ROCLength > 0, "'ROC Length' must be positive: " + ROCLength);
+
+def ROCPrice = haClose;
+def ROC = if ROCPrice[ROCLength] != 0 then (ROCPrice / ROCPrice[ROCLength] - 1) * 100 else 0;
+
 input RSILength = 14;
 input RSIAverageType = AverageType.WILDERS;
 
@@ -293,15 +299,13 @@ def bullishpb = ( # low(period = vPeriod) < pbsma && open(period = vPeriod) > pb
     #&&
     !Flat
     &&
-    (shaClose > shaOpen and (shaClose - shaOpen) > (shaClose[1] - shaOpen[1]))
-    &&
     (haClose > haOpen and (haClose - haOpen) > (haClose[1] - haOpen[1]))
     &&
+    ROC > 0
+    &&
     ((45 < RSI && RSI < 69) and avgRSI > avgRSI[1]) # bullish but not overbought and rising RSI
-    #&&
-    #(MACDhist > 0 and Lowest(MACDhist, MACDLookback) < 0 and MACDLine > MACDLine[1]) # recent positive cross on the MACD and rising
-    #&&
-    #OBVM > OBVM[1] # On Balance Volume is rising
+    &&
+    (shaClose > shaOpen and (shaClose - shaOpen) > (shaClose[1] - shaOpen[1]))    
 );
 def bullpb = (
     if (bullphase) then (
@@ -323,15 +327,13 @@ def bearishpb = ( # high(period = vPeriod) > pbsma && open(period = vPeriod) < p
     #&&
     !Flat
     &&
-    (shaOpen > shaClose and (shaOpen - shaClose) > (shaOpen[1] - shaClose[1]))
-    &&
     (haOpen > haClose and (haOpen - haClose) > (haOpen[1] - haClose[1]))
     &&
+    ROC < 0
+    &&
     ((36 < RSI && RSI < 60) and avgRSI < avgRSI[1]) # bearish but not oversold and falling RSI
-    #&&
-    #(MACDhist < 0 and Highest(MACDhist, MACDLookback) > 0 and MACDLine < MACDLine[1]) # recent negative cross on the MACD and falling
-    #&&
-    #OBVM < OBVM[1] # On Balance Volume is falling
+    &&
+    (shaOpen > shaClose and (shaOpen - shaClose) > (shaOpen[1] - shaClose[1]))
 );
 def bearpb = (
     if (bearphase) then (
@@ -394,11 +396,11 @@ DT9.AssignValueColor(if DT9 < 9 then Color.MAGENTA else Color.CYAN);
 
 ####
 
-def bullstp = if !useStops then 0 else (
+def bullstp = (
     0
 );
 
-def bearstp = if !useStops then 0 else (
+def bearstp = (
     0
 );
 
@@ -457,7 +459,7 @@ if ((BarNumber() == 1) OR isNaN(CurrentPosition[1])) {
         if (bearpb){
             CurrentPosition = -1;
             trail = close(period = vPeriod) + loss;
-        } else if (bullstp or close(period = vPeriod) <= trail[1]){
+        } else if (useStops and (bullstp or close(period = vPeriod) <= trail[1])){
             CurrentPosition = 0;
             trail = Double.NaN;
         } else {
@@ -468,7 +470,7 @@ if ((BarNumber() == 1) OR isNaN(CurrentPosition[1])) {
         if (bullpb){
             CurrentPosition = 1;
             trail = close(period = vPeriod) - loss;
-        } else if (bearstp or close(period = vPeriod) >= trail[1]){
+        } else if (useStops and (bearstp or close(period = vPeriod) >= trail[1])){
             CurrentPosition = 0;
             trail = Double.NaN;
         } else {
@@ -510,13 +512,13 @@ Alert(SellSig and useAlerts, "Sell Signal", Alert.bar, sound.Ding);
 Alert(SellSig and useAlerts, "Sell Signal", Alert.bar, sound.Ding);
 
 # If long and get a BuyStop
-Plot BuyStpSig = if ((bullstp or close(period = vPeriod) <= trail[1]) and isLong[1]) then 1 else 0;
+Plot BuyStpSig = if (useStops and (bullstp or close(period = vPeriod) <= trail[1]) and isLong[1]) then 1 else 0;
 BuyStpSig.AssignValueColor(color.LIGHT_GRAY);
 BuyStpSig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
 BuyStpSig.SetLineWeight(3);
 
 # If short and get a SellStop
-Plot SellStpSig = if ((bearstp or close(period = vPeriod) >= trail[1]) and isShort[1]) then 1 else 0;
+Plot SellStpSig = if (useStops and (bearstp or close(period = vPeriod) >= trail[1]) and isShort[1]) then 1 else 0;
 SellStpSig.AssignValueColor(color.LIGHT_GRAY);
 SellStpSig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
 SellStpSig.SetLineWeight(3);
