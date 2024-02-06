@@ -404,7 +404,7 @@ def bearstp = if !useStops then 0 else (
 
 ####
 
-input trailType = {default modified, unmodified};
+input trailType = {default modified, heikinashi, unmodified};
 input ATRPeriod = 5;
 input ATRFactor = 2.9;
 input ATRAverageType = AverageType.WILDERS;
@@ -423,6 +423,8 @@ def trueRange;
 switch (trailType) {
     case modified:
         trueRange = Max(HiLo, Max(HRef, LRef));
+    case heikinashi:
+        trueRange = TrueRange(haHigh, haClose, haLow);
     case unmodified:
         trueRange = TrueRange(high(period = vPeriod), close(period = vPeriod), low(period = vPeriod));
 }
