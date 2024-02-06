@@ -356,12 +356,6 @@ def bearpb = (
 
 input useStops = yes;
 
-input stplength = 3;
-input stpdisplace = -1;
-
-def stpDailyHigh = Highest(high(period = vPeriod)[-stpdisplace], stplength);
-def stpDailyLow = Lowest(low(period = vPeriod)[-stpdisplace], stplength);
-
 def UT9X = compoundValue(1, if (close(period = vPeriod) > close(period = vPeriod)[4]) then UT9X[1] + 1 else 0, 0);
 plot UT9 = (
     if (UT9X == 1 && !isNaN(UT9X[-8]) && UT9X[-8] == 9) then UT9X
@@ -459,7 +453,7 @@ if ((BarNumber() == 1) OR isNaN(CurrentPosition[1])) {
         if (bearpb){
             CurrentPosition = -1;
             trail = close(period = vPeriod) + loss;
-        } else if (useStops and (bullstp or close(period = vPeriod) <= trail[1])){
+        } else if (useStops and (bullstp or close(period = vPeriod) < trail[1])){
             CurrentPosition = 0;
             trail = Double.NaN;
         } else {
@@ -470,7 +464,7 @@ if ((BarNumber() == 1) OR isNaN(CurrentPosition[1])) {
         if (bullpb){
             CurrentPosition = 1;
             trail = close(period = vPeriod) - loss;
-        } else if (useStops and (bearstp or close(period = vPeriod) >= trail[1])){
+        } else if (useStops and (bearstp or close(period = vPeriod) > trail[1])){
             CurrentPosition = 0;
             trail = Double.NaN;
         } else {
@@ -512,13 +506,13 @@ Alert(SellSig and useAlerts, "Sell Signal", Alert.bar, sound.Ding);
 Alert(SellSig and useAlerts, "Sell Signal", Alert.bar, sound.Ding);
 
 # If long and get a BuyStop
-Plot BuyStpSig = if (useStops and (bullstp or close(period = vPeriod) <= trail[1]) and isLong[1]) then 1 else 0;
+Plot BuyStpSig = if (useStops and (bullstp or close(period = vPeriod) < trail[1]) and isLong[1]) then 1 else 0;
 BuyStpSig.AssignValueColor(color.LIGHT_GRAY);
 BuyStpSig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
 BuyStpSig.SetLineWeight(3);
 
 # If short and get a SellStop
-Plot SellStpSig = if (useStops and (bearstp or close(period = vPeriod) >= trail[1]) and isShort[1]) then 1 else 0;
+Plot SellStpSig = if (useStops and (bearstp or close(period = vPeriod) > trail[1]) and isShort[1]) then 1 else 0;
 SellStpSig.AssignValueColor(color.LIGHT_GRAY);
 SellStpSig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
 SellStpSig.SetLineWeight(3);
