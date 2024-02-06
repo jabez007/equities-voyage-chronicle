@@ -161,12 +161,11 @@ def warnphase = (
 ####
 
 input bPeriod = AggregationPeriod.WEEK;
-input bSource = FundamentalType.CLOSE;
 input bullSMALength = 20;
 input bullEMALength = 21;
 
-def bullSMA = Average(fundamental(bSource, period = bPeriod), bullSMALength);
-def bullEMA = ExpAverage(fundamental(bSource, period = bPeriod), bullEMALength);
+def bullSMA = Average(fundamental(price, period = bPeriod), bullSMALength);
+def bullEMA = ExpAverage(fundamental(price, period = bPeriod), bullEMALength);
 
 addCloud(
     bullSMA,
@@ -177,10 +176,10 @@ addCloud(
 
 ####
 
-def haClose = (open(period = vPeriod) + high(period = vPeriod) + low(period = vPeriod) + close(period = vPeriod)) / 4.0;
-def haOpen = compoundValue(1, (haOpen[1] + haClose[1]) / 2.0, (open(period = vPeriod)[1] + close(period = vPeriod)[1]) / 2.0);
-def haHigh = Max(Max(high(period = vPeriod), haOpen), haClose);
-def haLow = Min(Min(low(period = vPeriod), haOpen), haClose);
+def haClose = (O + H + L + C) / 4.0;
+def haOpen = compoundValue(1, (haOpen[1] + haClose[1]) / 2.0, (O[1] + C[1]) / 2.0);
+def haHigh = Max(Max(H, haOpen), haClose);
+def haLow = Min(Min(L, haOpen), haClose);
 
 ####
 # Smoothed Heiken Ashi
@@ -191,10 +190,10 @@ input haMovingAverageType = AverageType.EXPONENTIAL;
 input hideCandles = no;
 hidePricePlot(hideCandles);
 
-def openMA  = MovingAverage(haMovingAverageType, open(period = vPeriod),  shaPeriod); #compoundValue(1, , open(period = vPeriod));
-def closeMA = MovingAverage(haMovingAverageType, close(period = vPeriod), shaPeriod); #compoundValue(1, , close(period = vPeriod));
-def highMA  = MovingAverage(haMovingAverageType, high(period = vPeriod),  shaPeriod); #compoundValue(1, , high(period = vPeriod));
-def lowMA   = MovingAverage(haMovingAverageType, low(period = vPeriod),   shaPeriod); #compoundValue(1, , low(period = vPeriod));
+def openMA  = MovingAverage(haMovingAverageType, O,  shaPeriod); #compoundValue(1, , O);
+def closeMA = MovingAverage(haMovingAverageType, C, shaPeriod); #compoundValue(1, , C);
+def highMA  = MovingAverage(haMovingAverageType, H,  shaPeriod); #compoundValue(1, , H);
+def lowMA   = MovingAverage(haMovingAverageType, L,   shaPeriod); #compoundValue(1, , L);
 
 ### Open and Close
 
@@ -298,7 +297,7 @@ input MFIAverageType = AverageType.SIMPLE;
 
 def MoneyFlowIndex = MovingAverage(
     MFIAverageType,
-    moneyflow(high(period = vPeriod), close(period = vPeriod), low(period = vPeriod), volume(period = vPeriod), MFLength),
+    moneyflow(H, C, L, V, MFLength),
     MFILength
 );
 
@@ -309,8 +308,8 @@ def avgMFI = MovingAverage(avgMFIAverageType, MoneyFlowIndex, avgMFILength);
 
 ####
 
-def bullishpb = ( # low(period = vPeriod) < pbsma && open(period = vPeriod) > pbsma;
-    #Min(open(period = vPeriod), close(period = vPeriod)) >= pbsma # full candle close above
+def bullishpb = ( # L < pbsma && O > pbsma;
+    #Min(O, C) >= pbsma # full candle close above
     #&&
     !Flat
     &&
@@ -338,9 +337,8 @@ def bullpb = (
     )
 );
 
-
-def bearishpb = ( # high(period = vPeriod) > pbsma && open(period = vPeriod) < pbsma;
-    #Max(open(period = vPeriod), close(period = vPeriod)) <= pbsma # full candle close below
+def bearishpb = ( # H > pbsma && O < pbsma;
+    #Max(O, C) <= pbsma # full candle close below
     #&&
     !Flat
     &&
@@ -375,7 +373,7 @@ def bearpb = (
 
 input useStops = yes;
 
-def UT9X = compoundValue(1, if (close(period = vPeriod) > close(period = vPeriod)[4]) then UT9X[1] + 1 else 0, 0);
+def UT9X = compoundValue(1, if (C > C[4]) then UT9X[1] + 1 else 0, 0);
 plot UT9 = (
     if (UT9X == 1 && !isNaN(UT9X[-8]) && UT9X[-8] == 9) then UT9X
     else if (UT9X == 2 && !isNaN(UT9X[-7]) && UT9X[-7] == 9) then UT9X
@@ -391,7 +389,7 @@ plot UT9 = (
 UT9.SetPaintingStrategy(PaintingStrategy.Values_Above);
 UT9.AssignValueColor(if UT9 < 9 then Color.CYAN else Color.MAGENTA);
 
-def DT9X = compoundValue(1, if (close(period = vPeriod) < close(period = vPeriod)[4]) then DT9X[1] + 1 else 0, 0);
+def DT9X = compoundValue(1, if (C < C[4]) then DT9X[1] + 1 else 0, 0);
 plot DT9 = (
     if (DT9X == 1 && !isNaN(DT9X[-8]) && DT9X[-8] == 9) then DT9X
     else if (DT9X == 2 && !isNaN(DT9X[-7]) && DT9X[-7] == 9) then DT9X
@@ -426,13 +424,13 @@ input ATRAverageType = AverageType.WILDERS;
 
 Assert(ATRFactor > 0, "'atr factor' must be positive: " + ATRFactor);
 
-def HiLo = Min(high(period = vPeriod) - low(period = vPeriod), 1.5 * Average(high(period = vPeriod) - low(period = vPeriod), ATRPeriod));
-def HRef = if low(period = vPeriod) <= high(period = vPeriod)[1]
-    then high(period = vPeriod) - close(period = vPeriod)[1]
-    else (high(period = vPeriod) - close(period = vPeriod)[1]) - 0.5 * (low(period = vPeriod) - high(period = vPeriod)[1]);
-def LRef = if high(period = vPeriod) >= low(period = vPeriod)[1]
-    then close(period = vPeriod)[1] - low(period = vPeriod)
-    else (close(period = vPeriod)[1] - low(period = vPeriod)) - 0.5 * (low(period = vPeriod)[1] - high(period = vPeriod));
+def HiLo = Min(H - L, 1.5 * Average(H - L, ATRPeriod));
+def HRef = if L <= H[1]
+    then H - C[1]
+    else (H - C[1]) - 0.5 * (L - H[1]);
+def LRef = if H >= L[1]
+    then C[1] - L
+    else (C[1] - L) - 0.5 * (L[1] - H);
 
 def trueRange;
 switch (trailType) {
@@ -441,7 +439,7 @@ switch (trailType) {
     case heikinashi:
         trueRange = TrueRange(haHigh, haClose, haLow);
     case unmodified:
-        trueRange = TrueRange(high(period = vPeriod), close(period = vPeriod), low(period = vPeriod));
+        trueRange = TrueRange(H, C, L);
 }
 def loss = ATRFactor * MovingAverage(ATRAverageType, trueRange, ATRPeriod);
 
@@ -460,10 +458,10 @@ if ((BarNumber() == 1) OR isNaN(CurrentPosition[1])) {
     if (CurrentPosition[1] == 0) {               # FLAT
         if (bullpb) {
             CurrentPosition = 1;
-            trail = close(period = vPeriod) - loss;
+            trail = C - loss;
         } else if (bearpb){
             CurrentPosition = -1;
-            trail = close(period = vPeriod) + loss;
+            trail = C + loss;
         } else {
             CurrentPosition = CurrentPosition[1];
             trail = trail[1];
@@ -471,24 +469,24 @@ if ((BarNumber() == 1) OR isNaN(CurrentPosition[1])) {
     } else if (CurrentPosition[1] == 1) {        # LONG
         if (bearpb){
             CurrentPosition = -1;
-            trail = close(period = vPeriod) + loss;
-        } else if (useStops and (bullstp or close(period = vPeriod) < trail[1])){
+            trail = C + loss;
+        } else if (useStops and (bullstp or C < trail[1])){
             CurrentPosition = 0;
             trail = Double.NaN;
         } else {
             CurrentPosition = CurrentPosition[1];
-            trail = Max(trail[1], close(period = vPeriod) - loss);
+            trail = Max(trail[1], C - loss);
         }
     } else if (CurrentPosition[1] == -1) {       # SHORT
         if (bullpb){
             CurrentPosition = 1;
-            trail = close(period = vPeriod) - loss;
-        } else if (useStops and (bearstp or close(period = vPeriod) > trail[1])){
+            trail = C - loss;
+        } else if (useStops and (bearstp or C > trail[1])){
             CurrentPosition = 0;
             trail = Double.NaN;
         } else {
             CurrentPosition = CurrentPosition[1];
-            trail = Min(trail[1], close(period = vPeriod) + loss);
+            trail = Min(trail[1], C + loss);
         }
     } else {
         CurrentPosition = CurrentPosition[1];
@@ -525,13 +523,13 @@ Alert(SellSig and useAlerts, "Sell Signal", Alert.bar, sound.Ding);
 Alert(SellSig and useAlerts, "Sell Signal", Alert.bar, sound.Ding);
 
 # If long and get a BuyStop
-Plot BuyStpSig = if (useStops and (bullstp or close(period = vPeriod) < trail[1]) and isLong[1]) then 1 else 0;
+Plot BuyStpSig = if (useStops and (bullstp or C < trail[1]) and isLong[1]) then 1 else 0;
 BuyStpSig.AssignValueColor(color.LIGHT_GRAY);
 BuyStpSig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
 BuyStpSig.SetLineWeight(3);
 
 # If short and get a SellStop
-Plot SellStpSig = if (useStops and (bearstp or close(period = vPeriod) > trail[1]) and isShort[1]) then 1 else 0;
+Plot SellStpSig = if (useStops and (bearstp or C > trail[1]) and isShort[1]) then 1 else 0;
 SellStpSig.AssignValueColor(color.LIGHT_GRAY);
 SellStpSig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
 SellStpSig.SetLineWeight(3);
@@ -587,7 +585,7 @@ addlabel(yes, "            ", color.BLACK);
 def isOrder = if CurrentPosition == CurrentPosition[1] then 0 else 1; # Position changed so it's a new order
 
 # If there is an order to open, then the price is the next day's open
-def orderPrice = if (isOrder and (bullpb or bearpb)) then open(period = vPeriod)[-1] else orderPrice[1];
+def orderPrice = if (isOrder and (bullpb or bearpb)) then O[-1] else orderPrice[1];
 
 
 #######################################
@@ -600,9 +598,9 @@ if (!isOrder or orderPrice[1] == 0){
     profitLoss = 0;
 # If there is an order to close, 
 } else if ((isOrder and isLong[1]) and (SellSig or BuyStpSig)){
-    profitLoss = (if (isNaN(open(period = vPeriod)[-1])) then close(period = vPeriod) else open(period = vPeriod)[-1])  - orderPrice[1]; # then the price is the next day's open
+    profitLoss = (if (isNaN(O[-1])) then C else O[-1])  - orderPrice[1]; # then the price is the next day's open
 } else if ((isOrder and isShort[1]) and (BuySig or SellStpSig)) {
-    profitLoss = orderPrice[1] - (if (isNaN(open(period = vPeriod)[-1])) then close(period = vPeriod) else open(period = vPeriod)[-1]); # then the price is the next day's open
+    profitLoss = orderPrice[1] - (if (isNaN(O[-1])) then C else O[-1]); # then the price is the next day's open
 } else {
     profitLoss = 0;
 }
@@ -649,7 +647,7 @@ def avgTrade = round((dollarPLSum/orderCount),2);
 
 input showLabels = yes;
 
-AddLabel(showLabels, GetSymbol()+" Tick Size: "+TickSize()+" Value: "+TickValue()+" HODL: "+AsDollars(close(period = vPeriod)-First(open(period = vPeriod))), color.white);
+AddLabel(showLabels, GetSymbol()+" Tick Size: "+TickSize()+" Value: "+TickValue()+" HODL: "+AsDollars(C-First(O)), color.white);
 AddLabel(showLabels, "Closed Orders: " + orderCount + " P/L: " + AsDollars(dollarPLSum), if dollarPLSum > 0 then Color.GREEN else if dollarPLSum< 0 then Color.RED else Color.GRAY);
 AddLabel(if !IsNan(orderPrice) and showLabels then 1 else 0, "Closed+Open P/L: "+ AsDollars(TradePL+dollarPLSum), if ((TradePL+dollarPLSum) > 0) then color.green else if ((TradePL+dollarPLSum) < 0) then color.red else color.gray);
 
