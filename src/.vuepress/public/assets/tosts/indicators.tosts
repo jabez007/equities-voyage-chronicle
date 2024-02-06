@@ -292,6 +292,21 @@ input avgRSIAverageType = AverageType.WILDERS;
 
 def avgRSI = MovingAverage(avgRSIAverageType, RSI, avgRSILength);
 
+input MFLength = 14;
+input MFILength = 1;
+input MFIAverageType = AverageType.SIMPLE;
+
+def MoneyFlowIndex = MovingAverage(
+    MFIAverageType,
+    moneyflow(high(period = vPeriod), close(period = vPeriod), low(period = vPeriod), volume(period = vPeriod), MFLength),
+    MFILength
+);
+
+input avgMFILength = 3;
+input avgMFIAverageType = AverageType.WILDERS;
+
+def avgMFI = MovingAverage(avgMFIAverageType, MoneyFlowIndex, avgMFILength);
+
 ####
 
 def bullishpb = ( # low(period = vPeriod) < pbsma && open(period = vPeriod) > pbsma;
@@ -305,6 +320,8 @@ def bullishpb = ( # low(period = vPeriod) < pbsma && open(period = vPeriod) > pb
     &&
     ((45 < RSI && RSI < 69) and avgRSI > avgRSI[1]) # bullish but not overbought and rising RSI
     &&
+    #avgMFI > avgMFI[1]
+    #&&
     (shaClose > shaOpen and (shaClose - shaOpen) > (shaClose[1] - shaOpen[1]))    
 );
 def bullpb = (
@@ -333,6 +350,8 @@ def bearishpb = ( # high(period = vPeriod) > pbsma && open(period = vPeriod) < p
     &&
     ((36 < RSI && RSI < 60) and avgRSI < avgRSI[1]) # bearish but not oversold and falling RSI
     &&
+    #avgMFI < avgMFI[1]
+    #&&
     (shaOpen > shaClose and (shaOpen - shaClose) > (shaOpen[1] - shaClose[1]))
 );
 def bearpb = (
