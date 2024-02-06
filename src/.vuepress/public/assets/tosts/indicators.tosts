@@ -203,8 +203,8 @@ def shaOpen = CompoundValue(1, (shaOpen[1] + shaClose[1]) / 2.0, (openMA[1] + cl
 
 ### Wicks and Shadows
 
-def shaLow = min(lowMA, shaOpen);
-def shaHigh = max(highMA, shaOpen);
+def shaLow = Min(Min(lowMA, shaOpen), shaClose);
+def shaHigh = Max(Max(highMA, shaOpen), shaClose);
 
 #Red Candlesticks -----------------------------------------------------------------|
 
