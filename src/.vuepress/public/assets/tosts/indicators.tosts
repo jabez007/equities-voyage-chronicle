@@ -51,9 +51,6 @@ input price = FundamentalType.CLOSE; #hint price: which value to use for the mov
 input fastavgType = AverageType.SIMPLE;
 input fastavg = 50;
 
-input slowavgType = AverageType.SIMPLE;
-input slowavg = 200;
-
 plot fastsma = MovingAverage(fastavgType, fundamental(price, period = vPeriod), fastavg);
 fastsma.SetDefaultColor(Color.DARK_ORANGE);
 fastsma.SetLineWeight(3);
@@ -61,12 +58,33 @@ fastsma.SetLineWeight(3);
 def fastsmaheight = fastsma - fastsma[1];
 def fastsmaAngle = Atan(fastsmaheight) * 180 / Double.Pi;
 
+def fastOpenMA  = MovingAverage(fastavgType, open(period = vPeriod),  fastavg);
+def fastCloseMA = MovingAverage(fastavgType, close(period = vPeriod), fastavg);
+def fastHighMA  = MovingAverage(fastavgType, high(period = vPeriod),  fastavg);
+def fastLowMA   = MovingAverage(fastavgType, low(period = vPeriod),   fastavg);
+
+def fastHAClose = ((fastOpenMA + fastHighMA + fastLowMA + fastCloseMA) / 4.0);
+def fastHAOpen  = CompoundValue(1, (fastHAOpen[1] + fastHAClose[1]) / 2.0, (fastOpenMA[1] + fastCloseMA[1]) / 2.0);
+
+####
+
+input slowavgType = AverageType.SIMPLE;
+input slowavg = 200;
+
 plot slowsma = MovingAverage(slowavgType, fundamental(price, period = vPeriod), slowavg);
 slowsma.SetDefaultColor(Color.YELLOW);
 slowsma.SetLineWeight(5);
 
 def slowsmaheight = slowsma - slowsma[1];
 def slowsmaAngle = Atan(slowsmaheight) * 180 / Double.Pi;
+
+def slowOpenMA  = MovingAverage(slowavgType, open(period = vPeriod),  slowavg);
+def slowCloseMA = MovingAverage(slowavgType, close(period = vPeriod), slowavg);
+def slowHighMA  = MovingAverage(slowavgType, high(period = vPeriod),  slowavg);
+def slowLowMA   = MovingAverage(slowavgType, low(period = vPeriod),   slowavg);
+
+def slowHAClose = ((slowOpenMA + slowHighMA + slowLowMA + slowCloseMA) / 4.0);
+def slowHAOpen  = CompoundValue(1, (slowHAOpen[1] + slowHAClose[1]) / 2.0, (slowOpenMA[1] + slowCloseMA[1]) / 2.0);
 
 
 ####
@@ -80,6 +98,8 @@ def bullphase = (
     &&
     (fastsmaAngle > 0) && (slowsmaAngle > 0)
     && 
+    #(fastHAClose > fastHAOpen) and (slowHAClose > slowHAOpen)
+    #&&
     fundamental(price, period = vPeriod) > fastsma 
     &&
     fundamental(price, period = vPeriod) > slowsma
@@ -92,6 +112,8 @@ def accphase = (
     &&
     (fastsmaAngle > 0) && (slowsmaAngle >= 0)
     &&
+    #(fastHAClose > fastHAOpen) and (slowHAClose >= slowHAOpen)
+    #&&
     fundamental(price, period = vPeriod) > fastsma
     &&
     fundamental(price, period = vPeriod) > slowsma
@@ -104,6 +126,8 @@ def recphase = (
     &&
     (fastsmaAngle >= 0) && (slowsmaAngle < 0)
     &&
+    #(fastHAClose >= fastHAOpen) and (slowHAClose < slowHAOpen)
+    #&&
     fundamental(price, period = vPeriod) < slowsma
     &&
     fundamental(price, period = vPeriod) > fastsma
@@ -121,6 +145,8 @@ def bearphase = (
     &&
     (fastsmaAngle < 0) && (slowsmaAngle < 0)
     &&
+    #(fastHAClose < fastHAOpen) and (slowHAClose < fastHAOpen)
+    #&&
     fundamental(price, period = vPeriod) < fastsma
     &&
     fundamental(price, period = vPeriod) < slowsma
@@ -133,6 +159,8 @@ def distphase = (
     &&
     (fastsmaAngle < 0) && (slowsmaAngle <= 0)
     &&
+    #(fastHAClose < fastHAOpen) and (slowHAClose <= slowHAOpen)
+    #&&
     fundamental(price, period = vPeriod) < fastsma
     &&
     fundamental(price, period = vPeriod) < slowsma
@@ -145,6 +173,8 @@ def warnphase = (
     &&
     (fastsmaAngle <= 0) && (slowsmaAngle > 0)
     &&
+    #(fastHAClose <= fastHAOpen) and (slowHAClose > slowHAOpen) 
+    #&&
     fundamental(price, period = vPeriod) > slowsma
     &&
     fundamental(price, period = vPeriod) < fastsma
@@ -161,6 +191,10 @@ def warnphase = (
 ####
 
 input bullPeriod = AggregationPeriod.WEEK;
+
+def bullHAClose = (open(period = bullPeriod) + high(period = bullPeriod) + low(period = bullPeriod) + close(period = bullPeriod)) / 4.0;
+def bullHAOpen = compoundValue(1, (bullHAOpen[1] + bullHAClose[1]) / 2.0, (open(period = bullPeriod)[1] + close(period = bullPeriod)[1]) / 2.0);
+
 input bullLength = 20;
 input bullAvgType = AverageType.EXPONENTIAL;
 
@@ -169,14 +203,14 @@ def bullCloseMA = MovingAverage(bullAvgType, close(period = bullPeriod), bullLen
 def bullHighMA  = MovingAverage(bullAvgType, high(period = bullPeriod),  bullLength);
 def bullLowMA   = MovingAverage(bullAvgType, low(period = bullPeriod),   bullLength);
 
-def bullHAClose = ((bullOpenMA + bullHighMA + bullLowMA + bullCloseMA) / 4.0);
-def _bullHAOpen  = CompoundValue(1, (_bullHAOpen[1] + bullHAClose[1]) / 2.0, (bullOpenMA[1] + bullCloseMA[1]) / 2.0);
-plot bullHAOpen = _bullHAOpen;
-bullHAOpen.hide();
+def bullSHAClose = ((bullOpenMA + bullHighMA + bullLowMA + bullCloseMA) / 4.0);
+def _bullSHAOpen  = CompoundValue(1, (_bullSHAOpen[1] + bullSHAClose[1]) / 2.0, (bullOpenMA[1] + bullCloseMA[1]) / 2.0);
+plot bullSHAOpen = _bullSHAOpen;
+bullSHAOpen.hide();
 
 addCloud(
-    bullHAOpen,
-    bullHAClose,
+    bullSHAOpen,
+    bullSHAClose,
     color.RED,
     color.GREEN
 );
@@ -322,13 +356,17 @@ def bullishpb = ( # L < pbsma && O > pbsma;
     &&
     (haClose > haOpen and (haClose - haOpen) > (haClose[1] - haOpen[1]))
     &&
+    (shaClose > shaOpen and (shaClose - shaOpen) > (shaClose[1] - shaOpen[1]))
+    #&&
+    #(bullHAClose > bullHAOpen and (bullHAClose - bullHAOpen) > (bullHAClose[1] - bullHAOpen[1]))
+    #&&
+    #(bullSHAClose > bullSHAOpen) #and (bullSHAClose - bullSHAOpen) > (bullSHAClose[1] - bullSHAOpen[1]))
+    &&
     ROC > 0
     &&
     ((45 < RSI && RSI < 69) and avgRSI > avgRSI[1]) # bullish but not overbought and rising RSI
-    &&
-    #avgMFI > avgMFI[1]
     #&&
-    (shaClose > shaOpen and (shaClose - shaOpen) > (shaClose[1] - shaOpen[1]))    
+    #avgMFI > avgMFI[1]
 );
 def bullpb = (
     if (bullphase) then (
@@ -351,13 +389,17 @@ def bearishpb = ( # H > pbsma && O < pbsma;
     &&
     (haOpen > haClose and (haOpen - haClose) > (haOpen[1] - haClose[1]))
     &&
+    (shaOpen > shaClose and (shaOpen - shaClose) > (shaOpen[1] - shaClose[1]))
+    #&&
+    #(bullHAOpen > bullHAClose and (bullHAOpen - bullHAClose) > (bullHAOpen[1] - bullHAClose[1]))
+    #&&
+    #(bullSHAOpen > bullSHAClose) #and (bullSHAOpen - bullSHAClose) > (bullSHAOpen[1] - bullSHAClose[1]))
+    &&
     ROC < 0
     &&
     ((36 < RSI && RSI < 60) and avgRSI < avgRSI[1]) # bearish but not oversold and falling RSI
-    &&
+    #&
     #avgMFI < avgMFI[1]
-    #&&
-    (shaOpen > shaClose and (shaOpen - shaClose) > (shaOpen[1] - shaClose[1]))
 );
 def bearpb = (
     if (bearphase) then (
