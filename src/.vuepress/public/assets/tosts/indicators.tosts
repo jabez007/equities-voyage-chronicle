@@ -160,16 +160,23 @@ def warnphase = (
 #plot wphase = warnphase is true;
 ####
 
-input bPeriod = AggregationPeriod.WEEK;
-input bullSMALength = 20;
-input bullEMALength = 21;
+input bullPeriod = AggregationPeriod.WEEK;
+input bullLength = 20;
+input bullAvgType = AverageType.EXPONENTIAL;
 
-def bullSMA = Average(fundamental(price, period = bPeriod), bullSMALength);
-def bullEMA = ExpAverage(fundamental(price, period = bPeriod), bullEMALength);
+def bullOpenMA  = MovingAverage(bullAvgType, open(period = bullPeriod),  bullLength);
+def bullCloseMA = MovingAverage(bullAvgType, close(period = bullPeriod), bullLength);
+def bullHighMA  = MovingAverage(bullAvgType, high(period = bullPeriod),  bullLength);
+def bullLowMA   = MovingAverage(bullAvgType, low(period = bullPeriod),   bullLength);
+
+def bullHAClose = ((bullOpenMA + bullHighMA + bullLowMA + bullCloseMA) / 4.0);
+def _bullHAOpen  = CompoundValue(1, (_bullHAOpen[1] + bullHAClose[1]) / 2.0, (bullOpenMA[1] + bullCloseMA[1]) / 2.0);
+plot bullHAOpen = _bullHAOpen;
+bullHAOpen.hide();
 
 addCloud(
-    bullSMA,
-    bullEMA,
+    bullHAOpen,
+    bullHAClose,
     color.RED,
     color.GREEN
 );
@@ -185,20 +192,20 @@ def haLow = Min(Min(L, haOpen), haClose);
 # Smoothed Heiken Ashi
 ####
 
-input shaPeriod = 20;
+input shaLength = 20;
 input haMovingAverageType = AverageType.EXPONENTIAL;
 input hideCandles = no;
 hidePricePlot(hideCandles);
 
-def openMA  = MovingAverage(haMovingAverageType, O,  shaPeriod); #compoundValue(1, , O);
-def closeMA = MovingAverage(haMovingAverageType, C, shaPeriod); #compoundValue(1, , C);
-def highMA  = MovingAverage(haMovingAverageType, H,  shaPeriod); #compoundValue(1, , H);
-def lowMA   = MovingAverage(haMovingAverageType, L,   shaPeriod); #compoundValue(1, , L);
+def openMA  = MovingAverage(haMovingAverageType, O,  shaLength); #compoundValue(1, , O);
+def closeMA = MovingAverage(haMovingAverageType, C, shaLength); #compoundValue(1, , C);
+def highMA  = MovingAverage(haMovingAverageType, H,  shaLength); #compoundValue(1, , H);
+def lowMA   = MovingAverage(haMovingAverageType, L,   shaLength); #compoundValue(1, , L);
 
 ### Open and Close
 
 def shaClose = ((OpenMA + HighMA + LowMA + CloseMA) / 4.0);
-def shaOpen = CompoundValue(1, (shaOpen[1] + shaClose[1]) / 2.0, (openMA[1] + closeMA[1] / 2.0));
+def shaOpen = CompoundValue(1, (shaOpen[1] + shaClose[1]) / 2.0, (openMA[1] + closeMA[1]) / 2.0);
 
 ### Wicks and Shadows
 
