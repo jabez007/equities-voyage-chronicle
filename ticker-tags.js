@@ -177,4 +177,10 @@ module.exports = {
   - sector
   - equities
 `.trim(),
+
+    LQD: `
+  - investment grade
+  - corporate
+  - bonds
+`.trim(),
 }
