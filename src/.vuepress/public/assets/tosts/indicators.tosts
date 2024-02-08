@@ -68,8 +68,8 @@ fastMA.SetLineWeight(3);
 def Fast_MA_Height = fastMA - fastMA[1];
 def Fast_MA_Angle  = Atan(Fast_MA_Height) * 180 / Double.Pi;
 
-def HA_Close_Fast_MA = (Fast_MA_HA_Open + Fast_MA_HA_High + Fast_MA_HA_Low + Fast_MA_HA_Close) / 4.0;
-def HA_Open_Fast_MA  = if IsNaN(HA_Open_Fast_MA[1]) then (Fast_MA_HA_Open + Fast_MA_HA_Close) / 2.0 else (HA_Open_Fast_MA[1] + HA_Close_Fast_MA[1]) / 2.0;
+#def HA_Close_Fast_MA = (Fast_MA_HA_Open + Fast_MA_HA_High + Fast_MA_HA_Low + Fast_MA_HA_Close) / 4.0;
+#def HA_Open_Fast_MA  = if IsNaN(HA_Open_Fast_MA[1]) then (Fast_MA_HA_Open + Fast_MA_HA_Close) / 2.0 else (HA_Open_Fast_MA[1] + HA_Close_Fast_MA[1]) / 2.0;
 
 ####
 
@@ -88,8 +88,8 @@ slowMA.SetLineWeight(5);
 def Slow_MA_Height = slowMA - slowMA[1];
 def Slow_MA_Angle = Atan(Slow_MA_Height) * 180 / Double.Pi;
 
-def HA_Close_Slow_MA = (Slow_MA_HA_Open + Slow_MA_HA_High + Slow_MA_HA_Low + Slow_MA_HA_Close) / 4.0;
-def HA_Open_Slow_MA  = if IsNaN(HA_Open_Slow_MA[1]) then (Slow_MA_HA_Open + Slow_MA_HA_Close) / 2.0 else (HA_Open_Slow_MA[1] + HA_Close_Slow_MA[1]) / 2.0;
+#def HA_Close_Slow_MA = (Slow_MA_HA_Open + Slow_MA_HA_High + Slow_MA_HA_Low + Slow_MA_HA_Close) / 4.0;
+#def HA_Open_Slow_MA  = if IsNaN(HA_Open_Slow_MA[1]) then (Slow_MA_HA_Open + Slow_MA_HA_Close) / 2.0 else (HA_Open_Slow_MA[1] + HA_Close_Slow_MA[1]) / 2.0;
 
 
 ####
@@ -250,45 +250,40 @@ HA_Open_Bull_MA.hide();
 # Smoothed Heiken Ashi
 ####
 
-input shaLength = 20;
-input haMovingAverageType = AverageType.EXPONENTIAL;
-input hideCandles = no;
-hidePricePlot(hideCandles);
+input HA_Avg_Length = 20;
+input HA_Avg_Type   = AverageType.EXPONENTIAL;
 
-def openMA  = MovingAverage(haMovingAverageType, O,  shaLength); #compoundValue(1, , O);
-def closeMA = MovingAverage(haMovingAverageType, C, shaLength); #compoundValue(1, , C);
-def highMA  = MovingAverage(haMovingAverageType, H,  shaLength); #compoundValue(1, , H);
-def lowMA   = MovingAverage(haMovingAverageType, L,   shaLength); #compoundValue(1, , L);
+def MA_HA_Close = MovingAverage(HA_Avg_Type, HA_Close, HA_Avg_Length);
+def MA_HA_Open  = MovingAverage(HA_Avg_Type, HA_Open,  HA_Avg_Length);
+def MA_HA_High  = MovingAverage(HA_Avg_Type, HA_High,  HA_Avg_Length);
+def MA_HA_Low   = MovingAverage(HA_Avg_Type, HA_Low,   HA_Avg_Length);
 
-### Open and Close
+####
 
-def shaClose = ((OpenMA + HighMA + LowMA + CloseMA) / 4.0);
-def shaOpen = CompoundValue(1, (shaOpen[1] + shaClose[1]) / 2.0, (openMA[1] + closeMA[1]) / 2.0);
-
-### Wicks and Shadows
-
-def shaLow = Min(Min(lowMA, shaOpen), shaClose);
-def shaHigh = Max(Max(highMA, shaOpen), shaClose);
+#def HA_Close_MA = (MA_HA_Open + MA_HA_High + MA_HA_Low + MA_HA_Close) / 4.0;
+#def HA_Open_MA  = if IsNaN(HA_Open_MA[1]) then (MA_HA_Open + MA_HA_Close) / 2.0 else (HA_Open_MA[1] + HA_Close_MA[1]) / 2.0;
+#def HA_High_MA = Max(MA_HA_High, Max(HA_Open_MA, HA_Close_MA));
+#def HA_Low_MA  = Min(MA_HA_Low,  Min(HA_Open_MA, HA_Close_MA));
 
 #Red Candlesticks -----------------------------------------------------------------|
 
-def shaOpen_fall  = if shaOpen >  shaClose then shaOpen  else double.nan;
-def shaHigh_fall  = if shaOpen >= shaClose then shaHigh  else double.nan;
-def shaLow_fall   = if shaOpen >= shaClose then shaLow   else double.nan;
-def shaClose_fall = if shaOpen >= shaClose then shaClose else double.nan;
+def MA_HA_Open_fall  = if MA_HA_Open >  MA_HA_Close then MA_HA_Open  else double.nan;
+def MA_HA_High_fall  = if MA_HA_Open >= MA_HA_Close then MA_HA_High  else double.nan;
+def MA_HA_Low_fall   = if MA_HA_Open >= MA_HA_Close then MA_HA_Low   else double.nan;
+def MA_HA_Close_fall = if MA_HA_Open >= MA_HA_Close then MA_HA_Close else double.nan;
 
 # royalBlue = createColor(65, 105, 225)
-AddChart(growColor = Color.plum, fallColor = createColor(65, 105, 225), neutralColor = Color.current, high = shaHigh_fall, low = shaLow_fall, open = shaOpen_fall, close = shaClose_fall , type = ChartType.CANDLE);
+AddChart(growColor = Color.plum, fallColor = createColor(65, 105, 225), neutralColor = Color.current, high = MA_HA_High_fall, low = MA_HA_Low_fall, open = MA_HA_Open_fall, close = MA_HA_Close_fall , type = ChartType.CANDLE);
 
 #Green Candlesticks ---------------------------------------------------------------|
 
-def shaOpen_rise  = if shaOpen <  shaClose then shaClose else double.nan;
-def shaHigh_rise  = if shaOpen <= shaClose then shaHigh  else double.nan;
-def shaLow_rise   = if shaOpen <= shaClose then shaLow   else double.nan;
-def shaClose_rise = if shaOpen <= shaClose then shaOpen  else double.nan;
+def MA_HA_Open_rise  = if MA_HA_Open <  MA_HA_Close then MA_HA_Close else double.nan;
+def MA_HA_High_rise  = if MA_HA_Open <= MA_HA_Close then MA_HA_High  else double.nan;
+def MA_HA_Low_rise   = if MA_HA_Open <= MA_HA_Close then MA_HA_Low   else double.nan;
+def MA_HA_Close_rise = if MA_HA_Open <= MA_HA_Close then MA_HA_Open  else double.nan;
 
 # royalBlue = createColor(65, 105, 225)
-AddChart(growColor = createColor(65, 105, 225), fallColor = Color.plum, neutralColor = Color.current, high = shaHigh_rise, low = shaLow_rise, open = shaOpen_rise, close = shaClose_rise, type = ChartType.CANDLE);
+AddChart(growColor = createColor(65, 105, 225), fallColor = Color.plum, neutralColor = Color.current, high = MA_HA_High_rise, low = MA_HA_Low_rise, open = MA_HA_Open_rise, close = MA_HA_Close_rise, type = ChartType.CANDLE);
 
 
 #############################################################
@@ -343,33 +338,33 @@ assert(ROCLength > 0, "'ROC Length' must be positive: " + ROCLength);
 def ROCPrice = HA_Close;
 def ROC = if ROCPrice[ROCLength] != 0 then (ROCPrice / ROCPrice[ROCLength] - 1) * 100 else 0;
 
-input RSILength = 14;
-input RSIAverageType = AverageType.WILDERS;
+input RSILength  = 14;
+input RSIAvgType = AverageType.WILDERS;
 
-def NetChgAvg = MovingAverage(RSIAverageType, fundamental(price, period = vPeriod) - fundamental(price, period = vPeriod)[1], RSILength);
-def TotChgAvg = MovingAverage(RSIAverageType, AbsValue(fundamental(price, period = vPeriod) - fundamental(price, period = vPeriod)[1]), RSILength);
+def NetChgAvg = MovingAverage(RSIAvgType, fundamental(price, period = vPeriod) - fundamental(price, period = vPeriod)[1], RSILength);
+def TotChgAvg = MovingAverage(RSIAvgType, AbsValue(fundamental(price, period = vPeriod) - fundamental(price, period = vPeriod)[1]), RSILength);
 def ChgRatio = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
 def RSI = 50 * (ChgRatio + 1);
 
-input avgRSILength = 3;
-input avgRSIAverageType = AverageType.WILDERS;
+input avgRSILength  = 3;
+input avgRSIAvgType = AverageType.WILDERS;
 
-def avgRSI = MovingAverage(avgRSIAverageType, RSI, avgRSILength);
+def avgRSI = MovingAverage(avgRSIAvgType, RSI, avgRSILength);
 
-input MFLength = 14;
-input MFILength = 1;
-input MFIAverageType = AverageType.SIMPLE;
+input MFLength   = 14;
+input MFILength  = 1;
+input MFIAvgType = AverageType.SIMPLE;
 
 def MoneyFlowIndex = MovingAverage(
-    MFIAverageType,
+    MFIAvgType,
     moneyflow(H, C, L, V, MFLength),
     MFILength
 );
 
-input avgMFILength = 3;
-input avgMFIAverageType = AverageType.WILDERS;
+input avgMFILength  = 3;
+input avgMFIAvgType = AverageType.WILDERS;
 
-def avgMFI = MovingAverage(avgMFIAverageType, MoneyFlowIndex, avgMFILength);
+def avgMFI = MovingAverage(avgMFIAvgType, MoneyFlowIndex, avgMFILength);
 
 ####
 
@@ -380,11 +375,11 @@ def bullishpb = ( # L < pbsma && O > pbsma;
     &&
     (HA_Close > HA_Open and (HA_Close - HA_Open) > (HA_Close[1] - HA_Open[1]))
     &&
-    (shaClose > shaOpen and (shaClose - shaOpen) > (shaClose[1] - shaOpen[1]))
+    (MA_HA_Close > MA_HA_Open and (MA_HA_Close - MA_HA_Open) > (MA_HA_Close[1] - MA_HA_Open[1]))
     #&&
     #(bullHAClose > bullHAOpen and (bullHAClose - bullHAOpen) > (bullHAClose[1] - bullHAOpen[1]))
     #&&
-    #(bullSHAClose > bullSHAOpen) #and (bullSHAClose - bullSHAOpen) > (bullSHAClose[1] - bullSHAOpen[1]))
+    #(MA_Bull_HA_Close > MA_Bull_HA_Open) #and (bullSHAClose - bullSHAOpen) > (bullSHAClose[1] - bullSHAOpen[1]))
     &&
     ROC > 0
     &&
@@ -413,11 +408,11 @@ def bearishpb = ( # H > pbsma && O < pbsma;
     &&
     (HA_Open > HA_Close and (HA_Open - HA_Close) > (HA_Open[1] - HA_Close[1]))
     &&
-    (shaOpen > shaClose and (shaOpen - shaClose) > (shaOpen[1] - shaClose[1]))
+    (MA_HA_Open > MA_HA_Close and (MA_HA_Open - MA_HA_Close) > (MA_HA_Open[1] - MA_HA_Close[1]))
     #&&
     #(bullHAOpen > bullHAClose and (bullHAOpen - bullHAClose) > (bullHAOpen[1] - bullHAClose[1]))
     #&&
-    #(bullSHAOpen > bullSHAClose) #and (bullSHAOpen - bullSHAClose) > (bullSHAOpen[1] - bullSHAClose[1]))
+    #(MA_Bull_HA_Open > MA_Bull_HA_Close) #and (bullSHAOpen - bullSHAClose) > (bullSHAOpen[1] - bullSHAClose[1]))
     &&
     ROC < 0
     &&
