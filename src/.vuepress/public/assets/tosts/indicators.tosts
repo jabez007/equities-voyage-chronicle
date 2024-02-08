@@ -68,7 +68,7 @@ fastMA.SetLineWeight(3);
 def Fast_MA_Height = fastMA - fastMA[1];
 def Fast_MA_Angle  = Atan(Fast_MA_Height) * 180 / Double.Pi;
 
-def HA_Close_Fast_MA = ((Fast_MA_HA_Open + Fast_MA_HA_High + Fast_MA_HA_Low + Fast_MA_HA_Close) / 4.0);
+def HA_Close_Fast_MA = (Fast_MA_HA_Open + Fast_MA_HA_High + Fast_MA_HA_Low + Fast_MA_HA_Close) / 4.0;
 def HA_Open_Fast_MA  = if IsNaN(HA_Open_Fast_MA[1]) then (Fast_MA_HA_Open + Fast_MA_HA_Close) / 2.0 else (HA_Open_Fast_MA[1] + HA_Close_Fast_MA[1]) / 2.0;
 
 ####
@@ -88,7 +88,7 @@ slowMA.SetLineWeight(5);
 def Slow_MA_Height = slowMA - slowMA[1];
 def Slow_MA_Angle = Atan(Slow_MA_Height) * 180 / Double.Pi;
 
-def HA_Close_Slow_MA = ((Slow_MA_HA_Open + Slow_MA_HA_High + Slow_MA_HA_Low + Slow_MA_HA_Close) / 4.0);
+def HA_Close_Slow_MA = (Slow_MA_HA_Open + Slow_MA_HA_High + Slow_MA_HA_Low + Slow_MA_HA_Close) / 4.0;
 def HA_Open_Slow_MA  = if IsNaN(HA_Open_Slow_MA[1]) then (Slow_MA_HA_Open + Slow_MA_HA_Close) / 2.0 else (HA_Open_Slow_MA[1] + HA_Close_Slow_MA[1]) / 2.0;
 
 
@@ -211,28 +211,40 @@ def warnphase = (
 
 input bullPeriod = AggregationPeriod.WEEK;
 
-def bullHAClose = (open(period = bullPeriod) + high(period = bullPeriod) + low(period = bullPeriod) + close(period = bullPeriod)) / 4.0;
-def bullHAOpen = compoundValue(1, (bullHAOpen[1] + bullHAClose[1]) / 2.0, (open(period = bullPeriod)[1] + close(period = bullPeriod)[1]) / 2.0);
+def bull_HA_Close = (open(period = bullPeriod) + high(period = bullPeriod) + low(period = bullPeriod) + close(period = bullPeriod)) / 4.0;
+def _bull_HA_Open = if IsNaN(_bull_HA_Open[1]) then (open(period = bullPeriod) + close(period = bullPeriod)) / 2.0 else (_bull_HA_Open[1] + bull_HA_Close[1]) / 2.0;
+plot bull_HA_Open = _bull_HA_Open;
+bull_HA_Open.hide();
+def bull_HA_High  = Max(high(period = bullPeriod), Max(bull_HA_Open, bull_HA_Close));
+def bull_HA_Low   = Min(low(period = bullPeriod),  Min(bull_HA_Open, bull_HA_Close));
 
-input bullLength = 20;
-input bullAvgType = AverageType.EXPONENTIAL;
+input bullAvgLength = 20;
+input bullAvgType   = AverageType.EXPONENTIAL;
 
-def bullOpenMA  = MovingAverage(bullAvgType, open(period = bullPeriod),  bullLength);
-def bullCloseMA = MovingAverage(bullAvgType, close(period = bullPeriod), bullLength);
-def bullHighMA  = MovingAverage(bullAvgType, high(period = bullPeriod),  bullLength);
-def bullLowMA   = MovingAverage(bullAvgType, low(period = bullPeriod),   bullLength);
-
-def bullSHAClose = ((bullOpenMA + bullHighMA + bullLowMA + bullCloseMA) / 4.0);
-def _bullSHAOpen  = CompoundValue(1, (_bullSHAOpen[1] + bullSHAClose[1]) / 2.0, (bullOpenMA[1] + bullCloseMA[1]) / 2.0);
-plot bullSHAOpen = _bullSHAOpen;
-bullSHAOpen.hide();
+def MA_Bull_HA_Close = MovingAverage(bullAvgType, bull_HA_Close, bullAvgLength);
+def MA_Bull_HA_Open  = MovingAverage(bullAvgType, bull_HA_Open,  bullAvgLength);
+def MA_Bull_HA_High  = MovingAverage(bullAvgType, bull_HA_High,  bullAvgLength);
+def MA_Bull_HA_Low   = MovingAverage(bullAvgType, bull_HA_Low,   bullAvgLength);
 
 addCloud(
-    bullSHAOpen,
-    bullSHAClose,
+    MA_Bull_HA_Open,
+    MA_Bull_HA_Close,
     color.RED,
     color.GREEN
 );
+
+def HA_Close_Bull_MA = (MA_Bull_HA_Open + MA_Bull_HA_High + MA_Bull_HA_Low + MA_Bull_HA_Close) / 4.0;
+def _HA_Open_Bull_MA = if IsNaN(_HA_Open_Bull_MA[1]) then (MA_Bull_HA_Open + MA_Bull_HA_Close) / 2.0 else (_HA_Open_Bull_MA[1] + HA_Close_Bull_MA[1]) / 2.0;
+plot HA_Open_Bull_MA = _HA_Open_Bull_MA;
+HA_Open_Bull_MA.hide();
+
+#addCloud(
+#    HA_Open_Bull_MA,
+#    HA_Close_Bull_MA,
+#    color.RED,
+#    color.GREEN
+#);
+
 
 ####
 # Smoothed Heiken Ashi
