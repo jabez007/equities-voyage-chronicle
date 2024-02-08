@@ -1,7 +1,12 @@
 const fs = require('fs');
 const tickerTags = require('./ticker-tags.js')
 
-const today = new Date();
+let today;
+if (process.argv[2]) {
+    today = new Date(process.argv[2]);
+} else {
+    today = new Date();
+}
 if (today.getDay() == 6) {
     today.setDate(today.getDate() - 1);
 } else if (today.getDay() == 0) {
