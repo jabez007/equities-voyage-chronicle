@@ -121,8 +121,14 @@ table
   display: block
   overflow-x: auto
 
+th
+  background-color darken($bgColor, 10%)
+
 tr
   border-top 1px solid #dfe2e5
+
+  &:nth-child(2n+1)
+    background-color darken(#f6f8fa, 20%)
 
   &:nth-child(2n)
     background-color #f6f8fa

@@ -59,6 +59,10 @@ module.exports = {
         link: '/tag/sell/',
       },
       {
+        text: 'Positions',
+        link: '/positions',
+      },
+      {
         text: 'Seasonality',
         link: '/seasonality',
       },
