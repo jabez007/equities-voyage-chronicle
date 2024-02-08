@@ -86,7 +86,7 @@ slowMA.SetDefaultColor(Color.YELLOW);
 slowMA.SetLineWeight(5);
 
 def Slow_MA_Height = slowMA - slowMA[1];
-def Slow_MA_Angle = Atan(Slow_MA_Height) * 180 / Double.Pi;
+def Slow_MA_Angle  = Atan(Slow_MA_Height) * 180 / Double.Pi;
 
 #def HA_Close_Slow_MA = (Slow_MA_HA_Open + Slow_MA_HA_High + Slow_MA_HA_Low + Slow_MA_HA_Close) / 4.0;
 #def HA_Open_Slow_MA  = if IsNaN(HA_Open_Slow_MA[1]) then (Slow_MA_HA_Open + Slow_MA_HA_Close) / 2.0 else (HA_Open_Slow_MA[1] + HA_Close_Slow_MA[1]) / 2.0;
@@ -262,8 +262,8 @@ def MA_HA_Low   = MovingAverage(HA_Avg_Type, HA_Low,   HA_Avg_Length);
 
 #def HA_Close_MA = (MA_HA_Open + MA_HA_High + MA_HA_Low + MA_HA_Close) / 4.0;
 #def HA_Open_MA  = if IsNaN(HA_Open_MA[1]) then (MA_HA_Open + MA_HA_Close) / 2.0 else (HA_Open_MA[1] + HA_Close_MA[1]) / 2.0;
-#def HA_High_MA = Max(MA_HA_High, Max(HA_Open_MA, HA_Close_MA));
-#def HA_Low_MA  = Min(MA_HA_Low,  Min(HA_Open_MA, HA_Close_MA));
+#def HA_High_MA  = Max(MA_HA_High, Max(HA_Open_MA, HA_Close_MA));
+#def HA_Low_MA   = Min(MA_HA_Low,  Min(HA_Open_MA, HA_Close_MA));
 
 #Red Candlesticks -----------------------------------------------------------------|
 
