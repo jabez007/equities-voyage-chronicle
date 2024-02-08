@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'src/posts/**'
+      - 'src/*.md'
       - 'src/.vuepress/public/assets/tosts/**'
       - 'src/.vuepress/styles/**'
   workflow_dispatch:
