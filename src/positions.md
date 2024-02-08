@@ -23,6 +23,5 @@ These are the 1 month stops from the MTP report.
 | TLT    |      |  97.20|
 | UUP    |      |       |
 | XLF    |      |       |
-| XLP    |      |  73.86|
 </div>
 </div>

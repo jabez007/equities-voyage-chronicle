@@ -46,91 +46,104 @@ AddLabel(yes, " Price Weak ", if weakPrice then Color.MAGENTA else color.black);
 # Moving Averages used to determine Bullish or Bearish
 ####
 
-input price = FundamentalType.CLOSE; #hint price: which value to use for the moving averages
-
-input fastavgType = AverageType.SIMPLE;
-input fastavg = 50;
-
-plot fastsma = MovingAverage(fastavgType, fundamental(price, period = vPeriod), fastavg);
-fastsma.SetDefaultColor(Color.DARK_ORANGE);
-fastsma.SetLineWeight(3);
-
-def fastsmaheight = fastsma - fastsma[1];
-def fastsmaAngle = Atan(fastsmaheight) * 180 / Double.Pi;
-
-def fastOpenMA  = MovingAverage(fastavgType, open(period = vPeriod),  fastavg);
-def fastCloseMA = MovingAverage(fastavgType, close(period = vPeriod), fastavg);
-def fastHighMA  = MovingAverage(fastavgType, high(period = vPeriod),  fastavg);
-def fastLowMA   = MovingAverage(fastavgType, low(period = vPeriod),   fastavg);
-
-def fastHAClose = ((fastOpenMA + fastHighMA + fastLowMA + fastCloseMA) / 4.0);
-def fastHAOpen  = CompoundValue(1, (fastHAOpen[1] + fastHAClose[1]) / 2.0, (fastOpenMA[1] + fastCloseMA[1]) / 2.0);
+def HA_Close = (O + H + L + C) / 4.0;
+def HA_Open  = if IsNaN(HA_Open[1]) then (O + C) / 2.0 else (HA_Open[1] + HA_Close[1]) / 2.0;
+def HA_High  = Max(H, Max(HA_Open, HA_Close));
+def HA_Low   = Min(L, Min(HA_Open, HA_Close));
 
 ####
 
-input slowavgType = AverageType.SIMPLE;
-input slowavg = 200;
+input fastAvgLength = 50;
+input fastAvgType   = AverageType.SIMPLE;
 
-plot slowsma = MovingAverage(slowavgType, fundamental(price, period = vPeriod), slowavg);
-slowsma.SetDefaultColor(Color.YELLOW);
-slowsma.SetLineWeight(5);
+def Fast_MA_HA_Close = MovingAverage(fastAvgType, HA_Close, fastAvgLength);
+def Fast_MA_HA_Open  = MovingAverage(fastAvgType, HA_Open,  fastAvgLength);
+def Fast_MA_HA_High  = MovingAverage(fastAvgType, HA_High,  fastAvgLength);
+def Fast_MA_HA_Low   = MovingAverage(fastAvgType, HA_Low,   fastAvgLength);
 
-def slowsmaheight = slowsma - slowsma[1];
-def slowsmaAngle = Atan(slowsmaheight) * 180 / Double.Pi;
+plot fastMA = Fast_MA_HA_Open;
+fastMA.SetDefaultColor(Color.DARK_ORANGE);
+fastMA.SetLineWeight(3);
 
-def slowOpenMA  = MovingAverage(slowavgType, open(period = vPeriod),  slowavg);
-def slowCloseMA = MovingAverage(slowavgType, close(period = vPeriod), slowavg);
-def slowHighMA  = MovingAverage(slowavgType, high(period = vPeriod),  slowavg);
-def slowLowMA   = MovingAverage(slowavgType, low(period = vPeriod),   slowavg);
+def Fast_MA_Height = fastMA - fastMA[1];
+def Fast_MA_Angle  = Atan(Fast_MA_Height) * 180 / Double.Pi;
 
-def slowHAClose = ((slowOpenMA + slowHighMA + slowLowMA + slowCloseMA) / 4.0);
-def slowHAOpen  = CompoundValue(1, (slowHAOpen[1] + slowHAClose[1]) / 2.0, (slowOpenMA[1] + slowCloseMA[1]) / 2.0);
+def HA_Close_Fast_MA = ((Fast_MA_HA_Open + Fast_MA_HA_High + Fast_MA_HA_Low + Fast_MA_HA_Close) / 4.0);
+def HA_Open_Fast_MA  = if IsNaN(HA_Open_Fast_MA[1]) then (Fast_MA_HA_Open + Fast_MA_HA_Close) / 2.0 else (HA_Open_Fast_MA[1] + HA_Close_Fast_MA[1]) / 2.0;
+
+####
+
+input slowAvgLength = 200;
+input slowAvgType   = AverageType.SIMPLE;
+
+def Slow_MA_HA_Close = MovingAverage(slowAvgType, HA_Close, slowAvgLength);
+def Slow_MA_HA_Open  = MovingAverage(slowAvgType, HA_Open,  slowAvgLength);
+def Slow_MA_HA_High  = MovingAverage(slowAvgType, HA_High,  slowAvgLength);
+def Slow_MA_HA_Low   = MovingAverage(slowAvgType, HA_Low,   slowAvgLength);
+
+plot slowMA = Slow_MA_HA_Open;
+slowMA.SetDefaultColor(Color.YELLOW);
+slowMA.SetLineWeight(5);
+
+def Slow_MA_Height = slowMA - slowMA[1];
+def Slow_MA_Angle = Atan(Slow_MA_Height) * 180 / Double.Pi;
+
+def HA_Close_Slow_MA = ((Slow_MA_HA_Open + Slow_MA_HA_High + Slow_MA_HA_Low + Slow_MA_HA_Close) / 4.0);
+def HA_Open_Slow_MA  = if IsNaN(HA_Open_Slow_MA[1]) then (Slow_MA_HA_Open + Slow_MA_HA_Close) / 2.0 else (HA_Open_Slow_MA[1] + HA_Close_Slow_MA[1]) / 2.0;
 
 
 ####
 # Bullish criteria define below
 ####
 
+input price = FundamentalType.CLOSE; #hint price: which value to use for the moving averages
+
 # Define criteria for Bullish Phase : close > 50 SMA, close > 200 SMA, 50 SMA > 200 SMA
 
 def bullphase = (
-    fastsma > slowsma
+    fastMA > slowMA
     &&
-    (fastsmaAngle > 0) && (slowsmaAngle > 0)
-    && 
-    #(fastHAClose > fastHAOpen) and (slowHAClose > slowHAOpen)
-    #&&
-    fundamental(price, period = vPeriod) > fastsma 
+    (
+        (Fast_MA_Angle > 0) && (Slow_MA_Angle > 0)
+        or 
+        (Fast_MA_HA_Close > Fast_MA_HA_Open) and (Slow_MA_HA_Close > Slow_MA_HA_Open)
+    )
     &&
-    fundamental(price, period = vPeriod) > slowsma
+    fundamental(price, period = vPeriod) > fastMA 
+    &&
+    fundamental(price, period = vPeriod) > slowMA
 );
 
 # Define criteria for Accumulation Phase : close > 50 SMA, close > 200 SMA, 50 SMA < 200 SMA
 
 def accphase = (
-    fastsma < slowsma
+    fastMA < slowMA
     &&
-    (fastsmaAngle > 0) && (slowsmaAngle >= 0)
+    (
+        (Fast_MA_Angle > 0) && (Slow_MA_Angle >= 0)
+        or
+        (Fast_MA_HA_Close > Fast_MA_HA_Open) and (Slow_MA_HA_Close >= Slow_MA_HA_Open)
+    )
     &&
-    #(fastHAClose > fastHAOpen) and (slowHAClose >= slowHAOpen)
-    #&&
-    fundamental(price, period = vPeriod) > fastsma
+    fundamental(price, period = vPeriod) > fastMA
     &&
-    fundamental(price, period = vPeriod) > slowsma
+    fundamental(price, period = vPeriod) > slowMA
 );
 
 # Define criteria for Recovery Phase : close > 50 SMA, close < 200 SMA, 50 SMA < 200 SMA
 
 def recphase = (
-    fastsma < slowsma
+    fastMA < slowMA
     &&
-    (fastsmaAngle >= 0) && (slowsmaAngle < 0)
+    (
+        (Fast_MA_Angle >= 0) && (Slow_MA_Angle < 0)
+        or
+        (Fast_MA_HA_Close >= Fast_MA_HA_Open) and (Slow_MA_HA_Close < Slow_MA_HA_Open)
+    )
     &&
-    #(fastHAClose >= fastHAOpen) and (slowHAClose < slowHAOpen)
-    #&&
-    fundamental(price, period = vPeriod) < slowsma
+    fundamental(price, period = vPeriod) < slowMA
     &&
-    fundamental(price, period = vPeriod) > fastsma
+    fundamental(price, period = vPeriod) > fastMA
 );
 
 
@@ -141,43 +154,49 @@ def recphase = (
 # Define criteria for Bearish Phase : close < 50 SMA, close < 200 SMA, 50 SMA < 200 SMA
 
 def bearphase = (
-    fastsma < slowsma
+    fastMA < slowMA
     &&
-    (fastsmaAngle < 0) && (slowsmaAngle < 0)
+    (
+        (Fast_MA_Angle < 0) && (Slow_MA_Angle < 0)
+        or
+        (Fast_MA_HA_Close < Fast_MA_HA_Open) and (Slow_MA_HA_Close < Slow_MA_HA_Open)
+    )
     &&
-    #(fastHAClose < fastHAOpen) and (slowHAClose < fastHAOpen)
-    #&&
-    fundamental(price, period = vPeriod) < fastsma
+    fundamental(price, period = vPeriod) < fastMA
     &&
-    fundamental(price, period = vPeriod) < slowsma
+    fundamental(price, period = vPeriod) < slowMA
 );
 
 # Define criteria for Distribution Phase : close < 50 SMA, close < 200 SMA, 50 SMA > 200 SMA
 
 def distphase = (
-    fastsma > slowsma
+    fastMA > slowMA
     &&
-    (fastsmaAngle < 0) && (slowsmaAngle <= 0)
+    (
+        (Fast_MA_Angle < 0) && (Slow_MA_Angle <= 0)
+        or
+        (Fast_MA_HA_Close < Fast_MA_HA_Open) and (Slow_MA_HA_Close <= Slow_MA_HA_Open)
+    )
     &&
-    #(fastHAClose < fastHAOpen) and (slowHAClose <= slowHAOpen)
-    #&&
-    fundamental(price, period = vPeriod) < fastsma
+    fundamental(price, period = vPeriod) < fastMA
     &&
-    fundamental(price, period = vPeriod) < slowsma
+    fundamental(price, period = vPeriod) < slowMA
 );
 
 # Define criteria for Warning Phase : close < 50 SMA, close > 200 SMA, 50 SMA > 200 SMA
 
 def warnphase = (
-    fastsma > slowsma
+    fastMA > slowMA
     &&
-    (fastsmaAngle <= 0) && (slowsmaAngle > 0)
+    (
+        (Fast_MA_Angle <= 0) && (Slow_MA_Angle > 0)
+        or
+        (Fast_MA_HA_Close <= Fast_MA_HA_Open) and (Slow_MA_HA_Close > Slow_MA_HA_Open) 
+    )
     &&
-    #(fastHAClose <= fastHAOpen) and (slowHAClose > slowHAOpen) 
-    #&&
-    fundamental(price, period = vPeriod) > slowsma
+    fundamental(price, period = vPeriod) > slowMA
     &&
-    fundamental(price, period = vPeriod) < fastsma
+    fundamental(price, period = vPeriod) < fastMA
 );
 
 ####
@@ -214,13 +233,6 @@ addCloud(
     color.RED,
     color.GREEN
 );
-
-####
-
-def haClose = (O + H + L + C) / 4.0;
-def haOpen = compoundValue(1, (haOpen[1] + haClose[1]) / 2.0, (O[1] + C[1]) / 2.0);
-def haHigh = Max(Max(H, haOpen), haClose);
-def haLow = Min(Min(L, haOpen), haClose);
 
 ####
 # Smoothed Heiken Ashi
@@ -316,7 +328,7 @@ pbsma.SetLineWeight(2);
 input ROCLength = 11;
 assert(ROCLength > 0, "'ROC Length' must be positive: " + ROCLength);
 
-def ROCPrice = haClose;
+def ROCPrice = HA_Close;
 def ROC = if ROCPrice[ROCLength] != 0 then (ROCPrice / ROCPrice[ROCLength] - 1) * 100 else 0;
 
 input RSILength = 14;
@@ -354,7 +366,7 @@ def bullishpb = ( # L < pbsma && O > pbsma;
     #&&
     !Flat
     &&
-    (haClose > haOpen and (haClose - haOpen) > (haClose[1] - haOpen[1]))
+    (HA_Close > HA_Open and (HA_Close - HA_Open) > (HA_Close[1] - HA_Open[1]))
     &&
     (shaClose > shaOpen and (shaClose - shaOpen) > (shaClose[1] - shaOpen[1]))
     #&&
@@ -387,7 +399,7 @@ def bearishpb = ( # H > pbsma && O < pbsma;
     #&&
     !Flat
     &&
-    (haOpen > haClose and (haOpen - haClose) > (haOpen[1] - haClose[1]))
+    (HA_Open > HA_Close and (HA_Open - HA_Close) > (HA_Open[1] - HA_Close[1]))
     &&
     (shaOpen > shaClose and (shaOpen - shaClose) > (shaOpen[1] - shaClose[1]))
     #&&
@@ -486,7 +498,7 @@ switch (trailType) {
     case modified:
         trueRange = Max(HiLo, Max(HRef, LRef));
     case heikinashi:
-        trueRange = TrueRange(haHigh, haClose, haLow);
+        trueRange = TrueRange(HA_High, HA_Close, HA_Low);
     case unmodified:
         trueRange = TrueRange(H, C, L);
 }
