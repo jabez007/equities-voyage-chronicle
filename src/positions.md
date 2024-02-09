@@ -10,18 +10,18 @@ These are the 1 month stops from the MTP report.
 * For the following days' reports, only raise the stop never lower.
 * Exit the position once the previous day's close is less than the stop or the current day's signal flips.
 
-|Ticker  | Side |  Stop |
-|:-------|:----:|------:|
-| EFA    |      |  75.24|
-| EWW    |      |  67.90|
-| EWZ    |      |  33.21|
-| GDX    |      |  28.59|
-| GLD    |      | 189.53|
-| HYG    | long |  76.91|
-| LQD    |      |       |
-| SLV    |      |  21.02|
-| TLT    |      |  97.20|
-| UUP    |      |       |
-| XLF    |      |       |
+|Ticker  | Side  |  Stop |
+|:-------|:-----:|------:|
+| EFA    |       |  75.24|
+| EWW    |       |  67.90|
+| EWZ    |       |  33.21|
+| GDX    | short |  27.76|
+| GLD    |       | 189.53|
+| HYG    | long  |  77.00|
+| LQD    |       |       |
+| SLV    | short |  20.52|
+| TLT    | short |  95.04|
+| UUP    |       |       |
+| XLF    |       |       |
 </div>
 </div>
