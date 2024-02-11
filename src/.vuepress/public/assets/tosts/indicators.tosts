@@ -1,6 +1,10 @@
-#hint: Trend Advisor Market Phases Swing Trader;
+###
+#
+###
 
 ###
+# Trend Advisor Market Phases
+# [URL]https://usethinkscript.com/threads/market-phases-indicator-for-thinkorswim.1025[/URL]
 # Credits
 #  - Chuck Dukas for creating the Market Phases system
 #  - the author of VolumeTrendLabels whose study was use to create this indicator.
@@ -46,68 +50,44 @@ AddLabel(yes, " Price Weak ", if weakPrice then Color.MAGENTA else color.black);
 # Moving Averages used to determine Bullish or Bearish
 ####
 
-def HA_Close = (O + H + L + C) / 4.0;
-def HA_Open  = if IsNaN(HA_Open[1]) then (O + C) / 2.0 else (HA_Open[1] + HA_Close[1]) / 2.0;
-def HA_High  = Max(H, Max(HA_Open, HA_Close));
-def HA_Low   = Min(L, Min(HA_Open, HA_Close));
+input price = FundamentalType.CLOSE; #hint price: which value to use for the moving averages
 
 ####
 
 input fastAvgLength = 50;
 input fastAvgType   = AverageType.SIMPLE;
 
-def Fast_MA_HA_Close = MovingAverage(fastAvgType, HA_Close, fastAvgLength);
-def Fast_MA_HA_Open  = MovingAverage(fastAvgType, HA_Open,  fastAvgLength);
-def Fast_MA_HA_High  = MovingAverage(fastAvgType, HA_High,  fastAvgLength);
-def Fast_MA_HA_Low   = MovingAverage(fastAvgType, HA_Low,   fastAvgLength);
-
-plot fastMA = Fast_MA_HA_Open;
+plot fastMA = MovingAverage(fastAvgType, fundamental(price, period = vPeriod), fastAvgLength);
 fastMA.SetDefaultColor(Color.DARK_ORANGE);
 fastMA.SetLineWeight(3);
 
 def Fast_MA_Height = fastMA - fastMA[1];
 def Fast_MA_Angle  = Atan(Fast_MA_Height) * 180 / Double.Pi;
 
-#def HA_Close_Fast_MA = (Fast_MA_HA_Open + Fast_MA_HA_High + Fast_MA_HA_Low + Fast_MA_HA_Close) / 4.0;
-#def HA_Open_Fast_MA  = if IsNaN(HA_Open_Fast_MA[1]) then (Fast_MA_HA_Open + Fast_MA_HA_Close) / 2.0 else (HA_Open_Fast_MA[1] + HA_Close_Fast_MA[1]) / 2.0;
-
 ####
 
 input slowAvgLength = 200;
 input slowAvgType   = AverageType.SIMPLE;
 
-def Slow_MA_HA_Close = MovingAverage(slowAvgType, HA_Close, slowAvgLength);
-def Slow_MA_HA_Open  = MovingAverage(slowAvgType, HA_Open,  slowAvgLength);
-def Slow_MA_HA_High  = MovingAverage(slowAvgType, HA_High,  slowAvgLength);
-def Slow_MA_HA_Low   = MovingAverage(slowAvgType, HA_Low,   slowAvgLength);
-
-plot slowMA = Slow_MA_HA_Open;
+plot slowMA = MovingAverage(slowAvgType, fundamental(price, period = vPeriod), slowAvgLength);
 slowMA.SetDefaultColor(Color.YELLOW);
 slowMA.SetLineWeight(5);
 
 def Slow_MA_Height = slowMA - slowMA[1];
 def Slow_MA_Angle  = Atan(Slow_MA_Height) * 180 / Double.Pi;
 
-#def HA_Close_Slow_MA = (Slow_MA_HA_Open + Slow_MA_HA_High + Slow_MA_HA_Low + Slow_MA_HA_Close) / 4.0;
-#def HA_Open_Slow_MA  = if IsNaN(HA_Open_Slow_MA[1]) then (Slow_MA_HA_Open + Slow_MA_HA_Close) / 2.0 else (HA_Open_Slow_MA[1] + HA_Close_Slow_MA[1]) / 2.0;
-
-
 ####
 # Bullish criteria define below
 ####
 
-input price = FundamentalType.CLOSE; #hint price: which value to use for the moving averages
-
 # Define criteria for Bullish Phase : close > 50 SMA, close > 200 SMA, 50 SMA > 200 SMA
-
+# Higher highs and higher lows
+# Buy the dips, volume expands on breakouts, new highs
+# Accelerating momentum and volume
 def bullphase = (
     fastMA > slowMA
-    &&
-    (
-        (Fast_MA_Angle > 0) && (Slow_MA_Angle > 0)
-        or 
-        (Fast_MA_HA_Close > Fast_MA_HA_Open) and (Slow_MA_HA_Close > Slow_MA_HA_Open)
-    )
+    #&&
+    #((Fast_MA_Angle > 0) and (Slow_MA_Angle > 0))
     &&
     fundamental(price, period = vPeriod) > fastMA 
     &&
@@ -115,15 +95,11 @@ def bullphase = (
 );
 
 # Define criteria for Accumulation Phase : close > 50 SMA, close > 200 SMA, 50 SMA < 200 SMA
-
+# Begin to see new 60 period HH
 def accphase = (
     fastMA < slowMA
-    &&
-    (
-        (Fast_MA_Angle > 0) && (Slow_MA_Angle >= 0)
-        or
-        (Fast_MA_HA_Close > Fast_MA_HA_Open) and (Slow_MA_HA_Close >= Slow_MA_HA_Open)
-    )
+    #&&
+    #((Fast_MA_Angle > 0) and (Slow_MA_Angle >= 0))
     &&
     fundamental(price, period = vPeriod) > fastMA
     &&
@@ -134,12 +110,8 @@ def accphase = (
 
 def recphase = (
     fastMA < slowMA
-    &&
-    (
-        (Fast_MA_Angle >= 0) && (Slow_MA_Angle < 0)
-        or
-        (Fast_MA_HA_Close >= Fast_MA_HA_Open) and (Slow_MA_HA_Close < Slow_MA_HA_Open)
-    )
+    #&&
+    #((Fast_MA_Angle >= 0) and (Slow_MA_Angle < 0))
     &&
     fundamental(price, period = vPeriod) < slowMA
     &&
@@ -155,12 +127,8 @@ def recphase = (
 
 def bearphase = (
     fastMA < slowMA
-    &&
-    (
-        (Fast_MA_Angle < 0) && (Slow_MA_Angle < 0)
-        or
-        (Fast_MA_HA_Close < Fast_MA_HA_Open) and (Slow_MA_HA_Close < Slow_MA_HA_Open)
-    )
+    #&&
+    #((Fast_MA_Angle < 0) and (Slow_MA_Angle < 0))
     &&
     fundamental(price, period = vPeriod) < fastMA
     &&
@@ -171,12 +139,8 @@ def bearphase = (
 
 def distphase = (
     fastMA > slowMA
-    &&
-    (
-        (Fast_MA_Angle < 0) && (Slow_MA_Angle <= 0)
-        or
-        (Fast_MA_HA_Close < Fast_MA_HA_Open) and (Slow_MA_HA_Close <= Slow_MA_HA_Open)
-    )
+    #&&
+    #((Fast_MA_Angle < 0) and (Slow_MA_Angle <= 0))
     &&
     fundamental(price, period = vPeriod) < fastMA
     &&
@@ -187,12 +151,8 @@ def distphase = (
 
 def warnphase = (
     fastMA > slowMA
-    &&
-    (
-        (Fast_MA_Angle <= 0) && (Slow_MA_Angle > 0)
-        or
-        (Fast_MA_HA_Close <= Fast_MA_HA_Open) and (Slow_MA_HA_Close > Slow_MA_HA_Open) 
-    )
+    #&&
+    #((Fast_MA_Angle <= 0) and (Slow_MA_Angle > 0))
     &&
     fundamental(price, period = vPeriod) > slowMA
     &&
@@ -209,42 +169,49 @@ def warnphase = (
 #plot wphase = warnphase is true;
 ####
 
-input bullPeriod = AggregationPeriod.WEEK;
+assignPriceColor(if bullphase then Color.GREEN else if bearphase then Color.RED else if (accphase or distphase or recphase or warnphase) then Color.ORANGE else Color.GRAY);
 
-def bull_HA_Close = (open(period = bullPeriod) + high(period = bullPeriod) + low(period = bullPeriod) + close(period = bullPeriod)) / 4.0;
-def _bull_HA_Open = if IsNaN(_bull_HA_Open[1]) then (open(period = bullPeriod) + close(period = bullPeriod)) / 2.0 else (_bull_HA_Open[1] + bull_HA_Close[1]) / 2.0;
-plot bull_HA_Open = _bull_HA_Open;
-bull_HA_Open.hide();
-def bull_HA_High  = Max(high(period = bullPeriod), Max(bull_HA_Open, bull_HA_Close));
-def bull_HA_Low   = Min(low(period = bullPeriod),  Min(bull_HA_Open, bull_HA_Close));
+############################################
+#### END of Trend Advisor Market Phases ####
+############################################
 
-input bullAvgLength = 20;
-input bullAvgType   = AverageType.EXPONENTIAL;
+###
+# Bull Market Support Band
+# [URL]https://www.tradingview.com/script/uSBR7cFa-Bull-Market-Support-Band-20w-SMA-21w-EMA/[/URL]
+###
 
-def MA_Bull_HA_Close = MovingAverage(bullAvgType, bull_HA_Close, bullAvgLength);
-def MA_Bull_HA_Open  = MovingAverage(bullAvgType, bull_HA_Open,  bullAvgLength);
-def MA_Bull_HA_High  = MovingAverage(bullAvgType, bull_HA_High,  bullAvgLength);
-def MA_Bull_HA_Low   = MovingAverage(bullAvgType, bull_HA_Low,   bullAvgLength);
+input bullPeriod      = AggregationPeriod.WEEK;
+input bull_MA1_Length = 20;
+input bull_MA1_Type   = AverageType.SIMPLE;
+input bull_MA2_Length = 21;
+input bull_MA2_Type   = AverageType.EXPONENTIAL;
+
+plot bull_MA1 = MovingAverage(bull_MA1_Type, fundamental(price, period = bullPeriod), bull_MA1_Length);
+bull_MA1.DefineColor("UpTrend", Color.GREEN);
+bull_MA1.DefineColor("DownTrend", Color.RED);
+def bull_MA1_Trend = compoundValue(1, 
+    if (bull_MA1 > bull_MA1[1]) then 1 else if (bull_MA1 < bull_MA1[1]) then -1 else bull_MA1_Trend[1],
+    if (bull_MA1 > bull_MA1[1]) then 1 else -1);
+bull_MA1.AssignValueColor(if (bull_MA1_Trend == 1) then bull_MA1.Color("UpTrend") else if (bull_MA1_Trend == -1) then bull_MA1.Color("DownTrend") else Color.ORANGE);
+
+plot bull_MA2 = MovingAverage(bull_MA2_Type, fundamental(price, period = bullPeriod), bull_MA2_Length);
+bull_MA2.DefineColor("UpTrend", Color.GREEN);
+bull_MA2.DefineColor("DownTrend", Color.RED);
+def bull_MA2_Trend = compoundValue(1,
+    if (bull_MA2 > bull_MA2[1]) then 1 else if (bull_MA2 < bull_MA2[1]) then -1 else bull_MA2_Trend[1],
+    if (bull_MA2 > bull_MA2[1]) then 1 else -1);
+bull_MA2.AssignValueColor(if (bull_MA2_Trend == 1) then bull_MA2.Color("UpTrend") else if (bull_MA2_Trend == -1) then bull_MA2.Color("DownTrend") else Color.ORANGE);
 
 addCloud(
-    MA_Bull_HA_Open,
-    MA_Bull_HA_Close,
-    color.RED,
-    color.GREEN
+    bull_MA1,
+    bull_MA2,
+    Color.ORANGE,
+    Color.ORANGE
 );
 
-def HA_Close_Bull_MA = (MA_Bull_HA_Open + MA_Bull_HA_High + MA_Bull_HA_Low + MA_Bull_HA_Close) / 4.0;
-def _HA_Open_Bull_MA = if IsNaN(_HA_Open_Bull_MA[1]) then (MA_Bull_HA_Open + MA_Bull_HA_Close) / 2.0 else (_HA_Open_Bull_MA[1] + HA_Close_Bull_MA[1]) / 2.0;
-plot HA_Open_Bull_MA = _HA_Open_Bull_MA;
-HA_Open_Bull_MA.hide();
-
-#addCloud(
-#    HA_Open_Bull_MA,
-#    HA_Close_Bull_MA,
-#    color.RED,
-#    color.GREEN
-#);
-
+#########################################
+#### END of Bull Market Support Band ####
+#########################################
 
 ####
 # Smoothed Heiken Ashi
@@ -324,13 +291,13 @@ def Flat = if (!isNan(BoxHigh[1]) and !isNan(BoxLow[1])) and !TradeInFlatRange t
 # Inspired by the Bravo9
 ####
 
-input pbavgType = AverageType.SIMPLE; #hint pbavgType: The fast moving average type to use for pullback entries.
-input pbavg = 9; #hint pbavg: The length of the fast moving average to use for pullback entries.
-input pbdisplace = 0; #hint pbdisplace: The displacement of the fast moving average to use for pullback entries.
+input pbAvgLength = 9; #hint pbAvgLength: The length of the fast moving average to use for pullback entries.
+input pbAvgType = AverageType.SIMPLE; #hint pbAvgType: The fast moving average type to use for pullback entries.
+input pbDisplace = 0; #hint pbDisplace: The displacement of the fast moving average to use for pullback entries.
 
-plot pbsma = MovingAverage(pbavgType, data = fundamental(price, period = vPeriod)[-pbdisplace], length = pbavg);
-pbsma.SetDefaultColor(Color.LIME);
-pbsma.SetLineWeight(2);
+plot pbMA = MovingAverage(pbAvgType, data = HA_Open[-pbDisplace], length = pbAvgLength);
+pbMA.SetDefaultColor(Color.LIME);
+pbMA.SetLineWeight(2);
 
 input ROCLength = 11;
 assert(ROCLength > 0, "'ROC Length' must be positive: " + ROCLength);
@@ -338,18 +305,19 @@ assert(ROCLength > 0, "'ROC Length' must be positive: " + ROCLength);
 def ROCPrice = HA_Close;
 def ROC = if ROCPrice[ROCLength] != 0 then (ROCPrice / ROCPrice[ROCLength] - 1) * 100 else 0;
 
-input RSILength  = 14;
-input RSIAvgType = AverageType.WILDERS;
+####
 
-def NetChgAvg = MovingAverage(RSIAvgType, fundamental(price, period = vPeriod) - fundamental(price, period = vPeriod)[1], RSILength);
-def TotChgAvg = MovingAverage(RSIAvgType, AbsValue(fundamental(price, period = vPeriod) - fundamental(price, period = vPeriod)[1]), RSILength);
-def ChgRatio = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
-def RSI = 50 * (ChgRatio + 1);
+input RSI_Length   = 14;
+input RSI_Avg_Type = AverageType.WILDERS;
 
-input avgRSILength  = 3;
-input avgRSIAvgType = AverageType.WILDERS;
+def NetChgAvg = MovingAverage(RSI_Avg_Type, fundamental(price, period = vPeriod) - fundamental(price, period = vPeriod)[1], RSI_Length);
+def TotChgAvg = MovingAverage(RSI_Avg_Type, AbsValue(fundamental(price, period = vPeriod) - fundamental(price, period = vPeriod)[1]), RSI_Length);
+def ChgRatio  = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
+def RSI       = 50 * (ChgRatio + 1);
 
-def avgRSI = MovingAverage(avgRSIAvgType, RSI, avgRSILength);
+input RSI_Lookback = 3;
+
+####
 
 input MFLength   = 14;
 input MFILength  = 1;
@@ -375,15 +343,18 @@ def bullishpb = ( # L < pbsma && O > pbsma;
     &&
     (HA_Close > HA_Open and (HA_Close - HA_Open) > (HA_Close[1] - HA_Open[1]))
     &&
-    (MA_HA_Close > MA_HA_Open and (MA_HA_Close - MA_HA_Open) > (MA_HA_Close[1] - MA_HA_Open[1]))
+    (HA_Close > pbMA) #and (HA_Close - pbMA) > (HA_Close[1] - pbMA[1]))
+    &&
+    (40 < RSI and IsAscending(RSI, RSI_Lookback))
+    #&&
+    #((MA_HA_Close - MA_HA_Open) > (MA_HA_Close[1] - MA_HA_Open[1]))
     #&&
     #(bullHAClose > bullHAOpen and (bullHAClose - bullHAOpen) > (bullHAClose[1] - bullHAOpen[1]))
     #&&
     #(MA_Bull_HA_Close > MA_Bull_HA_Open) #and (bullSHAClose - bullSHAOpen) > (bullSHAClose[1] - bullSHAOpen[1]))
-    &&
-    ROC > 0
-    &&
-    ((45 < RSI && RSI < 69) and avgRSI > avgRSI[1]) # bullish but not overbought and rising RSI
+    #&&
+    #ROC > 0
+    
     #&&
     #avgMFI > avgMFI[1]
 );
@@ -408,15 +379,17 @@ def bearishpb = ( # H > pbsma && O < pbsma;
     &&
     (HA_Open > HA_Close and (HA_Open - HA_Close) > (HA_Open[1] - HA_Close[1]))
     &&
-    (MA_HA_Open > MA_HA_Close and (MA_HA_Open - MA_HA_Close) > (MA_HA_Open[1] - MA_HA_Close[1]))
+    (pbMA > HA_Close) #and (pbMA - HA_Close) > (pbMA[1] - HA_Close[1]))
+    &&
+    (60 > RSI and IsDescending(RSI, RSI_Lookback))
+    #&&
+    #((MA_HA_Open - MA_HA_Close) > (MA_HA_Open[1] - MA_HA_Close[1]))
     #&&
     #(bullHAOpen > bullHAClose and (bullHAOpen - bullHAClose) > (bullHAOpen[1] - bullHAClose[1]))
     #&&
     #(MA_Bull_HA_Open > MA_Bull_HA_Close) #and (bullSHAOpen - bullSHAClose) > (bullSHAOpen[1] - bullSHAClose[1]))
-    &&
-    ROC < 0
-    &&
-    ((36 < RSI && RSI < 60) and avgRSI < avgRSI[1]) # bearish but not oversold and falling RSI
+    #&&
+    #ROC < 0
     #&
     #avgMFI < avgMFI[1]
 );
@@ -476,11 +449,11 @@ DT9.AssignValueColor(if DT9 < 9 then Color.MAGENTA else Color.CYAN);
 ####
 
 def bullstp = (
-    0
+    pbMA > HA_Close
 );
 
 def bearstp = (
-    0
+    HA_Close > pbMA
 );
 
 ####
@@ -737,8 +710,3 @@ input showBubbles = yes;
 
 AddChartBubble(showBubbles and isOrder and isLong[1], low, "$"+dollarProfitLoss, if dollarProfitLoss == 0 then Color.LIGHT_GRAY else if dollarProfitLoss > 0 then Color.GREEN else color.Red, 0);
 AddChartBubble(showBubbles and isOrder and isShort[1], high,  "$"+dollarProfitLoss, if dollarProfitLoss == 0 then Color.LIGHT_GRAY else if dollarProfitLoss > 0 then Color.GREEN else color.Red, 1);
-
-
-
-####
-assignPriceColor(if bullphase then Color.GREEN else if bearphase then Color.RED else if (accphase or distphase or recphase or warnphase) then Color.ORANGE else Color.GRAY);
