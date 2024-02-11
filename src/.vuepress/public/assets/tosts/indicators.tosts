@@ -51,13 +51,14 @@ AddLabel(yes, " Price Weak ", if weakPrice then Color.MAGENTA else color.black);
 ####
 
 input price = FundamentalType.CLOSE; #hint price: which value to use for the moving averages
+def src = Fundamental(FundamentalType = price, Period = vPeriod);
 
 ####
 
 input fastAvgLength = 50;
 input fastAvgType   = AverageType.SIMPLE;
 
-plot fastMA = MovingAverage(fastAvgType, fundamental(price, period = vPeriod), fastAvgLength);
+plot fastMA = MovingAverage(fastAvgType, src, fastAvgLength);
 fastMA.SetDefaultColor(Color.DARK_ORANGE);
 fastMA.SetLineWeight(3);
 
@@ -69,7 +70,7 @@ def Fast_MA_Angle  = Atan(Fast_MA_Height) * 180 / Double.Pi;
 input slowAvgLength = 200;
 input slowAvgType   = AverageType.SIMPLE;
 
-plot slowMA = MovingAverage(slowAvgType, fundamental(price, period = vPeriod), slowAvgLength);
+plot slowMA = MovingAverage(slowAvgType, src, slowAvgLength);
 slowMA.SetDefaultColor(Color.YELLOW);
 slowMA.SetLineWeight(5);
 
@@ -89,9 +90,9 @@ def bullphase = (
     #&&
     #((Fast_MA_Angle > 0) and (Slow_MA_Angle > 0))
     &&
-    fundamental(price, period = vPeriod) > fastMA 
+    src > fastMA 
     &&
-    fundamental(price, period = vPeriod) > slowMA
+    src > slowMA
 );
 
 # Define criteria for Accumulation Phase : close > 50 SMA, close > 200 SMA, 50 SMA < 200 SMA
@@ -101,9 +102,9 @@ def accphase = (
     #&&
     #((Fast_MA_Angle > 0) and (Slow_MA_Angle >= 0))
     &&
-    fundamental(price, period = vPeriod) > fastMA
+    src > fastMA
     &&
-    fundamental(price, period = vPeriod) > slowMA
+    src > slowMA
 );
 
 # Define criteria for Recovery Phase : close > 50 SMA, close < 200 SMA, 50 SMA < 200 SMA
@@ -113,9 +114,9 @@ def recphase = (
     #&&
     #((Fast_MA_Angle >= 0) and (Slow_MA_Angle < 0))
     &&
-    fundamental(price, period = vPeriod) < slowMA
+    src < slowMA
     &&
-    fundamental(price, period = vPeriod) > fastMA
+    src > fastMA
 );
 
 
@@ -130,9 +131,9 @@ def bearphase = (
     #&&
     #((Fast_MA_Angle < 0) and (Slow_MA_Angle < 0))
     &&
-    fundamental(price, period = vPeriod) < fastMA
+    src < fastMA
     &&
-    fundamental(price, period = vPeriod) < slowMA
+    src < slowMA
 );
 
 # Define criteria for Distribution Phase : close < 50 SMA, close < 200 SMA, 50 SMA > 200 SMA
@@ -142,9 +143,9 @@ def distphase = (
     #&&
     #((Fast_MA_Angle < 0) and (Slow_MA_Angle <= 0))
     &&
-    fundamental(price, period = vPeriod) < fastMA
+    src < fastMA
     &&
-    fundamental(price, period = vPeriod) < slowMA
+    src < slowMA
 );
 
 # Define criteria for Warning Phase : close < 50 SMA, close > 200 SMA, 50 SMA > 200 SMA
@@ -154,9 +155,9 @@ def warnphase = (
     #&&
     #((Fast_MA_Angle <= 0) and (Slow_MA_Angle > 0))
     &&
-    fundamental(price, period = vPeriod) > slowMA
+    src > slowMA
     &&
-    fundamental(price, period = vPeriod) < fastMA
+    src < fastMA
 );
 
 ####
@@ -212,6 +213,82 @@ addCloud(
 #########################################
 #### END of Bull Market Support Band ####
 #########################################
+
+####
+#// This source code is subject to the terms of the Mozilla Public License 2.0 a
+#// © btc_charlie / @TheParagonGrp
+#indicator('[@btc_charlie] Trader XO Macro Trend Scanner', overlay=true)
+# -- Converted by Sam4Cok@Samer800    - 01/2024
+# updated MTF option by Sam4Cok@Samer800    - 01/2024
+####
+
+input highlightBackground = yes;
+input TrendAvgType        = AverageType.EXPONENTIAL;
+input TrendFastLength     = 12;#, title='Fast EMA')
+input TrendSlowLength     = 25;#, title='Slow EMA')
+input showBothMovAvg      = yes;#(title='Show Both EMAs', defval=true)
+input ConsolidatedLength  = 25;#, title='Consolidated EMA')
+
+def na = Double.NaN;
+
+#// Define the MAs
+def v_fastMA = MovingAverage(TrendAvgType, src, TrendFastLength);
+def v_slowMA = MovingAverage(TrendAvgType, src, TrendSlowLength);
+def v_biasMA = MovingAverage(TrendAvgType, src, ConsolidatedLength);
+
+#// Color the MAs
+def TrendColor = if v_fastMA > v_slowMA then  1 else
+                 if v_fastMA < v_slowMA then -1 else 0;
+
+#// Plot the MAs
+plot ConsMA        = if showBothMovAvg then na       else v_biasMA; # 'Consolidated EMA'
+plot TrendFastLine = if showBothMovAvg then v_fastMA else na;#, title='Fast EMA', color=emaColor)
+plot TrendSlowLine = if showBothMovAvg then v_slowMA else na;#, title='Slow EMA', color=emaColor)
+ConsMA.SetLineWeight(2);
+ConsMA.AssignValueColor(if TrendColor > 0 then Color.GREEN else
+                        if TrendColor < 0 then Color.RED else Color.GRAY);
+TrendFastLine.AssignValueColor(if TrendColor > 0 then Color.GREEN else
+                               if TrendColor < 0 then Color.RED else Color.GRAY);
+TrendSlowLine.AssignValueColor(if TrendColor > 0 then Color.GREEN else
+                               if TrendColor < 0 then Color.RED else Color.GRAY);
+#// Colour the bars
+def buy = v_fastMA > v_slowMA;
+def sell = v_fastMA < v_slowMA;
+
+#// Variables
+def countBuy;
+def countSell;
+
+if buy {
+    countBuy  = countBuy[1] + 1;
+    countSell = 0;
+ } else if sell {
+    countSell = countSell[1] + 1;
+    countBuy  = 0;
+    } else {
+    countBuy = countBuy[1];
+    countSell = countSell[1];
+}
+
+def buysignal = countBuy < 2 and countBuy > 0 and countSell < 1 and buy and !buy[1];
+def sellsignal = countSell > 0 and countSell < 2 and countBuy < 1 and sell and !sell[1];
+
+#// Plot Bull/Bear
+
+AddChartBubble(buysignal, low, "Bull", Color.GREEN, no);
+AddChartBubble(sellsignal, high, "Bear", Color.RED);
+
+def bull = countBuy > 1 and highlightBackground;
+def bear = countSell > 1 and highlightBackground;
+def pos = Double.POSITIVE_INFINITY;
+def neg = Double.NEGATIVE_INFINITY;
+
+AddCloud(if (bull and (bullphase or accphase  or recphase))  then pos else na, neg, Color.DARK_GREEN);
+AddCloud(if (bear and (bearphase or distphase or warnphase)) then pos else na, neg, Color.DARK_RED);
+
+###########################
+### END of Macro Trend ####
+###########################
 
 ####
 # Smoothed Heiken Ashi
