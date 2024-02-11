@@ -242,7 +242,7 @@ input highlightBackground = yes;
 input TrendAvgType        = AverageType.EXPONENTIAL;
 input TrendFastLength     = 12;#, title='Fast EMA')
 input TrendSlowLength     = 25;#, title='Slow EMA')
-input showBothMovAvg      = yes;#(title='Show Both EMAs', defval=true)
+input showBothMovAvg      = no;#(title='Show Both EMAs', defval=true)
 input ConsolidatedLength  = 25;#, title='Consolidated EMA')
 
 def na = Double.NaN;
@@ -322,7 +322,7 @@ input TrendSource = close;
 input HAMALength  = 69;
 input HAMAType    = {default EMA, WMA, SMA, HMA};
 input HAMABar     = yes;
-input HAMAMa      = yes;
+input HAMAMa      = no;
 #//MA INFO
 input OpenLength  = 25;                      #"Length Open"
 input OpenType    = {default EMA, SMA, WMA}; #"Type Open"
@@ -630,21 +630,10 @@ def Flat = if (!isNan(BoxHigh[1]) and !isNan(BoxLow[1])) and !TradeInFlatRange t
 ############################
 
 ####
-# The conditions below are for possible entries when price pulls back
-# Inspired by the Bravo9
+# The conditions below are for possible entries for longs and shorts
 ####
 
-input pbAvgLength = 9; #hint pbAvgLength: The length of the fast moving average to use for pullback entries.
-input pbAvgType = AverageType.SIMPLE; #hint pbAvgType: The fast moving average type to use for pullback entries.
-input pbDisplace = 0; #hint pbDisplace: The displacement of the fast moving average to use for pullback entries.
-
-plot pbMA = MovingAverage(pbAvgType, data = src[-pbDisplace], length = pbAvgLength);
-pbMA.SetDefaultColor(Color.LIME);
-pbMA.SetLineWeight(2);
-
-def bullishpb = ( # L < pbsma && O > pbsma;
-    #Min(O, C) > pbsma # full candle close above
-    #&&
+def bullishpb = (
     countBuy > 0 and countSell < 1 and buy # From Macro Trend
     &&
     C > MAValue
@@ -668,9 +657,7 @@ def bullpb = (
     )
 );
 
-def bearishpb = ( # H > pbsma && O < pbsma;
-    #Max(O, C) < pbsma # full candle close below
-    #&&
+def bearishpb = (
     countSell > 0 and countBuy < 1 and sell # From Macro Trend
     &&
     C < MAValue
