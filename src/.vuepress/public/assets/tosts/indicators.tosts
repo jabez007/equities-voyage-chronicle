@@ -170,6 +170,22 @@ def warnphase = (
 #plot wphase = warnphase is true;
 ####
 
+####
+# Below adds labels to the chart to identify what phase the underlying is in
+####
+
+AddLabel(bullphase, " Bull Phase " , if bullphase is true then Color.GREEN else Color.BLACK);
+
+AddLabel(accphase, " Accumation Phase ", if accphase is true then Color.LIGHT_GREEN else Color.BLACK);
+
+AddLabel(recphase, " Recovery Phase ", if recphase is true then Color.LIGHT_ORANGE else Color.BLACK);
+
+AddLabel(warnphase, " Warning Phase ", if warnphase is true then Color.ORANGE else Color.BLACK);
+
+AddLabel(distphase, " Distribution Phase ", if distphase is true then Color.LIGHT_RED else Color.BLACK);
+
+AddLabel(bearphase, " Bear Phase ", if bearphase is true then Color.RED else Color.BLACK);
+
 assignPriceColor(if bullphase then Color.GREEN else if bearphase then Color.RED else if (accphase or distphase or recphase or warnphase) then Color.ORANGE else Color.GRAY);
 
 ############################################
@@ -270,13 +286,13 @@ if buy {
     countSell = countSell[1];
 }
 
-def buysignal = countBuy < 2 and countBuy > 0 and countSell < 1 and buy and !buy[1];
-def sellsignal = countSell > 0 and countSell < 2 and countBuy < 1 and sell and !sell[1];
+def buysignal  = countBuy  < 2 and countBuy  > 0 and countSell < 1 and buy  and !buy[1];
+def sellsignal = countSell < 2 and countSell > 0 and countBuy  < 1 and sell and !sell[1];
 
 #// Plot Bull/Bear
 
-AddChartBubble(buysignal, low, "Bull", Color.GREEN, no);
-AddChartBubble(sellsignal, high, "Bear", Color.RED);
+#AddChartBubble(buysignal, low, "Bull", Color.GREEN, no);
+#AddChartBubble(sellsignal, high, "Bear", Color.RED);
 
 def bull = countBuy > 1 and highlightBackground;
 def bear = countSell > 1 and highlightBackground;
@@ -291,44 +307,291 @@ AddCloud(if (bear and (bearphase or distphase or warnphase)) then pos else na, n
 ###########################
 
 ####
-# Smoothed Heiken Ashi
+#study("NSDT HAMA Candles", overlay=true)
+#//The follow gradient code is taken from the Pinecoders Gradient Framework example.
+#//https://www.tradingview.com/script/hqH4YIFa-Color-Gradient-Framework-PineCoders/
+#https://www.tradingview.com/script/k7nrF2oI-NSDT-HAMA-Candles/
+# Youtube strategy https://www.youtube.com/watch?v=YJrELewfIrU
+#Converted by Sam4Cok @ 07/2022
 ####
 
-input HA_Avg_Length = 20;
-input HA_Avg_Type   = AverageType.EXPONENTIAL;
+#//INPUTS
+input BackgroundColor = no;
+### NSDT ###
+input TrendSource = close;
+input HAMALength  = 69;
+input HAMAType    = {default EMA, WMA, SMA, HMA};
+input HAMABar     = yes;
+input HAMAMa      = yes;
+#//MA INFO
+input OpenLength  = 25;                      #"Length Open"
+input OpenType    = {default EMA, SMA, WMA}; #"Type Open"
+input HighLength  = 20;                      #"Length High"
+input HighType    = {default EMA, SMA, WMA}; #"Type High"
+input LowLength   = 20;                      #"Low"
+input LowType     = {default EMA, SMA, WMA}; #"Type Low"
+input CloseLength = 20;                     #"Length Close"
+input CloseType   = {default EMA, SMA, WMA}; #"Close"
+##################
 
-def MA_HA_Close = MovingAverage(HA_Avg_Type, HA_Close, HA_Avg_Length);
-def MA_HA_Open  = MovingAverage(HA_Avg_Type, HA_Open,  HA_Avg_Length);
-def MA_HA_High  = MovingAverage(HA_Avg_Type, HA_High,  HA_Avg_Length);
-def MA_HA_Low   = MovingAverage(HA_Avg_Type, HA_Low,   HA_Avg_Length);
+########## Colors ########
+DefineGlobalColor("Bull"        , CreateColor(38, 166, 154)); # HAMA GREEN - Teal
+DefineGlobalColor("Bear"        , CreateColor(239, 83, 80));  # HAMA Red
+DefineGlobalColor("WeakBull"    , CreateColor(204, 204, 0));  # HAMA DARK Yellow  
+DefineGlobalColor("WeakBear"    , CreateColor(255, 128, 0));  # HAMA Orange
+DefineGlobalColor("Neutral"     , CreateColor(255, 255, 0));  # HAMA Yellow
+
+DefineGlobalColor("BGBull"      , CreateColor (153, 255, 153));
+DefineGlobalColor("BGBear"      , CreateColor (255, 153, 153));
+#////////////////////////////////////////////////////////////////////////////////
+#mat(source, length, type) =>
+script mat {
+    input source = close;
+    input length = 69;
+    input type   = "EMA";
+    def mat;
+    mat =
+    if type == "SMA" then SimpleMovingAvg(source, length) else
+    if type == "EMA" then ExpAverage(source, length) else
+    if type == "WMA" then WMA(source, length) else
+    if type == "HMA" then WMA(2 * WMA(source, length / 2) - WMA(source, length), Round(Sqrt(length)))
+       else Double.NaN;
+    plot result = mat;
+}
+
+def ma = WMA(TrendSource, HAMALength);
+
+#//GRADIENT AREA
+def center  = ExpAverage(ma, 3);
+def xUp     = ma crosses above center;
+def xDn     = ma crosses below center;
+def chg     = ma - ma[1];
+def up      = chg > 0;
+def dn      = chg < 0;
+def srcBull = ma > center;
+def srcBear = ma < center;
+
+#### TREND ####
+def StrongUP = srcBull and up;
+def WeakUp   = srcBull and dn;
+def StrongDN = srcBear and dn;
+def WeakDN   = srcBear and up;
+def Neutral  = xUp or xDn or !StrongUP and !StrongDN and !WeakUp and !WeakDN;
+
+def SourceClose = (O + H + L + C) / 4;
+def LengthClose = CloseLength;
+
+def SourceOpen = CompoundValue(1, (SourceOpen[1] + SourceClose[1]) / 2, (O + C) / 2) ;
+def LengthOpen = OpenLength;
+
+def SourceHigh = Max(H, Max(SourceOpen, SourceClose));
+def LengthHigh = HighLength;
+
+def SourceLow = Min(L, Min(SourceOpen, SourceClose));
+def LengthLow = LowLength;
+
+#funcCalcMA1(type1, src1, len1) =>
+script funcCalcMA1 {
+    input type1 = "EMA";
+    input src1  = close;
+    input len1  = 0;
+    def funcCalcMA1;
+    funcCalcMA1 = if type1 == "SMA" then SimpleMovingAvg(src1, len1) else
+                  if type1 == "EMA" then ExpAverage(src1, len1) else WMA(src1, len1);
+    plot result = funcCalcMA1;
+}
+#funcCalcOpen(TypeOpen, SourceOpen, LengthOpen) =>
+script funcCalcOpen {
+    input TypeOpen   = "EMA";
+    input SourceOpen = close;
+    input LengthOpen = 0;
+    def funcCalcOpen;
+    funcCalcOpen = if TypeOpen == "SMA" then SimpleMovingAvg(SourceOpen, LengthOpen) else
+                   if TypeOpen == "EMA" then ExpAverage(SourceOpen, LengthOpen) else WMA(SourceOpen, LengthOpen);
+    plot result = funcCalcOpen;
+}
+#funcCalcHigh(TypeHigh, SourceHigh, LengthHigh) =>
+script funcCalcHigh {
+    input TypeHigh   = "EMA";
+    input SourceHigh = close;
+    input LengthHigh = 0;
+    def funcCalcHigh;
+    funcCalcHigh = if TypeHigh == "SMA" then SimpleMovingAvg(SourceHigh, LengthHigh) else
+                   if TypeHigh == "EMA" then ExpAverage(SourceHigh, LengthHigh) else WMA(SourceHigh, LengthHigh);
+    plot result = funcCalcHigh;
+}
+#funcCalcLow(TypeLow, SourceLow, LengthLow) =>
+script funcCalcLow {
+    input TypeLow   = "EMA";
+    input SourceLow = close;
+    input LengthLow = 0;
+    def funcCalcLow;
+    funcCalcLow = if TypeLow == "SMA" then SimpleMovingAvg(SourceLow, LengthLow) else
+                  if TypeLow == "EMA" then ExpAverage(SourceLow, LengthLow) else WMA(SourceLow, LengthLow);
+    plot result = funcCalcLow;
+}
+#funcCalcClose(TypeClose, SourceClose, LengthClose) =>
+script funcCalcClose {
+    input TypeClose   = "EMA";
+    input SourceClose = close;
+    input LengthClose = 0;
+    def funcCalcClose;
+    funcCalcClose = if TypeClose == "SMA" then SimpleMovingAvg(SourceClose, LengthClose) else
+                    if TypeClose == "EMA" then ExpAverage(SourceClose, LengthClose) else WMA(SourceClose, LengthClose);
+    plot result = funcCalcClose;
+}
+
+# Plot the new Chart
+def CandleOpen  = funcCalcOpen(OpenType, SourceOpen, LengthOpen);
+def CandleHigh  = funcCalcHigh(HighType, SourceHigh, LengthHigh);
+def CandleLow   = funcCalcLow(LowType, SourceLow, LengthLow);
+def CandleClose = funcCalcClose(CloseType, SourceClose, LengthClose);
+
+def MAValue  = funcCalcMA1(HAMAType, TrendSource, HAMALength);
+
+plot MALine = if HAMAMa then MAValue else na;
+MALine.SetStyle(Curve.FIRM);
+MALine.AssignValueColor( if StrongUP then GlobalColor("Bull")     else
+                         if WeakUp   then GlobalColor("WeakBull") else
+                         if StrongDN then GlobalColor("Bear")     else
+                         if WeakDN   then GlobalColor("WeakBear") else GlobalColor("Neutral"));
+MALine.SetLineWeight(2);
+
+# Plot STRONG UP
+def UpO1;
+def UpH1;
+def UpL1;
+def UpC1;
+if StrongUP and HAMABar
+then {
+    UpO1 = if CandleOpen < CandleClose then CandleClose else CandleOpen;
+    UpH1 = if CandleHigh > CandleClose then CandleClose else CandleHigh;
+    UpL1 = if CandleLow  < CandleOpen  then CandleOpen  else CandleLow;
+    UpC1 = if CandleOpen < CandleClose then CandleOpen  else CandleClose;
+} else
+{
+    UpO1 = na;
+    UpH1 = na;
+    UpL1 = na;
+    UpC1 = na;
+}
+# Plot WEAK UP
+def UpO;
+def UpH;
+def UpL;
+def UpC;
+if WeakUp and HAMABar
+then {
+    UpO = if CandleOpen < CandleClose then CandleClose else CandleOpen;
+    UpH = if CandleHigh > CandleClose then CandleClose else CandleHigh;
+    UpL = if CandleLow  < CandleOpen  then CandleOpen else CandleLow;
+    UpC = if CandleOpen < CandleClose then CandleOpen else CandleClose;
+} else
+{
+    UpO = na;
+    UpH = na;
+    UpL = na;
+    UpC = na;
+}
+# Plot WEAK DOWN
+def DnO;
+def DnH;
+def DnL;
+def DnC;
+if WeakDN and HAMABar
+then {
+    DnO = if CandleOpen < CandleClose then CandleClose else CandleOpen;
+    DnH = if CandleHigh > CandleOpen then CandleOpen else CandleHigh;
+    DnL = if CandleLow  < CandleClose then CandleClose else CandleLow;
+    DnC = if CandleOpen < CandleClose then CandleOpen else CandleClose;
+} else
+{
+    DnO = na;
+    DnH = na;
+    DnL = na;
+    DnC = na;
+}
+# Plot STRONG DOWN
+def DnO1;
+def DnH1;
+def DnL1;
+def DnC1;
+if StrongDN and HAMABar
+then {
+    DnO1 = if CandleOpen < CandleClose then CandleClose else CandleOpen;
+    DnH1 = if CandleHigh > CandleOpen then CandleOpen else CandleHigh;
+    DnL1 = if CandleLow  < CandleClose then CandleClose else CandleLow;
+    DnC1 = if CandleOpen < CandleClose then CandleOpen else CandleClose;
+} else
+{
+    DnO1 = na;
+    DnH1 = na;
+    DnL1 = na;
+    DnC1 = na;
+}
+# Plot Neutral
+def NuO;
+def NuH;
+def NuL;
+def NuC;
+if Neutral and HAMABar
+then {
+    NuO = if CandleOpen < CandleClose then CandleClose else CandleOpen;
+    NuH = if CandleHigh > CandleOpen then CandleOpen else CandleHigh;
+    NuL = if CandleLow  < CandleClose then CandleClose else CandleLow;
+    NuC = if CandleOpen < CandleClose then CandleOpen else CandleClose;
+} else
+{
+    NuO = na;
+    NuH = na;
+    NuL = na;
+    NuC = na;
+}
+# Plot the new Chart
+AddChart(high = UpH1, low = UpL1, open = UpO1, close = UpC1,
+         type = ChartType.CANDLE, growcolor =  GlobalColor("Bull"));
+AddChart(high = UpH , low = UpL , open = UpO,  close = UpC,
+         type = ChartType.CANDLE, growcolor =  GlobalColor("WeakBull"));
+
+AddChart(high = DnH1, low = DnL1, open = DnO1, close = DnC1,
+         type = ChartType.CANDLE, growcolor =  GlobalColor("Bear"));
+AddChart(high = DnH , low = DnL , open = DnO,  close = DnC,
+         type = ChartType.CANDLE, growcolor =  GlobalColor("WeakBear"));
+
+AddChart(high = NuH , low = NuL , open = NuO,  close = NuC,
+         type = ChartType.CANDLE, growcolor =  GlobalColor("Neutral"));
+
+### Signal ###
+def UpOpen = if CandleOpen < CandleClose then CandleClose else CandleOpen;
+def UpHigh = if CandleHigh > CandleClose then CandleClose else CandleHigh;
+def UpLow  = if CandleLow  < CandleOpen  then CandleOpen  else CandleLow;
+def UpClose= if CandleOpen < CandleClose then CandleOpen  else CandleClose;
+
+def DnOpen = if CandleOpen < CandleClose then CandleClose else CandleOpen;
+def DnHigh = if CandleHigh > CandleOpen then CandleOpen else CandleHigh;
+def DnLow  = if CandleLow  < CandleClose then CandleClose else CandleLow;
+def DnClose= if CandleOpen < CandleClose then CandleOpen else CandleClose;
+
+def HAMAHigh = C > CandleLow;
+def HAMALow  = L < DnLow;
 
 ####
 
-#def HA_Close_MA = (MA_HA_Open + MA_HA_High + MA_HA_Low + MA_HA_Close) / 4.0;
-#def HA_Open_MA  = if IsNaN(HA_Open_MA[1]) then (MA_HA_Open + MA_HA_Close) / 2.0 else (HA_Open_MA[1] + HA_Close_MA[1]) / 2.0;
-#def HA_High_MA  = Max(MA_HA_High, Max(HA_Open_MA, HA_Close_MA));
-#def HA_Low_MA   = Min(MA_HA_Low,  Min(HA_Open_MA, HA_Close_MA));
+AssignBackgroundColor(
+    if BackgroundColor then
+        if (StrongUP and C > UpHigh) then 
+            GlobalColor("BGBull") 
+        else if (StrongDN and C < DnLow) then 
+            GlobalColor("BGBear") 
+        else
+            Color.CURRENT
+    else 
+        Color.CURRENT
+);
 
-#Red Candlesticks -----------------------------------------------------------------|
-
-def MA_HA_Open_fall  = if MA_HA_Open >  MA_HA_Close then MA_HA_Open  else double.nan;
-def MA_HA_High_fall  = if MA_HA_Open >= MA_HA_Close then MA_HA_High  else double.nan;
-def MA_HA_Low_fall   = if MA_HA_Open >= MA_HA_Close then MA_HA_Low   else double.nan;
-def MA_HA_Close_fall = if MA_HA_Open >= MA_HA_Close then MA_HA_Close else double.nan;
-
-# royalBlue = createColor(65, 105, 225)
-AddChart(growColor = Color.plum, fallColor = createColor(65, 105, 225), neutralColor = Color.current, high = MA_HA_High_fall, low = MA_HA_Low_fall, open = MA_HA_Open_fall, close = MA_HA_Close_fall , type = ChartType.CANDLE);
-
-#Green Candlesticks ---------------------------------------------------------------|
-
-def MA_HA_Open_rise  = if MA_HA_Open <  MA_HA_Close then MA_HA_Close else double.nan;
-def MA_HA_High_rise  = if MA_HA_Open <= MA_HA_Close then MA_HA_High  else double.nan;
-def MA_HA_Low_rise   = if MA_HA_Open <= MA_HA_Close then MA_HA_Low   else double.nan;
-def MA_HA_Close_rise = if MA_HA_Open <= MA_HA_Close then MA_HA_Open  else double.nan;
-
-# royalBlue = createColor(65, 105, 225)
-AddChart(growColor = createColor(65, 105, 225), fallColor = Color.plum, neutralColor = Color.current, high = MA_HA_High_rise, low = MA_HA_Low_rise, open = MA_HA_Open_rise, close = MA_HA_Close_rise, type = ChartType.CANDLE);
-
+#############################
+#### END of HAMA Candles ####
+#############################
 
 #############################################################
 ###   Determine a flat market
@@ -358,10 +621,13 @@ def ExpL = if BarNumber() == 1 then Double.NaN else
 def BoxHigh = if !isnan(expL) and !isnan(ExpH) then ExpH else double.nan;
 def BoxLow = if !isnan(expL) and !isnan(ExpH) then ExpL else double.nan;
 
-addcloud(BoxHigh, BoxLow, color.gray, color.gray, yes);
+addcloud(BoxHigh, BoxLow, Color.GRAY, Color.GRAY, yes);
 
 def Flat = if (!isNan(BoxHigh[1]) and !isNan(BoxLow[1])) and !TradeInFlatRange then 1 else 0;
 
+############################
+#### END of Flat Market ####
+############################
 
 ####
 # The conditions below are for possible entries when price pulls back
@@ -372,68 +638,21 @@ input pbAvgLength = 9; #hint pbAvgLength: The length of the fast moving average 
 input pbAvgType = AverageType.SIMPLE; #hint pbAvgType: The fast moving average type to use for pullback entries.
 input pbDisplace = 0; #hint pbDisplace: The displacement of the fast moving average to use for pullback entries.
 
-plot pbMA = MovingAverage(pbAvgType, data = HA_Open[-pbDisplace], length = pbAvgLength);
+plot pbMA = MovingAverage(pbAvgType, data = src[-pbDisplace], length = pbAvgLength);
 pbMA.SetDefaultColor(Color.LIME);
 pbMA.SetLineWeight(2);
 
-input ROCLength = 11;
-assert(ROCLength > 0, "'ROC Length' must be positive: " + ROCLength);
-
-def ROCPrice = HA_Close;
-def ROC = if ROCPrice[ROCLength] != 0 then (ROCPrice / ROCPrice[ROCLength] - 1) * 100 else 0;
-
-####
-
-input RSI_Length   = 14;
-input RSI_Avg_Type = AverageType.WILDERS;
-
-def NetChgAvg = MovingAverage(RSI_Avg_Type, fundamental(price, period = vPeriod) - fundamental(price, period = vPeriod)[1], RSI_Length);
-def TotChgAvg = MovingAverage(RSI_Avg_Type, AbsValue(fundamental(price, period = vPeriod) - fundamental(price, period = vPeriod)[1]), RSI_Length);
-def ChgRatio  = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
-def RSI       = 50 * (ChgRatio + 1);
-
-input RSI_Lookback = 3;
-
-####
-
-input MFLength   = 14;
-input MFILength  = 1;
-input MFIAvgType = AverageType.SIMPLE;
-
-def MoneyFlowIndex = MovingAverage(
-    MFIAvgType,
-    moneyflow(H, C, L, V, MFLength),
-    MFILength
-);
-
-input avgMFILength  = 3;
-input avgMFIAvgType = AverageType.WILDERS;
-
-def avgMFI = MovingAverage(avgMFIAvgType, MoneyFlowIndex, avgMFILength);
-
-####
-
 def bullishpb = ( # L < pbsma && O > pbsma;
-    #Min(O, C) >= pbsma # full candle close above
+    #Min(O, C) > pbsma # full candle close above
     #&&
+    countBuy > 0 and countSell < 1 and buy # From Macro Trend
+    &&
+    C > MAValue
+    &&
+    HAMAHigh
+    &&
     !Flat
-    &&
-    (HA_Close > HA_Open and (HA_Close - HA_Open) > (HA_Close[1] - HA_Open[1]))
-    &&
-    (HA_Close > pbMA) #and (HA_Close - pbMA) > (HA_Close[1] - pbMA[1]))
-    &&
-    (40 < RSI and IsAscending(RSI, RSI_Lookback))
-    #&&
-    #((MA_HA_Close - MA_HA_Open) > (MA_HA_Close[1] - MA_HA_Open[1]))
-    #&&
-    #(bullHAClose > bullHAOpen and (bullHAClose - bullHAOpen) > (bullHAClose[1] - bullHAOpen[1]))
-    #&&
-    #(MA_Bull_HA_Close > MA_Bull_HA_Open) #and (bullSHAClose - bullSHAOpen) > (bullSHAClose[1] - bullSHAOpen[1]))
-    #&&
-    #ROC > 0
     
-    #&&
-    #avgMFI > avgMFI[1]
 );
 def bullpb = (
     if (bullphase) then (
@@ -450,25 +669,15 @@ def bullpb = (
 );
 
 def bearishpb = ( # H > pbsma && O < pbsma;
-    #Max(O, C) <= pbsma # full candle close below
+    #Max(O, C) < pbsma # full candle close below
     #&&
+    countSell > 0 and countBuy < 1 and sell # From Macro Trend
+    &&
+    C < MAValue
+    &&
+    HAMALow
+    &&
     !Flat
-    &&
-    (HA_Open > HA_Close and (HA_Open - HA_Close) > (HA_Open[1] - HA_Close[1]))
-    &&
-    (pbMA > HA_Close) #and (pbMA - HA_Close) > (pbMA[1] - HA_Close[1]))
-    &&
-    (60 > RSI and IsDescending(RSI, RSI_Lookback))
-    #&&
-    #((MA_HA_Open - MA_HA_Close) > (MA_HA_Open[1] - MA_HA_Close[1]))
-    #&&
-    #(bullHAOpen > bullHAClose and (bullHAOpen - bullHAClose) > (bullHAOpen[1] - bullHAClose[1]))
-    #&&
-    #(MA_Bull_HA_Open > MA_Bull_HA_Close) #and (bullSHAOpen - bullSHAClose) > (bullSHAOpen[1] - bullSHAClose[1]))
-    #&&
-    #ROC < 0
-    #&
-    #avgMFI < avgMFI[1]
 );
 def bearpb = (
     if (bearphase) then (
@@ -483,6 +692,10 @@ def bearpb = (
         bearishpb
     )
 );
+
+########################
+#### End of Entries ####
+########################
 
 ####
 # The conditions below are for stop losses
@@ -526,16 +739,16 @@ DT9.AssignValueColor(if DT9 < 9 then Color.MAGENTA else Color.CYAN);
 ####
 
 def bullstp = (
-    pbMA > HA_Close
+    sell # From Macro Trend
 );
 
 def bearstp = (
-    HA_Close > pbMA
+    buy # From Macro Trend
 );
 
 ####
 
-input trailType = {default modified, heikinashi, unmodified};
+input trailType = {default modified, unmodified};
 input ATRPeriod = 5;
 input ATRFactor = 2.9;
 input ATRAverageType = AverageType.WILDERS;
@@ -554,12 +767,14 @@ def trueRange;
 switch (trailType) {
     case modified:
         trueRange = Max(HiLo, Max(HRef, LRef));
-    case heikinashi:
-        trueRange = TrueRange(HA_High, HA_Close, HA_Low);
     case unmodified:
         trueRange = TrueRange(H, C, L);
 }
 def loss = ATRFactor * MovingAverage(ATRAverageType, trueRange, ATRPeriod);
+
+######################
+#### END of Stops ####
+######################
 
 
 #######################################
@@ -652,25 +867,9 @@ SellStpSig.AssignValueColor(color.LIGHT_GRAY);
 SellStpSig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
 SellStpSig.SetLineWeight(3);
 
-
-####
-# Below adds labels to the chart to identify what phase the underlying is in
-####
-
-AddLabel(bullphase, " Bull Phase " , if bullphase is true then Color.GREEN else Color.BLACK);
-
-AddLabel(accphase, " Accumation Phase ", if accphase is true then Color.LIGHT_GREEN else Color.BLACK);
-
-AddLabel(recphase, " Recovery Phase ", if recphase is true then Color.LIGHT_ORANGE else Color.BLACK);
-
-AddLabel(warnphase, " Warning Phase ", if warnphase is true then Color.ORANGE else Color.BLACK);
-
-AddLabel(distphase, " Distribution Phase ", if distphase is true then Color.LIGHT_RED else Color.BLACK);
-
-AddLabel(bearphase, " Bear Phase ", if bearphase is true then Color.RED else Color.BLACK);
-
-
-#### spacer
+################
+#### Spacer ####
+################
 addlabel(yes, "            ", color.BLACK);
 addlabel(yes, "            ", color.BLACK);
 addlabel(yes, "            ", color.BLACK);
@@ -694,7 +893,9 @@ addlabel(yes, "            ", color.BLACK);
 addlabel(yes, "            ", color.BLACK);
 addlabel(yes, "            ", color.BLACK);
 addlabel(yes, "            ", color.BLACK);
-#### end spacer code
+#######################
+#### END of Spacer ####
+#######################
 
 #######################################
 ##  Orders
