@@ -307,6 +307,16 @@ AddCloud(if (bear) then pos else na, neg, Color.DARK_RED);
 ####
 # Smoothed Heiken Ashi
 # [URL]https://usethinkscript.com/threads/smoothed-heikin-ashi-with-atr-trail-for-thinkorswim.9992/[/URL]
+#
+# Moving Average of Heikin Ashi Values:
+#     * This approach involves calculating the Heikin Ashi values first and then taking a moving average of these values.
+#     * It smooths out the Heikin Ashi data even further, potentially filtering out more noise and providing a clearer trend indication.
+#     * It may be useful if you're looking for smoother trend signals or want to reduce the impact of short-term fluctuations.
+#
+# Heikin Ashi of the Moving Average:
+#     * This approach involves taking a moving average of the open, high, low, and close prices first and then calculating Heikin Ashi values based on these smoothed prices.
+#     * It applies the Heikin Ashi calculation to already smoothed data, potentially preserving more of the original price action while still benefiting from the smoothing effect of the moving average.
+#     * It may be useful if you want to maintain a balance between smoothing and responsiveness to price movements.
 ####
 
 input OpenAvgLength  = 20;
