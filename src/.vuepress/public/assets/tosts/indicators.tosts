@@ -584,7 +584,7 @@ def isLong  = if CurrentPosition == 1 then 1 else 0;
 def isShort = if CurrentPosition == -1 then 1 else 0;
 def isFlat  = if CurrentPosition == 0 then 1 else 0;
 
-plot TrailingStop = trail;
+plot TrailingStop = if use_ATR_Trail then trail else Double.NaN;
 TrailingStop.SetPaintingStrategy(PaintingStrategy.POINTS);
 TrailingStop.AssignValueColor(if isLong then Color.MAGENTA else if isShort then Color.CYAN else Color.GRAY);
 
