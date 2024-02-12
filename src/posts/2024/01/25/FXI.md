@@ -7,6 +7,11 @@ tags:
   - large cap
   - foreign
   - buy
+price:
+  open: 22.97
+  high: 23.10
+  low: 22.64
+  close: 22.75
 ---
 <div class="post">
 <snapshot-grid 

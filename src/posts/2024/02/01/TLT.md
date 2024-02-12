@@ -7,6 +7,11 @@ tags:
   - treasury
   - bonds
   - buy
+price:
+  open: 97.42
+  high: 98.67
+  low: 97.19
+  close: 98.24
 ---
 <div class="post">
 <snapshot-grid 

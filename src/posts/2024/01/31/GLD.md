@@ -6,6 +6,11 @@ tags:
   - gold
   - commodities
   - buy
+price:
+  open: 189.37
+  high: 190.46
+  low: 188.13
+  close: 188.45
 ---
 <div class="post">
 <snapshot-grid 

@@ -6,6 +6,11 @@ tags:
   - silver
   - commodities
   - buy
+price:
+  open: 21.03
+  high: 21.25
+  low: 20.84
+  close: 21.21
 ---
 <div class="post">
 <snapshot-grid 

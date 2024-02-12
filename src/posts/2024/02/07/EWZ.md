@@ -7,6 +7,11 @@ tags:
   - MSCI
   - foreign
   - buy
+price:
+  open: 33.30
+  high: 33.48
+  low: 33.20
+  close: 33.39
 ---
 <div class="post">
 <snapshot-grid 

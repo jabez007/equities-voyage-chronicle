@@ -7,6 +7,11 @@ tags:
   - miners
   - equities
   - buy
+price:
+  open: 27.65
+  high: 27.75
+  low: 27.38
+  close: 27.46
 ---
 <div class="post">
 <snapshot-grid 

@@ -6,6 +6,11 @@ tags:
   - biotech
   - equities
   - buy
+price:
+  open: 136.88
+  high: 137.04
+  low: 135.75
+  close: 136.58
 ---
 <div class="post">
 <snapshot-grid 

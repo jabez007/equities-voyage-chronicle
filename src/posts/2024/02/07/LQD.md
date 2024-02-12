@@ -7,6 +7,11 @@ tags:
   - corporate
   - bonds
   - buy
+price:
+  open: 108.92
+  high: 109.31
+  low: 108.76
+  close: 108.86
 ---
 <div class="post">
 <snapshot-grid 

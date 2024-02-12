@@ -6,6 +6,11 @@ tags:
   - oil
   - commodities
   - buy
+price:
+  open: 70.27
+  high: 71.60
+  low: 70.22
+  close: 71.52
 ---
 <div class="post">
 <snapshot-grid 

@@ -10,6 +10,11 @@ tags:
     - loss
     - watchlist
     - buy
+price:
+  open: 38.09
+  high: 38.30
+  low: 38.02
+  close: 38.11
 ---
 <div class="post">
 <snapshot-grid 

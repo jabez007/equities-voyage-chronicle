@@ -7,6 +7,11 @@ tags:
   - sector
   - equities
   - buy
+price:
+  open: 70.10
+  high: 70.55
+  low: 69.92
+  close: 70.26
 ---
 <div class="post">
 <snapshot-grid 
