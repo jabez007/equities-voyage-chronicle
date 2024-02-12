@@ -25,7 +25,6 @@ def V = volume(period = vPeriod);
 def SV = V * (H - C) / (H - L);
 def BV = V * (C - L) / (H - L);
 
-
 ####
 # below determines if volume supports the move, adds conviction
 ####
@@ -36,7 +35,6 @@ AddLabel(yes, " Buyer Vol Strong ", if buyerVol then Color.GREEN else color.blac
 def sellerVol = high < high[1] and low < low[1] and SV*1.05 > BV;
 AddLabel(yes, " Seller Vol Strong ", if sellerVol then Color.MAGENTA else color.black);
 
-
 ####
 # below determines if price supports the move
 ####
@@ -46,7 +44,6 @@ AddLabel(yes, " Price Strong ", if strongPrice then Color.GREEN else color.black
 
 def weakPrice = high < high[1] and high[1] < high[2] and low < low[1] and low[1] < low[2];
 AddLabel(yes, " Price Weak ", if weakPrice then Color.MAGENTA else color.black);
-
 
 ####
 # Moving Averages used to determine Bullish or Bearish
@@ -120,7 +117,6 @@ def recphase = (
     &&
     src > fastMA
 );
-
 
 ####
 # Bearish Criteria define below
@@ -301,8 +297,8 @@ def bear = countSell > 1 and highlightBackground;
 def pos = Double.POSITIVE_INFINITY;
 def neg = Double.NEGATIVE_INFINITY;
 
-AddCloud(if (bull and (bullphase or accphase  or recphase))  then pos else na, neg, Color.DARK_GREEN);
-AddCloud(if (bear and (bearphase or distphase or warnphase)) then pos else na, neg, Color.DARK_RED);
+AddCloud(if (bull) then pos else na, neg, Color.DARK_GREEN);
+AddCloud(if (bear) then pos else na, neg, Color.DARK_RED);
 
 ###########################
 ### END of Macro Trend ####
@@ -310,6 +306,7 @@ AddCloud(if (bear and (bearphase or distphase or warnphase)) then pos else na, n
 
 ####
 # Smoothed Heiken Ashi
+# [URL]https://usethinkscript.com/threads/smoothed-heikin-ashi-with-atr-trail-for-thinkorswim.9992/[/URL]
 ####
 
 input OpenAvgLength  = 20;
@@ -488,26 +485,30 @@ DT9.AssignValueColor(if DT9 < 9 then Color.MAGENTA else Color.CYAN);
 
 def bullstp = (
     countBuy < 1 # From Macro Trend
-    or
+    &&
     HA_Open_MA > HA_Close_MA
+    &&
+    Flat
 );
 
 def bearstp = (
     countSell < 1 # From Macro Trend
-    or
+    &&
     HA_Close_MA > HA_Open_MA
+    &&
+    Flat
 );
 
 ####
 
-input trailType = {default modified, unmodified};
-input ATRPeriod = 5;
-input ATRFactor = 2.9;
-input ATRAverageType = AverageType.WILDERS;
+input trailType    = {default modified, unmodified};
+input ATR_Period   = 5;
+input ATR_Factor   = 2.9;
+input ATR_Avg_Type = AverageType.WILDERS;
 
-Assert(ATRFactor > 0, "'atr factor' must be positive: " + ATRFactor);
+Assert(ATR_Factor > 0, "'atr factor' must be positive: " + ATR_Factor);
 
-def HiLo = Min(H - L, 1.5 * Average(H - L, ATRPeriod));
+def HiLo = Min(H - L, 1.5 * Average(H - L, ATR_Period));
 def HRef = if L <= H[1]
     then H - C[1]
     else (H - C[1]) - 0.5 * (L - H[1]);
@@ -522,12 +523,11 @@ switch (trailType) {
     case unmodified:
         trueRange = TrueRange(H, C, L);
 }
-def loss = ATRFactor * MovingAverage(ATRAverageType, trueRange, ATRPeriod);
+def loss = ATR_Factor * MovingAverage(ATR_Avg_Type, trueRange, ATR_Period);
 
 ######################
 #### END of Stops ####
 ######################
-
 
 #######################################
 ##  Maintain the position of trades
@@ -658,17 +658,16 @@ def isOrder = if CurrentPosition == CurrentPosition[1] then 0 else 1; # Position
 # If there is an order to open, then the price is the next day's open
 def orderPrice = if (isOrder and (bullpb or bearpb)) then O[-1] else orderPrice[1];
 
-
 #######################################
 ##  Price and Profit
 #######################################
 
 def profitLoss;
 
-if (!isOrder or orderPrice[1] == 0){
+if (!isOrder or orderPrice[1] == 0) {
     profitLoss = 0;
 # If there is an order to close, 
-} else if ((isOrder and isLong[1]) and (SellSig or BuyStpSig)){
+} else if ((isOrder and isLong[1]) and (SellSig or BuyStpSig)) {
     profitLoss = (if (isNaN(O[-1])) then C else O[-1])  - orderPrice[1]; # then the price is the next day's open
 } else if ((isOrder and isShort[1]) and (BuySig or SellStpSig)) {
     profitLoss = orderPrice[1] - (if (isNaN(O[-1])) then C else O[-1]); # then the price is the next day's open
@@ -677,12 +676,12 @@ if (!isOrder or orderPrice[1] == 0){
 }
 
 # Total Profit or Loss
-def profitLossSum = compoundValue(1, if isNaN(isOrder)  or barnumber()==1 then 0 else if isOrder then profitLossSum[1] + profitLoss else profitLossSum[1], 0);
+def profitLossSum = compoundValue(1, if isNaN(isOrder) or barnumber()==1 then 0 else if isOrder then profitLossSum[1] + profitLoss else profitLossSum[1], 0);
 
 # How many trades won or lost
-def profitWinners = compoundValue(1, if isNaN(profitWinners[1]) or barnumber()==1 then 0 else if isOrder and profitLoss > 0 then profitWinners[1] + 1 else profitWinners[1], 0);
-def profitLosers = compoundValue(1, if isNaN(profitLosers[1])  or barnumber()==1 then 0 else if isOrder and profitLoss < 0 then profitLosers[1] + 1 else profitLosers[1], 0);
-def profitPush = compoundValue(1, if isNaN(profitPush[1])  or barnumber()==1 then 0 else if isOrder and profitLoss == 0 then profitPush[1] + 1 else profitPush[1], 0);
+def profitWinners = compoundValue(1, if isNaN(profitWinners[1]) or barnumber()==1 then 0 else if isOrder and profitLoss > 0  then profitWinners[1] + 1 else profitWinners[1], 0);
+def profitLosers  = compoundValue(1, if isNaN(profitLosers[1])  or barnumber()==1 then 0 else if isOrder and profitLoss < 0  then profitLosers[1] + 1  else profitLosers[1],  0);
+def profitPush    = compoundValue(1, if isNaN(profitPush[1])    or barnumber()==1 then 0 else if isOrder and profitLoss == 0 then profitPush[1] + 1    else profitPush[1],    0);
 
 def orderCount = (profitWinners + profitLosers + profitPush) - 1;
 
@@ -696,21 +695,20 @@ def dollarProfitLoss = if orderPRice[1]==0 or isNaN(orderPrice[1]) then 0 else r
 def dollarPLSum = round((profitLossSum/Ticksize())*Tickvalue());
 
 # Split profits or losses by long and short trades
-def profitLong = compoundValue(1, if isNan(profitLong[1])  or barnumber()==1 then 0 else if isOrder and isLong[1] then profitLong[1]+dollarProfitLoss else profitLong[1],0);
-def profitShort = compoundValue(1, if isNan(profitShort[1])  or barnumber()==1 then 0 else if isOrder and isShort[1] then profitShort[1]+dollarProfitLoss else profitShort[1],0);
-def countLong = compoundValue(1, if isNaN(countLong[1])  or barnumber()==1 then 0 else if isOrder and isLong[1] then countLong[1]+1 else countLong[1],0);
-def countShort = compoundValue(1, if isNaN(countShort[1])  or barnumber()==1 then 0 else if isOrder and isShort[1] then countShort[1]+1 else countShort[1],0);
+def profitLong  = compoundValue(1, if isNan(profitLong[1])  or barnumber()==1 then 0 else if isOrder and isLong[1]  then profitLong[1]+dollarProfitLoss  else profitLong[1],  0);
+def profitShort = compoundValue(1, if isNan(profitShort[1]) or barnumber()==1 then 0 else if isOrder and isShort[1] then profitShort[1]+dollarProfitLoss else profitShort[1], 0);
+def countLong   = compoundValue(1, if isNaN(countLong[1])   or barnumber()==1 then 0 else if isOrder and isLong[1]  then countLong[1]+1                  else countLong[1],   0);
+def countShort  = compoundValue(1, if isNaN(countShort[1])  or barnumber()==1 then 0 else if isOrder and isShort[1] then countShort[1]+1                 else countShort[1],  0);
 
 # What was the biggest winning and losing trade
-def biggestWin = compoundValue(1, if isNaN(biggestWin[1]) or barnumber()==1 then 0 else if isOrder and (dollarProfitLoss > 0) and (dollarProfitLoss > biggestWin[1]) then dollarProfitLoss else biggestWin[1], 0);
+def biggestWin  = compoundValue(1, if isNaN(biggestWin[1])  or barnumber()==1 then 0 else if isOrder and (dollarProfitLoss > 0) and (dollarProfitLoss > biggestWin[1])  then dollarProfitLoss else biggestWin[1],  0);
 def biggestLoss = compoundValue(1, if isNaN(biggestLoss[1]) or barnumber()==1 then 0 else if isOrder and (dollarProfitLoss < 0) and (dollarProfitLoss < biggestLoss[1]) then dollarProfitLoss else biggestLoss[1], 0);
 
 # What percent were winners
-def PCTWin = round((profitWinners/orderCount)*100,2);
+def PCTWin = round((profitWinners / orderCount) * 100, 2);
 
 # Average trade
-def avgTrade = round((dollarPLSum/orderCount),2);
-
+def avgTrade = round((dollarPLSum / orderCount), 2);
 
 #######################################
 ##  Create Labels
@@ -731,12 +729,11 @@ AddLabel(showLabels, "Short Profit: " +AsDollars(profitShort), if profitShort > 
 AddLabel(if !IsNan(CurrentPosition) and showLabels then 1 else 0, "Open: "+ (If isLong then "Bought" else "Sold") + " @ "+orderPrice, color.white);
 AddLabel(if !IsNan(orderPrice) and showLabels then 1 else 0, "Open Trade P/L: "+ AsDollars(TradePL), if (TradePL > 0) then color.green else if (TradePl < 0) then color.red else color.gray);
 
-
 #######################################
 ##  Chart Bubbles for Profit/Loss
 #######################################
 
 input showBubbles = yes;
 
-AddChartBubble(showBubbles and isOrder and isLong[1], low, "$"+dollarProfitLoss, if dollarProfitLoss == 0 then Color.LIGHT_GRAY else if dollarProfitLoss > 0 then Color.GREEN else color.Red, 0);
-AddChartBubble(showBubbles and isOrder and isShort[1], high,  "$"+dollarProfitLoss, if dollarProfitLoss == 0 then Color.LIGHT_GRAY else if dollarProfitLoss > 0 then Color.GREEN else color.Red, 1);
+AddChartBubble(showBubbles and isOrder and isLong[1],  low,  "$"+dollarProfitLoss, if dollarProfitLoss == 0 then Color.LIGHT_GRAY else if dollarProfitLoss > 0 then Color.GREEN else color.Red, 0);
+AddChartBubble(showBubbles and isOrder and isShort[1], high, "$"+dollarProfitLoss, if dollarProfitLoss == 0 then Color.LIGHT_GRAY else if dollarProfitLoss > 0 then Color.GREEN else color.Red, 1);
