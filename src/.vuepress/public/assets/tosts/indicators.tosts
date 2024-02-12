@@ -400,8 +400,8 @@ def bullishpb = (
     countBuy > 0 and countSell < 1 and buy # From Macro Trend
     &&
     (HA_Close_MA > HA_Open_MA and (HA_Close_MA - HA_Open_MA) > (HA_Close_MA[1] - HA_Open_MA[1]))
-    &&
-    !Flat    
+    #&&
+    #!Flat    
 );
 def bullpb = (
     if (bullphase) then (
@@ -421,8 +421,8 @@ def bearishpb = (
     countSell > 0 and countBuy < 1 and sell # From Macro Trend
     &&
     (HA_Open_MA > HA_Close_MA and (HA_Open_MA - HA_Close_MA) > (HA_Open_MA[1] - HA_Close_MA[1]))
-    &&
-    !Flat
+    #&&
+    #!Flat
 );
 def bearpb = (
     if (bearphase) then (
@@ -487,24 +487,25 @@ def bullstp = (
     countBuy < 1 # From Macro Trend
     &&
     HA_Open_MA > HA_Close_MA
-    &&
-    Flat
+    #&&
+    #Flat
 );
 
 def bearstp = (
     countSell < 1 # From Macro Trend
     &&
     HA_Close_MA > HA_Open_MA
-    &&
-    Flat
+    #&&
+    #Flat
 );
 
 ####
 
-input trailType    = {default modified, unmodified};
-input ATR_Period   = 5;
-input ATR_Factor   = 2.9;
-input ATR_Avg_Type = AverageType.WILDERS;
+input use_ATR_Trail = no;
+input trailType     = {default modified, unmodified};
+input ATR_Period    = 5;
+input ATR_Factor    = 2.9;
+input ATR_Avg_Type  = AverageType.WILDERS;
 
 Assert(ATR_Factor > 0, "'atr factor' must be positive: " + ATR_Factor);
 
@@ -555,7 +556,7 @@ if ((BarNumber() == 1) OR isNaN(CurrentPosition[1])) {
         if (bearpb){
             CurrentPosition = -1;
             trail = C + loss;
-        } else if (useStops and (bullstp or C < trail[1])){
+        } else if ((useStops and bullstp) or (use_ATR_Trail and C < trail[1])) {
             CurrentPosition = 0;
             trail = Double.NaN;
         } else {
@@ -566,7 +567,7 @@ if ((BarNumber() == 1) OR isNaN(CurrentPosition[1])) {
         if (bullpb){
             CurrentPosition = 1;
             trail = C - loss;
-        } else if (useStops and (bearstp or C > trail[1])){
+        } else if ((useStops and bearstp) or (use_ATR_Trail and C > trail[1])) {
             CurrentPosition = 0;
             trail = Double.NaN;
         } else {
@@ -608,13 +609,13 @@ Alert(SellSig and useAlerts, "Sell Signal", Alert.bar, sound.Ding);
 Alert(SellSig and useAlerts, "Sell Signal", Alert.bar, sound.Ding);
 
 # If long and get a BuyStop
-Plot BuyStpSig = if (useStops and (bullstp or C < trail[1]) and isLong[1]) then 1 else 0;
+Plot BuyStpSig = if (((useStops and bullstp) or (use_ATR_Trail and C < trail[1])) and isLong[1]) then 1 else 0;
 BuyStpSig.AssignValueColor(color.LIGHT_GRAY);
 BuyStpSig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
 BuyStpSig.SetLineWeight(3);
 
 # If short and get a SellStop
-Plot SellStpSig = if (useStops and (bearstp or C > trail[1]) and isShort[1]) then 1 else 0;
+Plot SellStpSig = if (((useStops and bearstp) or (use_ATR_Trail and C > trail[1])) and isShort[1]) then 1 else 0;
 SellStpSig.AssignValueColor(color.LIGHT_GRAY);
 SellStpSig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
 SellStpSig.SetLineWeight(3);
