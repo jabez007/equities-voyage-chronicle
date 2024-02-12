@@ -381,7 +381,7 @@ def Neutral  = xUp or xDn or !StrongUP and !StrongDN and !WeakUp and !WeakDN;
 def SourceClose = (O + H + L + C) / 4;
 def LengthClose = CloseLength;
 
-def SourceOpen = CompoundValue(1, (SourceOpen[1] + SourceClose[1]) / 2, (O + C) / 2) ;
+def SourceOpen = CompoundValue(1, (SourceOpen[1] + SourceClose[1]) / 2, (O + C) / 2);
 def LengthOpen = OpenLength;
 
 def SourceHigh = Max(H, Max(SourceOpen, SourceClose));
@@ -451,10 +451,13 @@ def MAValue  = funcCalcMA1(HAMAType, src, HAMALength);
 
 plot MALine = if HAMAMa then MAValue else na;
 MALine.SetStyle(Curve.FIRM);
-MALine.AssignValueColor( if StrongUP then GlobalColor("Bull")     else
-                         if WeakUp   then GlobalColor("WeakBull") else
-                         if StrongDN then GlobalColor("Bear")     else
-                         if WeakDN   then GlobalColor("WeakBear") else GlobalColor("Neutral"));
+MALine.AssignValueColor(
+    if StrongUP then GlobalColor("Bull")     else
+    if WeakUp   then GlobalColor("WeakBull") else
+    if StrongDN then GlobalColor("Bear")     else
+    if WeakDN   then GlobalColor("WeakBear") else 
+    GlobalColor("Neutral")
+);
 MALine.SetLineWeight(2);
 
 # Plot STRONG UP
@@ -484,8 +487,8 @@ if WeakUp and HAMABar
 then {
     UpO = if CandleOpen < CandleClose then CandleClose else CandleOpen;
     UpH = if CandleHigh > CandleClose then CandleClose else CandleHigh;
-    UpL = if CandleLow  < CandleOpen  then CandleOpen else CandleLow;
-    UpC = if CandleOpen < CandleClose then CandleOpen else CandleClose;
+    UpL = if CandleLow  < CandleOpen  then CandleOpen  else CandleLow;
+    UpC = if CandleOpen < CandleClose then CandleOpen  else CandleClose;
 } else
 {
     UpO = na;
@@ -501,9 +504,9 @@ def DnC;
 if WeakDN and HAMABar
 then {
     DnO = if CandleOpen < CandleClose then CandleClose else CandleOpen;
-    DnH = if CandleHigh > CandleOpen then CandleOpen else CandleHigh;
+    DnH = if CandleHigh > CandleOpen  then CandleOpen  else CandleHigh;
     DnL = if CandleLow  < CandleClose then CandleClose else CandleLow;
-    DnC = if CandleOpen < CandleClose then CandleOpen else CandleClose;
+    DnC = if CandleOpen < CandleClose then CandleOpen  else CandleClose;
 } else
 {
     DnO = na;
@@ -519,9 +522,9 @@ def DnC1;
 if StrongDN and HAMABar
 then {
     DnO1 = if CandleOpen < CandleClose then CandleClose else CandleOpen;
-    DnH1 = if CandleHigh > CandleOpen then CandleOpen else CandleHigh;
+    DnH1 = if CandleHigh > CandleOpen  then CandleOpen  else CandleHigh;
     DnL1 = if CandleLow  < CandleClose then CandleClose else CandleLow;
-    DnC1 = if CandleOpen < CandleClose then CandleOpen else CandleClose;
+    DnC1 = if CandleOpen < CandleClose then CandleOpen  else CandleClose;
 } else
 {
     DnO1 = na;
@@ -537,9 +540,9 @@ def NuC;
 if Neutral and HAMABar
 then {
     NuO = if CandleOpen < CandleClose then CandleClose else CandleOpen;
-    NuH = if CandleHigh > CandleOpen then CandleOpen else CandleHigh;
+    NuH = if CandleHigh > CandleOpen  then CandleOpen  else CandleHigh;
     NuL = if CandleLow  < CandleClose then CandleClose else CandleLow;
-    NuC = if CandleOpen < CandleClose then CandleOpen else CandleClose;
+    NuC = if CandleOpen < CandleClose then CandleOpen  else CandleClose;
 } else
 {
     NuO = na;
@@ -549,28 +552,28 @@ then {
 }
 # Plot the new Chart
 AddChart(high = UpH1, low = UpL1, open = UpO1, close = UpC1,
-         type = ChartType.CANDLE, growcolor =  GlobalColor("Bull"));
-AddChart(high = UpH , low = UpL , open = UpO,  close = UpC,
-         type = ChartType.CANDLE, growcolor =  GlobalColor("WeakBull"));
+         type = ChartType.CANDLE, growcolor = GlobalColor("Bull"));
+AddChart(high = UpH, low = UpL, open = UpO, close = UpC,
+         type = ChartType.CANDLE, growcolor = GlobalColor("WeakBull"));
 
 AddChart(high = DnH1, low = DnL1, open = DnO1, close = DnC1,
-         type = ChartType.CANDLE, growcolor =  GlobalColor("Bear"));
-AddChart(high = DnH , low = DnL , open = DnO,  close = DnC,
-         type = ChartType.CANDLE, growcolor =  GlobalColor("WeakBear"));
+         type = ChartType.CANDLE, growcolor = GlobalColor("Bear"));
+AddChart(high = DnH, low = DnL, open = DnO, close = DnC,
+         type = ChartType.CANDLE, growcolor = GlobalColor("WeakBear"));
 
-AddChart(high = NuH , low = NuL , open = NuO,  close = NuC,
-         type = ChartType.CANDLE, growcolor =  GlobalColor("Neutral"));
+AddChart(high = NuH, low = NuL, open = NuO, close = NuC,
+         type = ChartType.CANDLE, growcolor = GlobalColor("Neutral"));
 
 ### Signal ###
-def UpOpen = if CandleOpen < CandleClose then CandleClose else CandleOpen;
-def UpHigh = if CandleHigh > CandleClose then CandleClose else CandleHigh;
-def UpLow  = if CandleLow  < CandleOpen  then CandleOpen  else CandleLow;
-def UpClose= if CandleOpen < CandleClose then CandleOpen  else CandleClose;
+def UpOpen  = if CandleOpen < CandleClose then CandleClose else CandleOpen;
+def UpHigh  = if CandleHigh > CandleClose then CandleClose else CandleHigh;
+def UpLow   = if CandleLow  < CandleOpen  then CandleOpen  else CandleLow;
+def UpClose = if CandleOpen < CandleClose then CandleOpen  else CandleClose;
 
-def DnOpen = if CandleOpen < CandleClose then CandleClose else CandleOpen;
-def DnHigh = if CandleHigh > CandleOpen then CandleOpen else CandleHigh;
-def DnLow  = if CandleLow  < CandleClose then CandleClose else CandleLow;
-def DnClose= if CandleOpen < CandleClose then CandleOpen else CandleClose;
+def DnOpen  = if CandleOpen < CandleClose then CandleClose else CandleOpen;
+def DnHigh  = if CandleHigh > CandleOpen  then CandleOpen  else CandleHigh;
+def DnLow   = if CandleLow  < CandleClose then CandleClose else CandleLow;
+def DnClose = if CandleOpen < CandleClose then CandleOpen  else CandleClose;
 
 def HAMAHigh = C > CandleLow;
 def HAMALow  = L < DnLow;
