@@ -253,6 +253,7 @@ def v_slowMA = MovingAverage(TrendAvgType, src, TrendSlowLength);
 def v_biasMA = MovingAverage(TrendAvgType, src, ConsolidatedLength);
 
 #// Color the MAs
+DefineGlobalColor("RoyalBlue", createColor(65, 105, 225));
 def TrendColor = if v_fastMA > v_slowMA then  1 else
                  if v_fastMA < v_slowMA then -1 else 0;
 
@@ -261,12 +262,12 @@ plot ConsMA        = if showBothMovAvg then na       else v_biasMA; # 'Consolida
 plot TrendFastLine = if showBothMovAvg then v_fastMA else na;#, title='Fast EMA', color=emaColor)
 plot TrendSlowLine = if showBothMovAvg then v_slowMA else na;#, title='Slow EMA', color=emaColor)
 ConsMA.SetLineWeight(2);
-ConsMA.AssignValueColor(if TrendColor > 0 then Color.GREEN else
-                        if TrendColor < 0 then Color.RED else Color.GRAY);
-TrendFastLine.AssignValueColor(if TrendColor > 0 then Color.GREEN else
-                               if TrendColor < 0 then Color.RED else Color.GRAY);
-TrendSlowLine.AssignValueColor(if TrendColor > 0 then Color.GREEN else
-                               if TrendColor < 0 then Color.RED else Color.GRAY);
+ConsMA.AssignValueColor(if TrendColor > 0 then GlobalColor("RoyalBlue") else
+                        if TrendColor < 0 then Color.PLUM else Color.GRAY);
+TrendFastLine.AssignValueColor(if TrendColor > 0 then GlobalColor("RoyalBlue") else
+                               if TrendColor < 0 then Color.PLUM else Color.GRAY);
+TrendSlowLine.AssignValueColor(if TrendColor > 0 then GlobalColor("RoyalBlue") else
+                               if TrendColor < 0 then Color.PLUM else Color.GRAY);
 #// Colour the bars
 def buy = v_fastMA > v_slowMA;
 def sell = v_fastMA < v_slowMA;
@@ -318,7 +319,6 @@ AddCloud(if (bear and (bearphase or distphase or warnphase)) then pos else na, n
 #//INPUTS
 input BackgroundColor = no;
 ### NSDT ###
-input TrendSource = close;
 input HAMALength  = 69;
 input HAMAType    = {default EMA, WMA, SMA, HMA};
 input HAMABar     = yes;
@@ -335,14 +335,14 @@ input CloseType   = {default EMA, SMA, WMA}; #"Close"
 ##################
 
 ########## Colors ########
-DefineGlobalColor("Bull"        , CreateColor(38, 166, 154)); # HAMA GREEN - Teal
-DefineGlobalColor("Bear"        , CreateColor(239, 83, 80));  # HAMA Red
-DefineGlobalColor("WeakBull"    , CreateColor(204, 204, 0));  # HAMA DARK Yellow  
-DefineGlobalColor("WeakBear"    , CreateColor(255, 128, 0));  # HAMA Orange
-DefineGlobalColor("Neutral"     , CreateColor(255, 255, 0));  # HAMA Yellow
+DefineGlobalColor("Bull"     , CreateColor(38, 166, 154)); # HAMA GREEN - Teal
+DefineGlobalColor("Bear"     , CreateColor(239, 83, 80));  # HAMA Red
+DefineGlobalColor("WeakBull" , CreateColor(204, 204, 0));  # HAMA DARK Yellow  
+DefineGlobalColor("WeakBear" , CreateColor(255, 128, 0));  # HAMA Orange
+DefineGlobalColor("Neutral"  , CreateColor(255, 255, 0));  # HAMA Yellow
 
-DefineGlobalColor("BGBull"      , CreateColor (153, 255, 153));
-DefineGlobalColor("BGBear"      , CreateColor (255, 153, 153));
+DefineGlobalColor("BGBull"   , CreateColor (153, 255, 153));
+DefineGlobalColor("BGBear"   , CreateColor (255, 153, 153));
 #////////////////////////////////////////////////////////////////////////////////
 #mat(source, length, type) =>
 script mat {
@@ -359,7 +359,7 @@ script mat {
     plot result = mat;
 }
 
-def ma = WMA(TrendSource, HAMALength);
+def ma = WMA(src, HAMALength);
 
 #//GRADIENT AREA
 def center  = ExpAverage(ma, 3);
@@ -447,7 +447,7 @@ def CandleHigh  = funcCalcHigh(HighType, SourceHigh, LengthHigh);
 def CandleLow   = funcCalcLow(LowType, SourceLow, LengthLow);
 def CandleClose = funcCalcClose(CloseType, SourceClose, LengthClose);
 
-def MAValue  = funcCalcMA1(HAMAType, TrendSource, HAMALength);
+def MAValue  = funcCalcMA1(HAMAType, src, HAMALength);
 
 plot MALine = if HAMAMa then MAValue else na;
 MALine.SetStyle(Curve.FIRM);
@@ -593,6 +593,40 @@ AssignBackgroundColor(
 #### END of HAMA Candles ####
 #############################
 
+########
+#indicator("SSL Channel", by MissTricky)
+#https://www.tradingview.com/script/6y9SkpnV-SSL-Channel/
+########
+
+input ShowSSL   = yes; #(true, "Highlight State ?")
+input SSLWicks  = no;#(false, "Take Wicks into Account ?")
+input SSLType   = {WMA, default SMA, EMA, HMA};
+input SSL_MaLength = 69; #"MA "Channel ?
+
+def ma1 = mat(H, SSL_MaLength, SSLType);
+def ma2 = mat(L, SSL_MaLength, SSLType);
+
+def Hlv1 = if (if SSLWicks then H else C) > ma1 then 1 else
+           if (if SSLWicks then L else C) < ma2 then -1 else Hlv1[1];
+
+def sslUp1   = if Hlv1 < 0 then ma2 else ma1;
+def sslDown1 = if Hlv1 < 0 then ma1 else ma2;
+
+def SSLBull = Hlv1 > 0 and Hlv1[1] < 0;
+def SSLBear = Hlv1 < 0 and Hlv1[1] > 0;
+
+plot highLine = if ShowSSL then sslUp1 else na;
+highLine.AssignValueColor(if Hlv1 > 0 then Color.CYAN else color.MAGENTA);
+
+plot lowLine  = if ShowSSL then sslDown1 else na;
+lowLine.AssignValueColor( if Hlv1 > 0 then Color.CYAN else color.MAGENTA);
+
+AddCloud (highLine, lowLine, Color.DARK_GREEN, Color.DARK_RED, no);
+
+############################
+#### END of SSL Channel ####
+############################
+
 #############################################################
 ###   Determine a flat market
 #############################################################
@@ -640,8 +674,9 @@ def bullishpb = (
     &&
     HAMAHigh
     &&
-    !Flat
-    
+    Hlv1 > 0 # From SSL Channel
+    &&
+    !Flat    
 );
 def bullpb = (
     if (bullphase) then (
@@ -663,6 +698,8 @@ def bearishpb = (
     C < MAValue
     &&
     HAMALow
+    &&
+    Hlv1 < 0 # From SSL Channel
     &&
     !Flat
 );
@@ -726,11 +763,11 @@ DT9.AssignValueColor(if DT9 < 9 then Color.MAGENTA else Color.CYAN);
 ####
 
 def bullstp = (
-    sell # From Macro Trend
+    countBuy < 1 # From Macro Trend
 );
 
 def bearstp = (
-    buy # From Macro Trend
+    countSell < 1 # From Macro Trend
 );
 
 ####
