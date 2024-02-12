@@ -30,20 +30,20 @@ def BV = V * (C - L) / (H - L);
 ####
 
 def buyerVol = high > high[1] and low > low[1] and BV*1.05 > SV;
-AddLabel(yes, " Buyer Vol Strong ", if buyerVol then Color.GREEN else color.black);
+AddLabel(buyerVol, " Buyer Vol Strong ", if buyerVol then Color.GREEN else Color.BLACK);
 
 def sellerVol = high < high[1] and low < low[1] and SV*1.05 > BV;
-AddLabel(yes, " Seller Vol Strong ", if sellerVol then Color.MAGENTA else color.black);
+AddLabel(sellerVol, " Seller Vol Strong ", if sellerVol then Color.MAGENTA else Color.BLACK);
 
 ####
 # below determines if price supports the move
 ####
 
 def strongPrice = high > high[1] and high[1] > high[2] and low > low[1] and low[1] > low[2];
-AddLabel(yes, " Price Strong ", if strongPrice then Color.GREEN else color.black);
+AddLabel(strongPrice, " Price Strong ", if strongPrice then Color.GREEN else Color.BLACK);
 
 def weakPrice = high < high[1] and high[1] < high[2] and low < low[1] and low[1] < low[2];
-AddLabel(yes, " Price Weak ", if weakPrice then Color.MAGENTA else color.black);
+AddLabel(weakPrice, " Price Weak ", if weakPrice then Color.MAGENTA else Color.BLACK);
 
 ####
 # Moving Averages used to determine Bullish or Bearish
@@ -366,6 +366,35 @@ AddChart(growColor = GlobalColor("RoyalBlue"), fallColor = Color.plum, neutralCo
 #### END of Smoothed Heiken Ashi ####
 #####################################
 
+####
+# RSI
+####
+
+input RSI_Length   = 14;
+input RSI_Avg_Type = AverageType.WILDERS;
+input RSI_Lookback = 3;
+
+def NetChgAvg = MovingAverage(RSI_Avg_Type, src - src[1], RSI_Length);
+def TotChgAvg = MovingAverage(RSI_Avg_Type, AbsValue(src - src[1]), RSI_Length);
+def ChgRatio = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
+
+def RSI = 50 * (ChgRatio + 1);
+
+addlabel(yes, "           ", color.BLACK);
+AddLabel(yes, 
+    " RSI: "+Round(RSI, 0)+" and "+(if IsAscending(RSI, RSI_Lookback) then "rising" else if IsDescending(RSI, RSI_Lookback) then "falling" else "steady"),
+    if IsAscending(RSI, RSI_Lookback) then
+        if RSI > 40 then Color.LIGHT_GREEN else if RSI > 60 then Color.GREEN else Color.LIGHT_RED
+    else if IsDescending(RSI, RSI_Lookback) then
+        if RSI < 60 then Color.LIGHT_RED   else if RSI < 40 then Color.RED   else Color.LIGHT_GREEN
+    else
+        Color.LIGHT_GRAY 
+);
+
+####################
+#### END of RSI ####
+####################
+
 #############################################################
 ###   Determine a flat market
 #############################################################
@@ -633,6 +662,7 @@ SellStpSig.SetLineWeight(3);
 ################
 #### Spacer ####
 ################
+addlabel(yes, "            ", color.BLACK);
 addlabel(yes, "            ", color.BLACK);
 addlabel(yes, "            ", color.BLACK);
 addlabel(yes, "            ", color.BLACK);
