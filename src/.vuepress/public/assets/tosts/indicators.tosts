@@ -391,6 +391,21 @@ AddLabel(yes,
         Color.LIGHT_GRAY 
 );
 
+# Stochastic of the RSI
+
+input K_Period      = 14;
+input D_Period      = 3;
+input slowingPeriod = 3;
+input StochAvgType  = AverageType.SIMPLE;
+
+def lowest_k = Lowest(RSI, K_Period);
+def c1 = RSI - lowest_k;
+def c2 = Highest(RSI, K_Period) - lowest_k;
+def FastK = if c2 != 0 then c1 / c2 * 100 else 0;
+
+def FullK = MovingAverage(StochAvgType, FastK, slowingPeriod);
+def FullD = MovingAverage(StochAvgType, FullK, D_Period);
+
 ####################
 #### END of RSI ####
 ####################
