@@ -456,7 +456,9 @@ def bullpb = (
     )
 );
 
-def bearishpb = (
+input takeShorts = no;
+
+def bearishpb = takeShorts && (
     countSell > 0 and countBuy < 1 and sell # From Macro Trend
     &&
     (HA_Open_MA > HA_Close_MA and (HA_Open_MA - HA_Close_MA) > (HA_Open_MA[1] - HA_Close_MA[1]))
@@ -540,10 +542,10 @@ def bearstp = (
 
 ####
 
-input use_ATR_Trail = no;
-input trailType     = {default modified, unmodified};
-input ATR_Period    = 5;
-input ATR_Factor    = 2.9;
+input use_ATR_Trail = yes;
+input trailType     = {default unmodified, modified};
+input ATR_Period    = 14;
+input ATR_Factor    = 1.51;
 input ATR_Avg_Type  = AverageType.WILDERS;
 
 Assert(ATR_Factor > 0, "'atr factor' must be positive: " + ATR_Factor);
