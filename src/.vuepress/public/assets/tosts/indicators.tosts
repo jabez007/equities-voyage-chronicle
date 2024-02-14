@@ -372,7 +372,6 @@ AddChart(growColor = GlobalColor("RoyalBlue"), fallColor = Color.plum, neutralCo
 
 input RSI_Length   = 14;
 input RSI_Avg_Type = AverageType.WILDERS;
-input RSI_Lookback = 3;
 
 def NetChgAvg = MovingAverage(RSI_Avg_Type, src - src[1], RSI_Length);
 def TotChgAvg = MovingAverage(RSI_Avg_Type, AbsValue(src - src[1]), RSI_Length);
@@ -380,15 +379,22 @@ def ChgRatio = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
 
 def RSI = 50 * (ChgRatio + 1);
 
+input smoothed_RSI_Length   = 200;
+input smoothed_RSI_Avg_Type = AverageType.SIMPLE;
+
+def smoothed_RSI = MovingAverage(smoothed_RSI_Avg_Type, RSI, smoothed_RSI_Length);
+
+input RSI_Lookback = 3;
+
 addlabel(yes, "           ", color.BLACK);
 AddLabel(yes, 
     " RSI: "+Round(RSI, 0)+" and "+(if IsAscending(RSI, RSI_Lookback) then "rising" else if IsDescending(RSI, RSI_Lookback) then "falling" else "steady"),
     if IsAscending(RSI, RSI_Lookback) then
-        if RSI > 40 then Color.LIGHT_GREEN else if RSI > 60 then Color.GREEN else Color.LIGHT_RED
+        if RSI > smoothed_RSI then Color.GREEN else if RSI < smoothed_RSI then Color.LIGHT_GREEN else Color.LIGHT_GRAY
     else if IsDescending(RSI, RSI_Lookback) then
-        if RSI < 60 then Color.LIGHT_RED   else if RSI < 40 then Color.RED   else Color.LIGHT_GREEN
+        if RSI < smoothed_RSI then Color.RED   else if RSI > smoothed_RSI then Color.LIGHT_RED   else Color.LIGHT_GRAY
     else
-        Color.LIGHT_GRAY 
+        Color.LIGHT_GRAY
 );
 
 # Stochastic of the RSI
