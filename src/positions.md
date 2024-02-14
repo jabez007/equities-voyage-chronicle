@@ -12,7 +12,7 @@ These are the 1 month stops from the MTP report.
 
 |Ticker  | Side  |  Stop |
 |:-------|:-----:|------:|
-| EFA    |       |  75.24|
+| EFA    | short |  74.78|
 | EWW    |       |  67.90|
 | EWZ    |       |  33.21|
 | GDX    |       |  27.50|
