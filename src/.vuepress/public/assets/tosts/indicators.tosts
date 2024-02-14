@@ -279,20 +279,23 @@ if buy {
  } else if sell {
     countSell = countSell[1] + 1;
     countBuy  = 0;
-    } else {
-    countBuy = countBuy[1];
+} else {
+    countBuy  = countBuy[1];
     countSell = countSell[1];
 }
 
-def buysignal  = countBuy  > 0 and countBuy  < 2 and countSell < 1 and buy  and !buy[1];
-def sellsignal = countSell > 0 and countSell < 2 and countBuy  < 1 and sell and !sell[1];
+def trendBullish = countBuy  > 0 and countSell < 1 and buy;
+def trendBearish = countSell > 0 and countBuy  < 1 and sell;
+
+def buysignal  = trendBullish and countBuy  < 2 and !buy[1];
+def sellsignal = trendBearish and countSell < 2 and !sell[1];
 
 #// Plot Bull/Bear
 
 #AddChartBubble(buysignal, low, "Bull", Color.GREEN, no);
 #AddChartBubble(sellsignal, high, "Bear", Color.RED);
 
-def bull = countBuy > 1 and highlightBackground;
+def bull = countBuy  > 1 and highlightBackground;
 def bear = countSell > 1 and highlightBackground;
 def pos = Double.POSITIVE_INFINITY;
 def neg = Double.NEGATIVE_INFINITY;
@@ -362,6 +365,9 @@ AddChart(growColor = GlobalColor("RoyalBlue"), fallColor = Color.plum, neutralCo
     open = HA_Open_MA_rise, high = HA_High_MA_rise, low = HA_Low_MA_rise, close = HA_Close_MA_rise,
     type = ChartType.CANDLE);
 
+def HA_bullish = HA_Close_MA > HA_Open_MA and (HA_Close_MA - HA_Open_MA) > (HA_Close_MA[1] - HA_Open_MA[1]);
+def HA_bearish = HA_Open_MA > HA_Close_MA and (HA_Open_MA - HA_Close_MA) > (HA_Open_MA[1] - HA_Close_MA[1]);
+
 #####################################
 #### END of Smoothed Heiken Ashi ####
 #####################################
@@ -375,7 +381,7 @@ input RSI_Avg_Type = AverageType.WILDERS;
 
 def NetChgAvg = MovingAverage(RSI_Avg_Type, src - src[1], RSI_Length);
 def TotChgAvg = MovingAverage(RSI_Avg_Type, AbsValue(src - src[1]), RSI_Length);
-def ChgRatio = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
+def ChgRatio  = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
 
 def RSI = 50 * (ChgRatio + 1);
 
@@ -385,6 +391,9 @@ input smoothed_RSI_Avg_Type = AverageType.SIMPLE;
 def smoothed_RSI = MovingAverage(smoothed_RSI_Avg_Type, RSI, smoothed_RSI_Length);
 
 input RSI_Lookback = 3;
+
+def RSI_bullish = RSI > smoothed_RSI;
+def RSI_bearish = RSI < smoothed_RSI;
 
 addlabel(yes, "           ", color.BLACK);
 AddLabel(yes, 
@@ -415,6 +424,44 @@ def FullD = MovingAverage(StochAvgType, FullK, D_Period);
 ####################
 #### END of RSI ####
 ####################
+
+####
+# // @author LazyBear 
+# // List of all my indicators: 
+# // https://docs.google.com/document/d/15AGCufJZ8CIUvwFJ9W-IKns88gkWOKBCvByMEvm5MLo/edit?usp=sharing
+# // 
+# study("Anchored Momentum [LazyBear]", shorttitle="AMOM_LB")
+# thinkscript conversion by mashume 2022.10
+####
+
+# l=input(10, title="Momentum Period")
+input amomPeriod = 10;
+
+# p=2*l+1
+def amom_p = 2 * amomPeriod + 1;
+
+# sm=input(false, title="Smooth Momentum")
+input SmoothAmom = no;
+
+# smp=input(7, title="Smoothing Period")
+input amomSmoothingPeriod = 7;
+
+# amom=100*(((sm?ema(src,smp):src)/(sma(src,p)) - 1))
+def t_amom = if SmoothAmom == yes then ExpAverage(src, amomSmoothingPeriod) else src;
+def amom = 100 * ((t_amom / (Average(src, amom_p)) - 1));
+
+# sl=input(8, title="Signal Period")
+input amomSignalPeriod = 8;
+
+# amoms=sma(amom, sl)
+def amomSignal = Average(amom, amomSignalPeriod);
+
+def amomBullish = amom >  amomSignal and amom >= 0;
+def amomBearish = amom <= amomSignal and amom <  0;
+
+##################################
+#### END of Anchored Momentum ####
+##################################
 
 #############################################################
 ###   Determine a flat market
@@ -457,11 +504,13 @@ def Flat = if (!isNan(BoxHigh[1]) and !isNan(BoxLow[1])) and !TradeInFlatRange t
 ####
 
 def bullishpb = (
-    countBuy > 0 and countSell < 1 and buy # From Macro Trend
+    trendBullish
     &&
-    (HA_Close_MA > HA_Open_MA and (HA_Close_MA - HA_Open_MA) > (HA_Close_MA[1] - HA_Open_MA[1]))
+    HA_bullish
     &&
-    RSI > smoothed_RSI
+    RSI_bullish
+    &&
+    amomBullish
     #&&
     #!Flat    
 );
@@ -482,11 +531,13 @@ def bullpb = (
 input takeShorts = no;
 
 def bearishpb = takeShorts && (
-    countSell > 0 and countBuy < 1 and sell # From Macro Trend
+    trendBearish
     &&
-    (HA_Open_MA > HA_Close_MA and (HA_Open_MA - HA_Close_MA) > (HA_Open_MA[1] - HA_Close_MA[1]))
+    HA_bearish
     &&
-    RSI < smoothed_RSI
+    RSI_bearish
+    &&
+    amomBearish
     #&&
     #!Flat
 );
@@ -513,7 +564,7 @@ def bearpb = (
 # Inspired by the Accurate Swing Trading System
 ####
 
-input useStops = yes;
+input useStops = no;
 
 def UT9X = compoundValue(1, if (C > C[4]) then UT9X[1] + 1 else 0, 0);
 plot UT9 = (
@@ -550,19 +601,11 @@ DT9.AssignValueColor(if DT9 < 9 then Color.MAGENTA else Color.CYAN);
 ####
 
 def bullstp = (
-    countBuy < 1 # From Macro Trend
-    &&
-    HA_Open_MA > HA_Close_MA
-    #&&
-    #Flat
+    0
 );
 
 def bearstp = (
-    countSell < 1 # From Macro Trend
-    &&
-    HA_Close_MA > HA_Open_MA
-    #&&
-    #Flat
+    0
 );
 
 ####
