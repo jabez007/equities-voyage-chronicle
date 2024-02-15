@@ -463,6 +463,26 @@ def amomBearish = amom <= amomSignal and amom <  0;
 #### END of Anchored Momentum ####
 ##################################
 
+####
+# Z-Score
+# [URL]https://usethinkscript.com/threads/z-score-upper-indicator-for-thinkorswim.3896/[/URL]
+####
+
+input zscoreLength    = 21;
+input zscoreAvgLength = 8;
+
+def zscore_One_SD = StDev(src, zscoreLength);
+def zscoreAvgPrice = Average(src, zscoreLength);
+def zscoreValue = (src - zscoreAvgPrice) / zscore_One_SD;
+def zscoreAverage = Average(zscoreValue, zscoreAvgLength);
+
+def zscoreBullish = zscoreValue > zscoreAverage; # zscoreValue crosses above zscoreAverage and zscoreAverage < -.75
+def zscoreBearish = zscoreValue < zscoreAverage; # zscoreValue crosses below zscoreAverage and zscoreAverage > .75
+
+########################
+#### END of Z-Score ####
+########################
+
 #############################################################
 ###   Determine a flat market
 #############################################################
@@ -511,6 +531,8 @@ def bullishpb = (
     RSI_bullish
     &&
     amomBullish
+    &&
+    zscoreBullish
     #&&
     #!Flat    
 );
@@ -538,6 +560,8 @@ def bearishpb = takeShorts && (
     RSI_bearish
     &&
     amomBearish
+    &&
+    zscoreBearish
     #&&
     #!Flat
 );
@@ -564,7 +588,7 @@ def bearpb = (
 # Inspired by the Accurate Swing Trading System
 ####
 
-input useStops = no;
+input useStops = yes;
 
 def UT9X = compoundValue(1, if (C > C[4]) then UT9X[1] + 1 else 0, 0);
 plot UT9 = (
@@ -601,19 +625,19 @@ DT9.AssignValueColor(if DT9 < 9 then Color.MAGENTA else Color.CYAN);
 ####
 
 def bullstp = (
-    0
+    countSell > 0
 );
 
 def bearstp = (
-    0
+    countBuy > 0
 );
 
 ####
 
 input use_ATR_Trail = yes;
 input trailType     = {default unmodified, modified};
-input ATR_Period    = 14;
-input ATR_Factor    = 1.51;
+input ATR_Period    = 20;
+input ATR_Factor    = 1.93;
 input ATR_Avg_Type  = AverageType.WILDERS;
 
 Assert(ATR_Factor > 0, "'atr factor' must be positive: " + ATR_Factor);
