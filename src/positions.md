@@ -19,7 +19,7 @@ These are the 1 month stops from the MTP report.
 | GLD    | short | 185.67|
 | HYG    | short |  76.77|
 | LQD    |       |       |
-| SLV    | long  |  20.49|
+| SLV    | long  |  20.74|
 | TLT    |       |  93.49|
 | UUP    |       |       |
 | XLF    |       |       |
