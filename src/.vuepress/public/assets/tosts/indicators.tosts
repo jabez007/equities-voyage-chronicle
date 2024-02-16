@@ -455,6 +455,7 @@ def FullD = MovingAverage(StochAvgType, FullK, D_Period);
 # Mobius
 # V01.05.2018
 # hint: TMO calculates momentum using the delta of price. Giving a much better picture of trend, tend reversals and divergence than momentum oscillators using price.
+# [URL]https://usethinkscript.com/threads/tmo-true-momentum-oscillator-for-thinkorswim.9413/[/URL]
 ####
 
 input tmoLength       = 14;
