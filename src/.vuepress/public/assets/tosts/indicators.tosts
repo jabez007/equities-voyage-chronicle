@@ -474,8 +474,10 @@ def tmo_EMA   = ExpAverage(tmoData, tmoCalcLength);
 def tmoMain   = ExpAverage(tmo_EMA, tmoSmoothLength);
 def tmoSignal = ExpAverage(tmoMain, tmoSmoothLength);
 
-def TMO_Bullish = tmoMain > tmoSignal and tmoMain <  10;
-def TMO_Bearish = tmoMain < tmoSignal and tmoMain > -10;
+input tmoOutOfBounds = 0.7;
+
+def TMO_Bullish = tmoMain > tmoSignal and tmoMain <  round(tmoLength * tmoOutOfBounds);
+def TMO_Bearish = tmoMain < tmoSignal and tmoMain > -round(tmoLength * tmoOutOfBounds);
 
 ##############################################
 #### END of (T)rue (M)omentum (O)scilator ####
