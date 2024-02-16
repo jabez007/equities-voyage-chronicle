@@ -232,6 +232,27 @@ addCloud(
 #########################################
 
 ####
+# Ehler's Distance Coefficient Filter
+####
+
+input ehlersLength = 34;
+input ehlersPrice  = FundamentalType.HL2;
+
+def ehlersSrc = Fundamental(ehlersPrice, Period = vPeriod);
+def ehlersCoeff = ehlersLength * ehlersSrc * ehlersSrc - 2 * ehlersSrc * Sum(ehlersSrc, ehlersLength)[1] + Sum(ehlersSrc * ehlersSrc, ehlersLength)[1];
+plot ehlers = Sum(ehlersCoeff * ehlersSrc, ehlersLength) / Sum(ehlersCoeff, ehlersLength);
+ehlers.SetDefaultColor(Color.ORANGE);
+ehlers.SetStyle(Curve.MEDIUM_DASH);
+ehlers.SetLineWeight(2);
+
+def ehlersBullish = C > ehlers;
+def ehlersBearish = C < ehlers;
+
+####################################################
+#### END of Ehler's Distance Coefficient Filter ####
+####################################################
+
+####
 #// This source code is subject to the terms of the Mozilla Public License 2.0 a
 #// © btc_charlie / @TheParagonGrp
 #indicator('[@btc_charlie] Trader XO Macro Trend Scanner', overlay=true)
@@ -430,6 +451,37 @@ def FullD = MovingAverage(StochAvgType, FullK, D_Period);
 ####################
 
 ####
+# TMO ((T)rue (M)omentum (O)scilator)
+# Mobius
+# V01.05.2018
+# hint: TMO calculates momentum using the delta of price. Giving a much better picture of trend, tend reversals and divergence than momentum oscillators using price.
+####
+
+input tmoLength       = 14;
+input tmoCalcLength   = 5;
+input tmoSmoothLength = 3;
+
+def tmoData = fold i = 0 to tmoLength with s do 
+    s + (
+        if C > getValue(O, i) then 
+            1
+        else if C < getValue(O, i) then 
+            -1
+        else 
+            0
+    );
+def tmo_EMA   = ExpAverage(tmoData, tmoCalcLength);
+def tmoMain   = ExpAverage(tmo_EMA, tmoSmoothLength);
+def tmoSignal = ExpAverage(tmoMain, tmoSmoothLength);
+
+def TMO_Bullish = tmoMain > tmoSignal and tmoMain <  10;
+def TMO_Bearish = tmoMain < tmoSignal and tmoMain > -10;
+
+##############################################
+#### END of (T)rue (M)omentum (O)scilator ####
+##############################################
+
+####
 # Z-Score
 # [URL]https://usethinkscript.com/threads/z-score-upper-indicator-for-thinkorswim.3896/[/URL]
 ####
@@ -487,27 +539,6 @@ def amomBearish = amom <= amomSignal and amom <  0;
 #### END of Anchored Momentum ####
 ##################################
 
-####
-# Ehler's Distance Coefficient Filter
-####
-
-input ehlersLength = 34;
-input ehlersPrice  = FundamentalType.HL2;
-
-def ehlersSrc = Fundamental(ehlersPrice, Period = vPeriod);
-def ehlersCoeff = ehlersLength * ehlersSrc * ehlersSrc - 2 * ehlersSrc * Sum(ehlersSrc, ehlersLength)[1] + Sum(ehlersSrc * ehlersSrc, ehlersLength)[1];
-plot ehlers = Sum(ehlersCoeff * ehlersSrc, ehlersLength) / Sum(ehlersCoeff, ehlersLength);
-ehlers.SetDefaultColor(Color.ORANGE);
-ehlers.SetStyle(Curve.MEDIUM_DASH);
-ehlers.SetLineWeight(2);
-
-def ehlersBullish = C > ehlers;
-def ehlersBearish = C < ehlers;
-
-####################################################
-#### END of Ehler's Distance Coefficient Filter ####
-####################################################
-
 #############################################################
 ###   Determine a flat market
 #############################################################
@@ -555,6 +586,8 @@ def bullishSignal = (
     &&
     RSI_bullish
     &&
+    TMO_Bullish
+    &&
     zscoreBullish
     &&
     amomBullish
@@ -572,6 +605,8 @@ def bearishSignal = takeShorts && (
     HA_bearish
     &&
     RSI_bearish
+    &&
+    TMO_Bearish
     &&
     zscoreBearish
     &&
@@ -630,11 +665,19 @@ DT9.AssignValueColor(if DT9 < 9 then Color.MAGENTA else Color.CYAN);
 def bullstp = (
     countSell > 0
     or
+    HA_Close_MA < HA_Open_MA
+    or
+    tmoMain < tmoSignal
+    or
     C < ehlers
 );
 
 def bearstp = (
     countBuy > 0
+    or
+    HA_Close_MA > HA_Open_MA
+    or
+    tmoMain > tmoSignal
     or
     C > ehlers
 );
@@ -763,6 +806,7 @@ SellStpSig.SetLineWeight(3);
 ################
 #### Spacer ####
 ################
+addlabel(yes, "            ", color.BLACK);
 addlabel(yes, "            ", color.BLACK);
 addlabel(yes, "            ", color.BLACK);
 addlabel(yes, "            ", color.BLACK);
