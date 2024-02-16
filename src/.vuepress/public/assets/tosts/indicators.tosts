@@ -201,7 +201,9 @@ input bull_MA1_Type   = AverageType.SIMPLE;
 input bull_MA2_Length = 21;
 input bull_MA2_Type   = AverageType.EXPONENTIAL;
 
-plot bull_MA1 = MovingAverage(bull_MA1_Type, fundamental(price, period = bullPeriod), bull_MA1_Length);
+def bullSrc = fundamental(price, period = bullPeriod)
+
+plot bull_MA1 = MovingAverage(bull_MA1_Type, bullSrc, bull_MA1_Length);
 bull_MA1.DefineColor("UpTrend", Color.LIME);
 bull_MA1.DefineColor("DownTrend", Color.PINK);
 def bull_MA1_Trend = compoundValue(1, 
@@ -209,7 +211,7 @@ def bull_MA1_Trend = compoundValue(1,
     if (bull_MA1 > bull_MA1[1]) then 1 else -1);
 bull_MA1.AssignValueColor(if (bull_MA1_Trend == 1) then bull_MA1.Color("UpTrend") else if (bull_MA1_Trend == -1) then bull_MA1.Color("DownTrend") else Color.ORANGE);
 
-plot bull_MA2 = MovingAverage(bull_MA2_Type, fundamental(price, period = bullPeriod), bull_MA2_Length);
+plot bull_MA2 = MovingAverage(bull_MA2_Type, bullSrc, bull_MA2_Length);
 bull_MA2.DefineColor("UpTrend", Color.LIME);
 bull_MA2.DefineColor("DownTrend", Color.PINK);
 def bull_MA2_Trend = compoundValue(1,
@@ -236,7 +238,6 @@ addCloud(
 # updated MTF option by Sam4Cok@Samer800    - 01/2024
 ####
 
-input highlightBackground = yes;
 input TrendAvgType        = AverageType.EXPONENTIAL;
 input TrendFastLength     = 13;#, title='Fast EMA')
 input TrendSlowLength     = 34;#, title='Slow EMA')
@@ -294,6 +295,8 @@ def sellsignal = trendBearish and countSell < 2 and !sell[1];
 
 #AddChartBubble(buysignal, low, "Bull", Color.GREEN, no);
 #AddChartBubble(sellsignal, high, "Bear", Color.RED);
+
+input highlightBackground = no;
 
 def bull = countBuy  > 1 and highlightBackground;
 def bear = countSell > 1 and highlightBackground;
@@ -426,6 +429,26 @@ def FullD = MovingAverage(StochAvgType, FullK, D_Period);
 ####################
 
 ####
+# Z-Score
+# [URL]https://usethinkscript.com/threads/z-score-upper-indicator-for-thinkorswim.3896/[/URL]
+####
+
+input zscoreLength    = 21;
+input zscoreAvgLength = 8;
+
+def zscore_One_SD = StDev(src, zscoreLength);
+def zscoreAvgPrice = Average(src, zscoreLength);
+def zscoreValue = (src - zscoreAvgPrice) / zscore_One_SD;
+def zscoreAverage = Average(zscoreValue, zscoreAvgLength);
+
+def zscoreBullish = zscoreValue > zscoreAverage; # zscoreValue crosses above zscoreAverage and zscoreAverage < -.75
+def zscoreBearish = zscoreValue < zscoreAverage; # zscoreValue crosses below zscoreAverage and zscoreAverage > .75
+
+########################
+#### END of Z-Score ####
+########################
+
+####
 # // @author LazyBear 
 # // List of all my indicators: 
 # // https://docs.google.com/document/d/15AGCufJZ8CIUvwFJ9W-IKns88gkWOKBCvByMEvm5MLo/edit?usp=sharing
@@ -462,26 +485,6 @@ def amomBearish = amom <= amomSignal and amom <  0;
 ##################################
 #### END of Anchored Momentum ####
 ##################################
-
-####
-# Z-Score
-# [URL]https://usethinkscript.com/threads/z-score-upper-indicator-for-thinkorswim.3896/[/URL]
-####
-
-input zscoreLength    = 21;
-input zscoreAvgLength = 8;
-
-def zscore_One_SD = StDev(src, zscoreLength);
-def zscoreAvgPrice = Average(src, zscoreLength);
-def zscoreValue = (src - zscoreAvgPrice) / zscore_One_SD;
-def zscoreAverage = Average(zscoreValue, zscoreAvgLength);
-
-def zscoreBullish = zscoreValue > zscoreAverage; # zscoreValue crosses above zscoreAverage and zscoreAverage < -.75
-def zscoreBearish = zscoreValue < zscoreAverage; # zscoreValue crosses below zscoreAverage and zscoreAverage > .75
-
-########################
-#### END of Z-Score ####
-########################
 
 #############################################################
 ###   Determine a flat market
@@ -523,7 +526,7 @@ def Flat = if (!isNan(BoxHigh[1]) and !isNan(BoxLow[1])) and !TradeInFlatRange t
 # The conditions below are for possible entries for longs and shorts
 ####
 
-def bullishpb = (
+def bullishSignal = (
     trendBullish
     &&
     HA_bullish
@@ -536,23 +539,10 @@ def bullishpb = (
     #&&
     #!Flat    
 );
-def bullpb = (
-    if (bullphase) then (
-        bullishpb
-    ) else if (accphase) then (
-        bullishpb
-    ) else if (recphase) then (
-        bullishpb
-    ) else (
-        (!bearphase and !distphase and !warnphase)
-        &&
-        bullishpb
-    )
-);
 
 input takeShorts = no;
 
-def bearishpb = takeShorts && (
+def bearishSignal = takeShorts && (
     trendBearish
     &&
     HA_bearish
@@ -564,19 +554,6 @@ def bearishpb = takeShorts && (
     zscoreBearish
     #&&
     #!Flat
-);
-def bearpb = (
-    if (bearphase) then (
-        bearishpb
-    ) else if (distphase) then (
-        bearishpb
-    ) else if (warnphase) then (
-        bearishpb
-    ) else (
-        (!bullphase and !accphase and !recphase)
-        &&
-        bearishpb
-    )
 );
 
 ########################
@@ -675,10 +652,10 @@ if ((BarNumber() == 1) OR isNaN(CurrentPosition[1])) {
     trail = Double.NaN;
 } else {
     if (CurrentPosition[1] == 0) {               # FLAT
-        if (bullpb) {
+        if (bullishSignal) {
             CurrentPosition = 1;
             trail = C - loss;
-        } else if (bearpb){
+        } else if (bearishSignal){
             CurrentPosition = -1;
             trail = C + loss;
         } else {
@@ -686,7 +663,7 @@ if ((BarNumber() == 1) OR isNaN(CurrentPosition[1])) {
             trail = trail[1];
         }
     } else if (CurrentPosition[1] == 1) {        # LONG
-        if (bearpb){
+        if (bearishSignal){
             CurrentPosition = -1;
             trail = C + loss;
         } else if ((useStops and bullstp) or (use_ATR_Trail and C < trail[1])) {
@@ -697,7 +674,7 @@ if ((BarNumber() == 1) OR isNaN(CurrentPosition[1])) {
             trail = Max(trail[1], C - loss);
         }
     } else if (CurrentPosition[1] == -1) {       # SHORT
-        if (bullpb){
+        if (bullishSignal){
             CurrentPosition = 1;
             trail = C - loss;
         } else if ((useStops and bearstp) or (use_ATR_Trail and C > trail[1])) {
@@ -724,7 +701,7 @@ TrailingStop.AssignValueColor(if isLong then Color.MAGENTA else if isShort then 
 input useAlerts = no;
 
 # If not already long and get a BuySignal
-Plot BuySig = if (!isLong[1] and bullpb) then 1 else 0;
+Plot BuySig = if (!isLong[1] and bullishSignal) then 1 else 0;
 BuySig.AssignValueColor(color.CYAN);
 BuySig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
 BuySig.SetLineWeight(5);
@@ -733,7 +710,7 @@ Alert(BuySig and useAlerts, "Buy Signal", Alert.bar, sound.Ding);
 Alert(BuySig and useAlerts, "Buy Signal", Alert.bar, sound.Ding);
 
 # If not already short and get a SellSignal
-Plot SellSig = if (!isShort[1] and bearpb) then 1 else 0;
+Plot SellSig = if (!isShort[1] and bearishSignal) then 1 else 0;
 SellSig.AssignValueColor(color.MAGENTA);
 SellSig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
 SellSig.SetLineWeight(5);
@@ -791,7 +768,7 @@ addlabel(yes, "            ", color.BLACK);
 def isOrder = if CurrentPosition == CurrentPosition[1] then 0 else 1; # Position changed so it's a new order
 
 # If there is an order to open, then the price is the next day's open
-def orderPrice = if (isOrder and (bullpb or bearpb)) then O[-1] else orderPrice[1];
+def orderPrice = if (isOrder and (bullishSignal or bearishSignal)) then O[-1] else orderPrice[1];
 
 #######################################
 ##  Price and Profit
