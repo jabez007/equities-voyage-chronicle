@@ -201,7 +201,7 @@ input bull_MA1_Type   = AverageType.SIMPLE;
 input bull_MA2_Length = 21;
 input bull_MA2_Type   = AverageType.EXPONENTIAL;
 
-def bullSrc = fundamental(price, period = bullPeriod)
+def bullSrc = fundamental(price, period = bullPeriod);
 
 plot bull_MA1 = MovingAverage(bull_MA1_Type, bullSrc, bull_MA1_Length);
 bull_MA1.DefineColor("UpTrend", Color.LIME);
@@ -239,10 +239,10 @@ addCloud(
 ####
 
 input TrendAvgType        = AverageType.EXPONENTIAL;
-input TrendFastLength     = 13;#, title='Fast EMA')
-input TrendSlowLength     = 34;#, title='Slow EMA')
+input TrendFastLength     = 11;#, title='Fast EMA')
+input TrendSlowLength     = 29;#, title='Slow EMA')
 input showBothMovAvg      = no;#(title='Show Both EMAs', defval=true)
-input ConsolidatedLength  = 21;#, title='Consolidated EMA')
+input ConsolidatedLength  = 23;#, title='Consolidated EMA')
 
 def na = Double.NaN;
 
@@ -433,8 +433,8 @@ def FullD = MovingAverage(StochAvgType, FullK, D_Period);
 # [URL]https://usethinkscript.com/threads/z-score-upper-indicator-for-thinkorswim.3896/[/URL]
 ####
 
-input zscoreLength    = 21;
-input zscoreAvgLength = 8;
+input zscoreLength    = 20;
+input zscoreAvgLength = 20;
 
 def zscore_One_SD = StDev(src, zscoreLength);
 def zscoreAvgPrice = Average(src, zscoreLength);
@@ -486,6 +486,24 @@ def amomBearish = amom <= amomSignal and amom <  0;
 #### END of Anchored Momentum ####
 ##################################
 
+####
+# Ehler's Distance Coefficient Filter
+####
+
+input ehlersLength = 34;
+input ehlersPrice  = FundamentalType.HL2;
+
+def ehlersSrc = Fundamental(ehlersPrice, Period = vPeriod);
+def ehlersCoeff = ehlersLength * ehlersSrc * ehlersSrc - 2 * ehlersSrc * Sum(ehlersSrc, ehlersLength)[1] + Sum(ehlersSrc * ehlersSrc, ehlersLength)[1];
+plot ehlers = Sum(ehlersCoeff * ehlersSrc, ehlersLength) / Sum(ehlersCoeff, ehlersLength);
+
+def ehlersBullish = C > ehlers;
+def ehlersBearish = C < ehlers;
+
+####################################################
+#### END of Ehler's Distance Coefficient Filter ####
+####################################################
+
 #############################################################
 ###   Determine a flat market
 #############################################################
@@ -533,9 +551,11 @@ def bullishSignal = (
     &&
     RSI_bullish
     &&
+    zscoreBullish
+    &&
     amomBullish
     &&
-    zscoreBullish
+    ehlersBullish
     #&&
     #!Flat    
 );
@@ -549,9 +569,11 @@ def bearishSignal = takeShorts && (
     &&
     RSI_bearish
     &&
+    zscoreBearish
+    &&
     amomBearish
     &&
-    zscoreBearish
+    ehlersBearish
     #&&
     #!Flat
 );
@@ -603,18 +625,22 @@ DT9.AssignValueColor(if DT9 < 9 then Color.MAGENTA else Color.CYAN);
 
 def bullstp = (
     countSell > 0
+    or
+    C < ehlers
 );
 
 def bearstp = (
     countBuy > 0
+    or
+    C > ehlers
 );
 
 ####
 
 input use_ATR_Trail = yes;
-input trailType     = {default unmodified, modified};
+input trailType     = {default modified, unmodified};
 input ATR_Period    = 20;
-input ATR_Factor    = 1.93;
+input ATR_Factor    = 2.01;
 input ATR_Avg_Type  = AverageType.WILDERS;
 
 Assert(ATR_Factor > 0, "'atr factor' must be positive: " + ATR_Factor);
