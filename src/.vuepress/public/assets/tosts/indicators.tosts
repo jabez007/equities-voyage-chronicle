@@ -487,7 +487,7 @@ def TMO_Bearish = tmoMain < tmoSignal and tmoMain > -10;
 ####
 
 input zscoreLength    = 20;
-input zscoreAvgLength = 20;
+input zscoreAvgLength = 17;
 
 def zscore_One_SD = StDev(src, zscoreLength);
 def zscoreAvgPrice = Average(src, zscoreLength);
