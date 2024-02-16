@@ -496,6 +496,9 @@ input ehlersPrice  = FundamentalType.HL2;
 def ehlersSrc = Fundamental(ehlersPrice, Period = vPeriod);
 def ehlersCoeff = ehlersLength * ehlersSrc * ehlersSrc - 2 * ehlersSrc * Sum(ehlersSrc, ehlersLength)[1] + Sum(ehlersSrc * ehlersSrc, ehlersLength)[1];
 plot ehlers = Sum(ehlersCoeff * ehlersSrc, ehlersLength) / Sum(ehlersCoeff, ehlersLength);
+ehlers.SetDefaultColor(Color.ORANGE);
+ehlers.SetStyle(Curve.MEDIUM_DASH);
+ehlers.SetLineWeight(2);
 
 def ehlersBullish = C > ehlers;
 def ehlersBearish = C < ehlers;
