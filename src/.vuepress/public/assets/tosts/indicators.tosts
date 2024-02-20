@@ -670,7 +670,7 @@ def bullstp = (
     or
     HA_Close_MA < HA_Open_MA
     or
-    tmoMain < 0
+    tmoMain < tmoSignal
     or
     C < ehlers
 );
@@ -680,7 +680,7 @@ def bearstp = (
     or
     HA_Close_MA > HA_Open_MA
     or
-    tmoMain > 0
+    tmoMain > tmoSignal
     or
     C > ehlers
 );
