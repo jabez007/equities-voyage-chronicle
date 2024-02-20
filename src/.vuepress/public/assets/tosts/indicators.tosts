@@ -670,7 +670,7 @@ def bullstp = (
     or
     HA_Close_MA < HA_Open_MA
     or
-    tmoMain < tmoSignal
+    tmoMain < 0
     or
     C < ehlers
 );
@@ -680,7 +680,7 @@ def bearstp = (
     or
     HA_Close_MA > HA_Open_MA
     or
-    tmoMain > tmoSignal
+    tmoMain > 0
     or
     C > ehlers
 );
@@ -809,6 +809,7 @@ SellStpSig.SetLineWeight(3);
 ################
 #### Spacer ####
 ################
+addlabel(yes, "            ", color.BLACK);
 addlabel(yes, "            ", color.BLACK);
 addlabel(yes, "            ", color.BLACK);
 addlabel(yes, "            ", color.BLACK);
