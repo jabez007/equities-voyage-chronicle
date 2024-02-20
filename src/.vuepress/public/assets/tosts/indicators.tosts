@@ -283,11 +283,11 @@ plot TrendFastLine = if showBothMovAvg then v_fastMA else na;#, title='Fast EMA'
 plot TrendSlowLine = if showBothMovAvg then v_slowMA else na;#, title='Slow EMA', color=emaColor)
 ConsMA.SetLineWeight(2);
 ConsMA.AssignValueColor(if TrendColor > 0 then Color.LIGHT_GREEN else
-                        if TrendColor < 0 then Color.LIGHT_RED else Color.GRAY);
+                        if TrendColor < 0 then Color.LIGHT_RED   else Color.GRAY);
 TrendFastLine.AssignValueColor(if TrendColor > 0 then Color.LIGHT_GREEN else
-                               if TrendColor < 0 then Color.LIGHT_RED else Color.GRAY);
+                               if TrendColor < 0 then Color.LIGHT_RED   else Color.GRAY);
 TrendSlowLine.AssignValueColor(if TrendColor > 0 then Color.LIGHT_GREEN else
-                               if TrendColor < 0 then Color.LIGHT_RED else Color.GRAY);
+                               if TrendColor < 0 then Color.LIGHT_RED   else Color.GRAY);
 #// Colour the bars
 def buy = v_fastMA > v_slowMA;
 def sell = v_fastMA < v_slowMA;
