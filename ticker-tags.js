@@ -178,6 +178,12 @@ module.exports = {
   - equities
 `.trim(),
 
+    SMH: `
+  - semiconductor
+  - vectors
+  - equities
+`.trim(),
+
     LQD: `
   - investment grade
   - corporate
