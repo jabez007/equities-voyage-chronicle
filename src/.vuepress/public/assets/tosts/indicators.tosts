@@ -398,6 +398,36 @@ def HA_bearish = HA_Open_MA > HA_Close_MA and (HA_Open_MA - HA_Close_MA) > (HA_O
 #####################################
 
 ####
+# Bravo9
+# [URL]https://www.tradingview.com/script/1YCYP3Jq-Original-Bravo-Swing/[/URL]
+# [URL]https://www.tradingview.com/script/127zASU6-JBravo-Swing/[/URL]
+####
+
+input bravoFastLength = 9;
+input bravoFastType   = AverageType.SIMPLE;
+input bravoSlowLength = 20;
+input bravoSlowType   = AverageType.EXPONENTIAL;
+
+def bravoFast = MovingAverage(bravoFastType, src, bravoFastLength);
+def bravoSlow = MovingAverage(bravoSlowType, src, bravoSlowLength);
+
+def bravoBullish = (
+    bravoFast < bravoSlow # beatdown
+    and 
+    Min(O, C) > bravoFast # one-candle close above
+);
+
+def bravoBearish = (
+    bravoFast > bravoSlow
+    and 
+    Max(O, C) < bravoFast # one-candle close below
+);
+
+#######################
+#### END of Bravo9 ####
+#######################
+
+####
 # RSI
 ####
 
