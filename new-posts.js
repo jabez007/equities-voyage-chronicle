@@ -51,6 +51,12 @@ function getReportTickers(ticker) {
             CTA: 'dollar'
         }
     }
+    if (['UNG', 'natural_gas'].includes(ticker)) {
+        return {
+            MTP: 'UNG',
+            CTA: 'natural_gas'
+        }
+    }
     return {
         MTP: ticker,
         CTA: ticker
