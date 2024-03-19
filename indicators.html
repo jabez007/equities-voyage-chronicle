@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Indicators for Think or Swim | equities voyage chronicle</title>
+    <meta name="generator" content="VuePress 1.9.10">
+    
+    <meta name="description" content="&lt;&lt;&lt; @/src/.vuepress/public/assets/tosts/indicators.tosts ...">
+    <meta name="theme-color" content="#3eaf7c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    
+    <link rel="preload" href="/equities-voyage-chronicle/assets/css/0.styles.6a6a713d.css" as="style"><link rel="preload" href="/equities-voyage-chronicle/assets/js/app.294a5fd1.js" as="script"><link rel="preload" href="/equities-voyage-chronicle/assets/js/4.f1784a08.js" as="script"><link rel="preload" href="/equities-voyage-chronicle/assets/js/8.bfd7c6b6.js" as="script"><link rel="preload" href="/equities-voyage-chronicle/assets/js/22.45890281.js" as="script"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/1.cace1e2f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/100.d71ff4f9.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/101.6b837aac.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/102.1d47603c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/103.d5eb6fbf.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/104.85cc7cd7.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/105.eae1d56f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/106.e9a60b11.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/107.9837264f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/108.a4162c76.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/109.e739dfed.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/11.20fe7706.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/110.3df91613.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/111.0ae86634.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/112.8eab355a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/113.d319e6a0.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/114.6a370bff.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/115.6d85c79b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/116.6ee9d0a1.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/117.6e5b2eda.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/118.8e0c62ae.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/119.506f52ac.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/12.3fcb072c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/120.250deebb.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/121.03bbfb0a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/122.df539b54.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/123.acadd832.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/124.f827b26d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/125.e2973c57.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/126.6e74168a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/127.c23e3494.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/128.e0b0342d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/129.1f93bcde.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/13.ac030bd1.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/130.c809ca37.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/131.a5b0665d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/132.6459bdb2.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/133.e2e7e205.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/134.6e113a15.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/135.d90e28f0.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/136.d9ad9baa.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/137.df08e378.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/138.651c9fbf.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/139.3800f079.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/14.98f2ed64.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/140.f525c398.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/141.c3c46bab.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/142.3ed49531.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/143.3de4e1f4.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/144.340fef48.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/145.a6aead4d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/146.e0a5a9d9.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/147.18f31421.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/148.396e6992.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/149.b24c4b67.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/15.a29903fc.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/150.cf0504cb.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/151.0d8cabeb.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/152.3b07e16e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/153.2574cddb.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/154.6137d2c5.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/155.8f32ca41.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/156.362f1acd.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/157.86688bca.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/158.1ab2f052.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/159.59064684.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/16.bfa2eb58.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/160.2b958dab.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/161.bb3ad7a1.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/162.4b0f4a48.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/163.23d18178.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/164.92aaf1c7.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/165.50c231d9.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/166.62b03751.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/167.2da1fe39.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/168.3940be73.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/169.858fa30d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/17.99a3b62f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/170.d902d506.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/171.053a3b31.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/172.04811bf9.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/173.4b236fe7.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/174.0da25e75.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/175.30e55ac3.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/176.1e27550e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/177.f7f7ada9.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/178.f078d11c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/179.f7afffef.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/18.c9b5a0c5.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/180.a00f323d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/181.e893ee97.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/182.15b86985.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/183.d931d27b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/184.2b4ba84f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/185.c1cd3119.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/186.f996e144.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/187.75dad414.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/188.24213fff.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/189.d3057eaf.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/19.59a3c1fa.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/190.f9546f88.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/191.438a219f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/192.d95eded5.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/193.810bc85d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/194.5cbea9e6.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/195.4441fa6b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/196.0c7eeb54.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/197.23f4992c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/198.caf67e94.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/199.877a1896.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/2.47ceaa91.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/20.94c0770c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/200.4cf60881.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/201.c7e9795c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/202.75299c0b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/203.c7da1e43.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/204.158c0b68.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/205.f65cf405.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/206.94bef765.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/207.e05b3510.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/208.5e244891.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/209.ec91150b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/21.ff0882ce.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/210.073e20ab.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/211.3b4022fc.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/212.d8ecaf30.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/213.976e5bf2.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/214.7d3cd4a5.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/215.0df8d7f8.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/216.4fcad1bf.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/217.70f7377d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/218.2fe09876.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/219.d30d1920.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/220.75f1eba7.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/221.67afa8a9.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/222.f06224be.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/223.8f559c3e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/224.e1417121.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/225.6e08db17.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/226.ed7ff47e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/227.82a67030.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/228.dc1419f9.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/229.8315b63d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/23.d7339a4c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/230.2ee8716e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/231.5e3106a9.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/232.cddfc8eb.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/233.1d2fda7c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/234.65bad392.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/235.dbd61963.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/236.2d032e08.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/237.11ddb976.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/238.cf1dce0c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/239.fc3d400b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/24.68b85be2.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/240.94f25374.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/241.0519cc33.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/242.c83d4535.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/243.db1710bc.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/244.953e466b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/245.15df022f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/246.24dbfb32.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/247.d19d58f4.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/248.6102b031.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/249.8269480d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/25.5f712b74.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/250.35a5044c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/251.b8a79918.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/252.0afda186.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/253.725df721.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/254.71190b84.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/255.95e3667d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/256.cf211d22.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/257.8b31cad1.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/258.066666ca.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/259.2f56ea42.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/26.e6980afd.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/260.3992749e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/261.bf65c175.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/262.ed8c22f3.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/263.8ab0c65b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/264.584c3767.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/265.6db355bb.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/266.7216ce28.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/267.64aee4e5.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/268.190c7bc2.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/269.d0c4d85b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/27.b8d204c9.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/270.d71f4d32.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/271.8c3b7268.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/272.0e32de85.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/273.7a7ca0cf.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/274.dc52bc96.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/275.44c8f141.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/276.5fd01b6e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/277.8d283bd6.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/278.f5085cef.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/279.37e1e13f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/28.d22d6e85.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/280.b9705ef0.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/281.c3a85853.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/282.cf4bb6a5.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/283.878988fb.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/284.ac4b5a3b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/285.e324b709.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/286.fc3fffbc.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/287.b3040f26.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/288.021eaed0.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/289.576382b7.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/29.63832c54.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/290.b5fb0922.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/291.7d36ad0a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/292.0146f415.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/293.a0759bc1.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/294.cb683492.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/295.1fec27df.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/296.3e8f6ed9.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/297.0015a8a4.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/298.d9ba630d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/299.dafd911f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/3.44d05808.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/30.fc16c868.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/300.fb33fb87.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/301.ca40c450.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/302.86f2c47b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/303.19388cff.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/304.93a02ce6.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/305.e25a84e1.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/306.36d4d87e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/307.6fde1132.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/308.eed0b205.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/309.44732433.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/31.4798866d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/310.cf50ae77.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/311.33cdb66b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/312.afec365a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/313.c5c72a46.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/314.93ff9180.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/315.fdcbf684.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/316.a71fcbc4.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/317.1b0fce2a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/318.dc28019d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/319.1b007d97.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/32.7c778f15.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/320.49ceae51.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/321.25e286e2.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/322.0e7cd0c3.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/323.3177363a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/324.796467bb.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/325.66287f3a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/326.19508248.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/327.1e012fa6.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/328.61f3d806.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/329.0ce80137.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/33.b4001368.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/330.514beb8b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/331.d35d2d46.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/332.d6e078dc.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/333.a82be172.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/334.f4f081dd.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/335.e43a5a10.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/336.d01932cc.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/337.c7935809.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/338.2bae4173.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/339.58599670.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/34.0d8f0037.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/340.21af5d9e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/341.36daedcd.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/342.945e01d1.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/343.0a996f6e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/344.10a49d43.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/345.d770114e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/346.b760c2f8.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/347.1c4c94c4.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/348.627e4496.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/349.1c2e11f4.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/35.1522d265.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/350.6323cd7a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/351.39e06d91.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/352.5a013ce1.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/353.341cbcdc.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/354.074042f9.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/355.e491f303.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/356.0dd54c43.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/357.87a5dac0.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/358.0e0532ef.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/359.58776e39.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/36.6e247668.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/360.4ad00e75.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/361.a3fde2b8.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/362.3f898c9a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/363.ed5ebd47.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/364.10099bc0.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/365.aef35926.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/366.581bb5fe.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/367.b5674521.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/368.d5c77c74.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/369.da9eab06.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/37.786484f5.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/370.1cf56c29.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/371.6a5714f3.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/372.500d93e4.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/373.0a926488.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/374.77f1c75a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/375.ef1319a9.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/376.6e518e0e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/377.b946e0a8.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/378.61558b7c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/379.d17ba6d4.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/38.292b05e9.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/380.e7038bd3.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/381.1eb77aa7.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/382.c3f0da3d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/383.d657bf0e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/384.d521bc73.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/385.b33e829b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/386.3031d400.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/387.9b0ff826.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/388.fb4ebb2e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/389.a0ca83b8.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/39.5501fe0c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/390.94e09863.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/391.5dcf241b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/392.f1fe047f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/393.3bbb46e0.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/394.115c845b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/395.37b70e14.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/396.809212eb.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/397.c3542140.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/398.d288a86f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/399.77a31107.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/40.aa51fca8.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/400.f354efbe.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/401.10fb3fb9.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/402.f20a12eb.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/403.aaf45c12.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/404.3f9209ba.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/405.1a9bc2f8.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/406.b3c1fa8d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/407.93bc7123.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/408.5ce09c5c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/409.95e8d995.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/41.37e5f079.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/410.573b0080.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/411.98fac245.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/412.c15dd176.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/413.38d13809.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/414.d480473f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/415.5bcad551.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/416.58c17805.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/417.9d6dbdd7.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/418.ce010791.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/419.5a82e35b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/42.03820cb0.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/420.3443994d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/421.a47d1417.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/422.c3a362c8.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/423.7ec1036b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/424.7394774e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/425.d1015f80.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/426.0bc03e41.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/427.984073bd.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/428.5fc2ad77.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/429.2e454ee1.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/43.4fe11cc5.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/430.48a5e8d5.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/431.d7b97d79.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/432.378be68a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/433.827f2478.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/434.657d5be5.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/435.8b8d1a19.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/436.b96df831.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/437.85e6b7a6.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/438.e5d88800.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/439.146242f2.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/44.cd9d440b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/440.91a74977.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/441.7e301460.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/442.6e154012.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/443.b47d80e7.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/444.e89a705c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/445.a609768f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/446.a47296cf.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/447.3b5325c2.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/448.8634dbd7.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/449.d22d02bd.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/45.079b6121.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/450.01b96b01.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/451.1a4a1aa3.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/452.c733aeb7.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/453.9d580391.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/454.303fdeb6.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/455.34b64a64.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/456.87a503a9.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/457.c10c859c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/458.367ab94f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/459.da0efb2c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/46.031d7d8f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/460.1a6bce8c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/461.9892b17a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/462.055d8e03.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/463.e5f8407f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/464.adf9da2d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/465.31c03267.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/466.7995a70e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/467.82877db1.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/468.9afe4128.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/469.8412c550.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/47.0f9ffe5c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/470.2138c907.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/471.fff81fc2.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/472.59a0f4c9.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/473.672bbb5e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/474.1980e2cd.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/475.3569a55c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/476.4aa4e118.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/477.5a769e3e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/478.f0560d93.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/479.6b4517f6.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/48.51a4f238.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/480.137a42b7.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/481.6fe6b97c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/482.fcd9c451.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/483.61b52b3c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/484.10afbe2a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/485.849a95d5.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/486.f9e15068.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/487.3946462f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/488.df190151.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/489.5d937f4e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/49.d38fdbe0.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/490.9e4575a4.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/491.c2a75eb3.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/492.c74758a9.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/493.722a3693.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/494.453fa696.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/495.643cfce9.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/496.3b4e4eac.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/497.36d842ac.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/498.7b5bcadf.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/499.8a83e1ff.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/5.780d7002.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/50.0de16fdc.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/500.3b7241b6.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/501.42cf500d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/502.8c3a5dc3.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/503.4ec3a9ce.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/504.4ed8eb6f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/505.7ee4c7e5.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/506.6daa708a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/507.8a674f7e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/508.a2808792.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/509.60567d34.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/51.2ef7e59b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/510.3adf05b1.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/511.1d93faaf.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/512.ef245649.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/513.79815c0c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/514.6d5368e2.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/515.e0694a2a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/516.4bb2cbdc.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/517.d50c7a69.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/518.1b30f549.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/519.024c8c61.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/52.4edbc9a3.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/520.1cbf1092.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/521.f652b645.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/522.6926ed17.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/523.45c10ccf.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/524.82d6fe1d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/525.a9e980b6.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/526.0903c41c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/527.109c8c06.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/528.3ea17bd3.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/529.71f9e85f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/53.6578e643.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/530.077d35d4.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/531.160b0e7d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/532.af8f3539.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/533.e6ddc585.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/534.b3303eef.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/535.d2e93a2c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/536.bdf5c731.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/537.673afd5e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/538.136e9001.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/539.e127854c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/54.92f583bf.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/540.b83fe3c7.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/541.f3d1e759.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/542.8d3512a0.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/543.3da15108.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/544.32678964.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/545.c837757b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/546.093f6699.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/547.93e70e34.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/548.4470ecbc.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/549.d1c97842.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/55.327665b6.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/550.b9b53b94.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/551.8a2dac61.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/552.d4906cf4.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/553.7adfe631.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/554.8773098f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/555.3c069ca2.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/556.f2081f22.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/557.708bee8f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/558.2b8a1c4b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/559.063af309.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/56.4ef0cb4d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/560.678f2496.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/561.8a2b48c1.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/562.1f30365c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/563.6d721b3a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/564.4a55833f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/565.8d75de5e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/566.0311ea49.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/567.eb177e07.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/568.03922529.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/569.3dc41086.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/57.825d1666.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/570.3b80d0c0.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/571.b83d9fbb.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/572.748d6712.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/573.f94bdf71.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/574.b1eb5334.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/575.782f3dc3.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/576.039fa174.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/577.9a3e1f51.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/578.50733368.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/579.179282f1.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/58.7ed75617.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/580.f0a73216.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/581.e86efe91.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/582.ca112a1e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/583.557f21b3.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/584.ec7fbbe6.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/585.8947a791.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/586.bfe68aec.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/587.768f7bdd.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/588.6fc120dd.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/589.29a2ffaf.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/59.055b3091.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/590.e1732f8f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/591.a87fcf7f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/592.52d07d81.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/593.96f82ba5.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/594.9d875a3d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/595.18278f13.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/596.1db2c981.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/597.3eb4e508.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/598.271e7d0e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/599.d6aaa237.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/6.b9f4f4b6.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/60.3cfcb41f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/600.64e34460.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/601.13eac089.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/602.6137e53a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/603.2386b2c0.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/604.e8807ed1.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/605.d2950ab6.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/606.92e58b4a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/607.78e9c7b4.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/61.60f8fec6.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/62.d3bd31ba.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/63.50714d3c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/64.8e80791d.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/65.3e69e82a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/66.4fb6fcd4.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/67.29e87b11.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/68.ec3f469c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/69.8dcad556.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/7.b6a0c1f5.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/70.d4cab47a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/71.2c45a66f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/72.9530ab9c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/73.7962352a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/74.eaf32f32.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/75.212a79df.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/76.fe9ed499.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/77.a2c78b24.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/78.782f14ba.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/79.384f24ad.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/80.c02d3983.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/81.b316fa07.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/82.49cf46fd.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/83.5928d910.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/84.2ddfe08b.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/85.ac4df7c4.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/86.844c88f4.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/87.905e8bab.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/88.c9416e4c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/89.a54bf178.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/90.6bf2f238.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/91.f99384c5.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/92.d663f1ab.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/93.a4051495.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/94.870abe47.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/95.474fa15e.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/96.b9f0c4a8.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/97.ed9e174a.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/98.4b8bae2f.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/99.f5e2e01c.js"><link rel="prefetch" href="/equities-voyage-chronicle/assets/js/vuejs-paginate.70d82c12.js">
+    <link rel="stylesheet" href="/equities-voyage-chronicle/assets/css/0.styles.6a6a713d.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div id="vuepress-theme-blog__global-layout"><section id="header-wrapper"><header id="header"><div class="header-wrapper"><div class="title"><a href="/equities-voyage-chronicle/" class="nav-link home-link">equities voyage chronicle </a></div> <div class="header-right-wrap"><ul class="nav"><li class="nav-item"><a href="/equities-voyage-chronicle/tag/buy/" class="nav-link">Buys</a></li><li class="nav-item"><a href="/equities-voyage-chronicle/tag/sell/" class="nav-link">Sells</a></li><li class="nav-item"><a href="/equities-voyage-chronicle/positions.html" class="nav-link">Positions</a></li><li class="nav-item"><a href="/equities-voyage-chronicle/seasonality.html" class="nav-link">Seasonality</a></li><li class="nav-item"><a href="/equities-voyage-chronicle/indicators.html" aria-current="page" class="nav-link router-link-exact-active router-link-active">Indicators</a></li><li class="nav-item"><a href="https://v1.vuepress.vuejs.org" target="_blank" rel="noopener noreferrer" class="nav-link external">VuePress</a></li></ul> <div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <!----></div></div></header></section> <div id="mobile-header"><div class="mobile-header-bar"><div class="mobile-header-title"><a href="/equities-voyage-chronicle/" class="nav-link mobile-home-link">equities voyage chronicle </a> <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></div> <div class="mobile-menu-wrapper"><hr class="menu-divider"> <ul class="mobile-nav"><li class="mobile-nav-item"><a href="/equities-voyage-chronicle/tag/buy/" class="nav-link">Buys</a></li><li class="mobile-nav-item"><a href="/equities-voyage-chronicle/tag/sell/" class="nav-link">Sells</a></li><li class="mobile-nav-item"><a href="/equities-voyage-chronicle/positions.html" class="nav-link">Positions</a></li><li class="mobile-nav-item"><a href="/equities-voyage-chronicle/seasonality.html" class="nav-link">Seasonality</a></li><li class="mobile-nav-item"><a href="/equities-voyage-chronicle/indicators.html" aria-current="page" class="nav-link router-link-exact-active router-link-active">Indicators</a></li><li class="mobile-nav-item"><a href="https://v1.vuepress.vuejs.org" target="_blank" rel="noopener noreferrer" class="nav-link external">VuePress</a></li> <li class="mobile-nav-item"><!----></li></ul></div></div></div> <div class="content-wrapper"><div><div class="content__default"><div class="language-tosts line-numbers-mode"><pre class="language-text"><code>###
+#
+# [URL]https://usethinkscript.com/threads/why-using-different-types-of-indicators-is-important-to-successful-trading-in-thinkorswim.6114/[/URL]
+###
+
+DefineGlobalColor(&quot;RoyalBlue&quot;, createColor(65, 105, 225));
+
+###
+# Trend Advisor Market Phases
+# [URL]https://usethinkscript.com/threads/market-phases-indicator-for-thinkorswim.1025[/URL]
+# Credits
+#  - Chuck Dukas for creating the Market Phases system
+#  - the author of VolumeTrendLabels whose study was use to create this indicator.
+#
+### 
+
+#Ensure you set the correct aggregation period to then chart, this helps calculate the correct volume and price action.
+input vPeriod = AggregationPeriod.DAY; #hint vPeriod: Enter the chart time you use here. Required to properly caluclate volume and price strength.
+
+def O = open(period = vPeriod);
+def H = high(period = vPeriod);
+def C = close(period = vPeriod);
+def L = low(period = vPeriod);
+def V = volume(period = vPeriod);
+
+def SV = V * (H - C) / (H - L);
+def BV = V * (C - L) / (H - L);
+
+####
+# below determines if volume supports the move, adds conviction
+####
+
+def buyerVol = high &gt; high[1] and low &gt; low[1] and BV*1.05 &gt; SV;
+AddLabel(buyerVol, &quot; Buyer Vol Strong &quot;, if buyerVol then Color.GREEN else Color.BLACK);
+
+def sellerVol = high &lt; high[1] and low &lt; low[1] and SV*1.05 &gt; BV;
+AddLabel(sellerVol, &quot; Seller Vol Strong &quot;, if sellerVol then Color.MAGENTA else Color.BLACK);
+
+####
+# below determines if price supports the move
+####
+
+def strongPrice = high &gt; high[1] and high[1] &gt; high[2] and low &gt; low[1] and low[1] &gt; low[2];
+AddLabel(strongPrice, &quot; Price Strong &quot;, if strongPrice then Color.GREEN else Color.BLACK);
+
+def weakPrice = high &lt; high[1] and high[1] &lt; high[2] and low &lt; low[1] and low[1] &lt; low[2];
+AddLabel(weakPrice, &quot; Price Weak &quot;, if weakPrice then Color.MAGENTA else Color.BLACK);
+
+####
+# Moving Averages used to determine Bullish or Bearish
+####
+
+input price = FundamentalType.CLOSE; #hint price: which value to use for the moving averages
+def src = Fundamental(FundamentalType = price, Period = vPeriod);
+
+####
+
+input fastAvgLength = 50;
+input fastAvgType   = AverageType.SIMPLE;
+
+plot fastMA = MovingAverage(fastAvgType, src, fastAvgLength);
+fastMA.SetDefaultColor(Color.DARK_ORANGE);
+fastMA.SetLineWeight(3);
+
+def Fast_MA_Height = fastMA - fastMA[1];
+def Fast_MA_Angle  = Atan(Fast_MA_Height) * 180 / Double.Pi;
+
+####
+
+input slowAvgLength = 200;
+input slowAvgType   = AverageType.SIMPLE;
+
+plot slowMA = MovingAverage(slowAvgType, src, slowAvgLength);
+slowMA.SetDefaultColor(Color.YELLOW);
+slowMA.SetLineWeight(5);
+
+def Slow_MA_Height = slowMA - slowMA[1];
+def Slow_MA_Angle  = Atan(Slow_MA_Height) * 180 / Double.Pi;
+
+####
+# Bullish criteria define below
+####
+
+# Define criteria for Bullish Phase : close &gt; 50 SMA, close &gt; 200 SMA, 50 SMA &gt; 200 SMA
+# Higher highs and higher lows
+# Buy the dips, volume expands on breakouts, new highs
+# Accelerating momentum and volume
+def bullphase = (
+    fastMA &gt; slowMA
+    #&amp;&amp;
+    #((Fast_MA_Angle &gt; 0) and (Slow_MA_Angle &gt; 0))
+    &amp;&amp;
+    src &gt; fastMA 
+    &amp;&amp;
+    src &gt; slowMA
+);
+
+# Define criteria for Accumulation Phase : close &gt; 50 SMA, close &gt; 200 SMA, 50 SMA &lt; 200 SMA
+# Begin to see new 60 period HH
+def accphase = (
+    fastMA &lt; slowMA
+    #&amp;&amp;
+    #((Fast_MA_Angle &gt; 0) and (Slow_MA_Angle &gt;= 0))
+    &amp;&amp;
+    src &gt; fastMA
+    &amp;&amp;
+    src &gt; slowMA
+);
+
+# Define criteria for Recovery Phase : close &gt; 50 SMA, close &lt; 200 SMA, 50 SMA &lt; 200 SMA
+
+def recphase = (
+    fastMA &lt; slowMA
+    #&amp;&amp;
+    #((Fast_MA_Angle &gt;= 0) and (Slow_MA_Angle &lt; 0))
+    &amp;&amp;
+    src &lt; slowMA
+    &amp;&amp;
+    src &gt; fastMA
+);
+
+####
+# Bearish Criteria define below
+####
+
+# Define criteria for Bearish Phase : close &lt; 50 SMA, close &lt; 200 SMA, 50 SMA &lt; 200 SMA
+
+def bearphase = (
+    fastMA &lt; slowMA
+    #&amp;&amp;
+    #((Fast_MA_Angle &lt; 0) and (Slow_MA_Angle &lt; 0))
+    &amp;&amp;
+    src &lt; fastMA
+    &amp;&amp;
+    src &lt; slowMA
+);
+
+# Define criteria for Distribution Phase : close &lt; 50 SMA, close &lt; 200 SMA, 50 SMA &gt; 200 SMA
+
+def distphase = (
+    fastMA &gt; slowMA
+    #&amp;&amp;
+    #((Fast_MA_Angle &lt; 0) and (Slow_MA_Angle &lt;= 0))
+    &amp;&amp;
+    src &lt; fastMA
+    &amp;&amp;
+    src &lt; slowMA
+);
+
+# Define criteria for Warning Phase : close &lt; 50 SMA, close &gt; 200 SMA, 50 SMA &gt; 200 SMA
+
+def warnphase = (
+    fastMA &gt; slowMA
+    #&amp;&amp;
+    #((Fast_MA_Angle &lt;= 0) and (Slow_MA_Angle &gt; 0))
+    &amp;&amp;
+    src &gt; slowMA
+    &amp;&amp;
+    src &lt; fastMA
+);
+
+####
+#plot buphase = bullphase is true;
+#plot acphase = accphase is true;
+#plot rephase = recphase is true;
+####
+#plot bephase = bearphase is true;
+#plot dphase = distphase is true;
+#plot wphase = warnphase is true;
+####
+
+####
+# Below adds labels to the chart to identify what phase the underlying is in
+####
+
+AddLabel(bullphase, &quot; Bull Phase &quot; , if bullphase is true then Color.GREEN else Color.BLACK);
+
+AddLabel(accphase, &quot; Accumation Phase &quot;, if accphase is true then Color.LIGHT_GREEN else Color.BLACK);
+
+AddLabel(recphase, &quot; Recovery Phase &quot;, if recphase is true then Color.LIGHT_ORANGE else Color.BLACK);
+
+AddLabel(warnphase, &quot; Warning Phase &quot;, if warnphase is true then Color.ORANGE else Color.BLACK);
+
+AddLabel(distphase, &quot; Distribution Phase &quot;, if distphase is true then Color.LIGHT_RED else Color.BLACK);
+
+AddLabel(bearphase, &quot; Bear Phase &quot;, if bearphase is true then Color.RED else Color.BLACK);
+
+assignPriceColor(if bullphase then Color.GREEN else if bearphase then Color.RED else if (accphase or distphase or recphase or warnphase) then Color.ORANGE else Color.GRAY);
+
+############################################
+#### END of Trend Advisor Market Phases ####
+############################################
+
+###
+# Bull Market Support Band
+# [URL]https://www.tradingview.com/script/uSBR7cFa-Bull-Market-Support-Band-20w-SMA-21w-EMA/[/URL]
+###
+
+input bullPeriod      = AggregationPeriod.WEEK;
+input bull_MA1_Length = 20;
+input bull_MA1_Type   = AverageType.SIMPLE;
+input bull_MA2_Length = 21;
+input bull_MA2_Type   = AverageType.EXPONENTIAL;
+
+def bullSrc = fundamental(price, period = bullPeriod);
+
+plot bull_MA1 = MovingAverage(bull_MA1_Type, bullSrc, bull_MA1_Length);
+bull_MA1.DefineColor(&quot;UpTrend&quot;, Color.LIME);
+bull_MA1.DefineColor(&quot;DownTrend&quot;, Color.PINK);
+def bull_MA1_Trend = compoundValue(1, 
+    if (bull_MA1 &gt; bull_MA1[1]) then 1 else if (bull_MA1 &lt; bull_MA1[1]) then -1 else bull_MA1_Trend[1],
+    if (bull_MA1 &gt; bull_MA1[1]) then 1 else -1);
+bull_MA1.AssignValueColor(if (bull_MA1_Trend == 1) then bull_MA1.Color(&quot;UpTrend&quot;) else if (bull_MA1_Trend == -1) then bull_MA1.Color(&quot;DownTrend&quot;) else Color.ORANGE);
+
+plot bull_MA2 = MovingAverage(bull_MA2_Type, bullSrc, bull_MA2_Length);
+bull_MA2.DefineColor(&quot;UpTrend&quot;, Color.LIME);
+bull_MA2.DefineColor(&quot;DownTrend&quot;, Color.PINK);
+def bull_MA2_Trend = compoundValue(1,
+    if (bull_MA2 &gt; bull_MA2[1]) then 1 else if (bull_MA2 &lt; bull_MA2[1]) then -1 else bull_MA2_Trend[1],
+    if (bull_MA2 &gt; bull_MA2[1]) then 1 else -1);
+bull_MA2.AssignValueColor(if (bull_MA2_Trend == 1) then bull_MA2.Color(&quot;UpTrend&quot;) else if (bull_MA2_Trend == -1) then bull_MA2.Color(&quot;DownTrend&quot;) else Color.ORANGE);
+
+addCloud(
+    bull_MA1,
+    bull_MA2,
+    Color.LIGHT_ORANGE,
+    Color.LIGHT_ORANGE
+);
+
+#########################################
+#### END of Bull Market Support Band ####
+#########################################
+
+####
+# Ehler's Distance Coefficient Filter
+####
+
+input ehlersLength = 34;
+input ehlersPrice  = FundamentalType.HL2;
+
+def ehlersSrc = Fundamental(ehlersPrice, Period = vPeriod);
+def ehlersCoeff = ehlersLength * ehlersSrc * ehlersSrc - 2 * ehlersSrc * Sum(ehlersSrc, ehlersLength)[1] + Sum(ehlersSrc * ehlersSrc, ehlersLength)[1];
+plot ehlers = Sum(ehlersCoeff * ehlersSrc, ehlersLength) / Sum(ehlersCoeff, ehlersLength);
+ehlers.SetDefaultColor(Color.ORANGE);
+ehlers.SetStyle(Curve.MEDIUM_DASH);
+ehlers.SetLineWeight(2);
+
+def ehlersBullish = C &gt; ehlers;
+def ehlersBearish = C &lt; ehlers;
+
+####################################################
+#### END of Ehler's Distance Coefficient Filter ####
+####################################################
+
+####
+#// This source code is subject to the terms of the Mozilla Public License 2.0 a
+#// © btc_charlie / @TheParagonGrp
+#indicator('[@btc_charlie] Trader XO Macro Trend Scanner', overlay=true)
+# -- Converted by Sam4Cok@Samer800    - 01/2024
+# updated MTF option by Sam4Cok@Samer800    - 01/2024
+####
+
+input TrendAvgType        = AverageType.EXPONENTIAL;
+input TrendFastLength     = 11;#, title='Fast EMA')
+input TrendSlowLength     = 29;#, title='Slow EMA')
+input showBothMovAvg      = no;#(title='Show Both EMAs', defval=true)
+input ConsolidatedLength  = 23;#, title='Consolidated EMA')
+
+def na = Double.NaN;
+
+#// Define the MAs
+def v_fastMA = MovingAverage(TrendAvgType, src, TrendFastLength);
+def v_slowMA = MovingAverage(TrendAvgType, src, TrendSlowLength);
+def v_biasMA = MovingAverage(TrendAvgType, src, ConsolidatedLength);
+
+#// Color the MAs
+def TrendColor = if v_fastMA &gt; v_slowMA then  1 else
+                 if v_fastMA &lt; v_slowMA then -1 else 0;
+
+#// Plot the MAs
+plot ConsMA        = if showBothMovAvg then na       else v_biasMA; # 'Consolidated EMA'
+plot TrendFastLine = if showBothMovAvg then v_fastMA else na;#, title='Fast EMA', color=emaColor)
+plot TrendSlowLine = if showBothMovAvg then v_slowMA else na;#, title='Slow EMA', color=emaColor)
+ConsMA.SetLineWeight(2);
+ConsMA.AssignValueColor(if TrendColor &gt; 0 then Color.LIGHT_GREEN else
+                        if TrendColor &lt; 0 then Color.LIGHT_RED   else Color.GRAY);
+TrendFastLine.AssignValueColor(if TrendColor &gt; 0 then Color.LIGHT_GREEN else
+                               if TrendColor &lt; 0 then Color.LIGHT_RED   else Color.GRAY);
+TrendSlowLine.AssignValueColor(if TrendColor &gt; 0 then Color.LIGHT_GREEN else
+                               if TrendColor &lt; 0 then Color.LIGHT_RED   else Color.GRAY);
+#// Colour the bars
+def buy = v_fastMA &gt; v_slowMA;
+def sell = v_fastMA &lt; v_slowMA;
+
+#// Variables
+def countBuy;
+def countSell;
+
+if buy {
+    countBuy  = countBuy[1] + 1;
+    countSell = 0;
+ } else if sell {
+    countSell = countSell[1] + 1;
+    countBuy  = 0;
+} else {
+    countBuy  = countBuy[1];
+    countSell = countSell[1];
+}
+
+def trendBullish = countBuy  &gt; 0 and countSell &lt; 1 and buy;
+def trendBearish = countSell &gt; 0 and countBuy  &lt; 1 and sell;
+
+def buysignal  = trendBullish and countBuy  &lt; 2 and !buy[1];
+def sellsignal = trendBearish and countSell &lt; 2 and !sell[1];
+
+#// Plot Bull/Bear
+
+#AddChartBubble(buysignal, low, &quot;Bull&quot;, Color.GREEN, no);
+#AddChartBubble(sellsignal, high, &quot;Bear&quot;, Color.RED);
+
+input highlightBackground = no;
+
+def bull = countBuy  &gt; 1 and highlightBackground;
+def bear = countSell &gt; 1 and highlightBackground;
+def pos = Double.POSITIVE_INFINITY;
+def neg = Double.NEGATIVE_INFINITY;
+
+AddCloud(if (bull) then pos else na, neg, Color.DARK_GREEN);
+AddCloud(if (bear) then pos else na, neg, Color.DARK_RED);
+
+###########################
+### END of Macro Trend ####
+###########################
+
+####
+# Smoothed Heiken Ashi
+# [URL]https://usethinkscript.com/threads/smoothed-heikin-ashi-with-atr-trail-for-thinkorswim.9992/[/URL]
+#
+# Moving Average of Heikin Ashi Values:
+#     * This approach involves calculating the Heikin Ashi values first and then taking a moving average of these values.
+#     * It smooths out the Heikin Ashi data even further, potentially filtering out more noise and providing a clearer trend indication.
+#     * It may be useful if you're looking for smoother trend signals or want to reduce the impact of short-term fluctuations.
+#
+# Heikin Ashi of the Moving Average:
+#     * This approach involves taking a moving average of the open, high, low, and close prices first and then calculating Heikin Ashi values based on these smoothed prices.
+#     * It applies the Heikin Ashi calculation to already smoothed data, potentially preserving more of the original price action while still benefiting from the smoothing effect of the moving average.
+#     * It may be useful if you want to maintain a balance between smoothing and responsiveness to price movements.
+####
+
+input OpenAvgLength  = 20;
+input OpenAvgType    = AverageType.EXPONENTIAL;
+input HighAvgLength  = 20;
+input HighAvgType    = AverageType.EXPONENTIAL;
+input LowAvgLength   = 20;
+input LowAvgType     = AverageType.EXPONENTIAL;
+input CloseAvgLength = 20;
+input CloseAvgType   = AverageType.EXPONENTIAL;
+
+####
+
+def Open_MA  = MovingAverage(OpenAvgType,  O, OpenAvgLength);
+def High_MA  = MovingAverage(HighAvgType,  H, HighAvgLength);
+def Low_MA   = MovingAverage(LowAvgType,   L, LowAvgLength);
+def Close_MA = MovingAverage(CloseAvgType, C, CloseAvgLength);
+
+def HA_Close_MA = (Open_MA + High_MA + Low_MA + Close_MA) / 4.0;
+def HA_Open_MA  = compoundValue(1, (HA_Open_MA[1] + HA_Close_MA[1]) / 2.0, (Open_MA + Close_MA) / 2.0);
+def HA_High_MA  = Max(High_MA, Max(HA_Open_MA, HA_Close_MA));
+def HA_Low_MA   = Min(Low_MA,  Min(HA_Open_MA, HA_Close_MA));
+
+#Red Candlesticks -----------------------------------------------------------------|
+
+def HA_Open_MA_fall  = if HA_Open_MA &gt;  HA_Close_MA then HA_Open_MA  else double.nan;
+def HA_High_MA_fall  = if HA_Open_MA &gt;= HA_Close_MA then HA_High_MA  else double.nan;
+def HA_Low_MA_fall   = if HA_Open_MA &gt;= HA_Close_MA then HA_Low_MA   else double.nan;
+def HA_Close_MA_fall = if HA_Open_MA &gt;= HA_Close_MA then HA_Close_MA else double.nan;
+
+AddChart(growColor = Color.plum, fallColor = GlobalColor(&quot;RoyalBlue&quot;), neutralColor = Color.current,
+    open = HA_Open_MA_fall, high = HA_High_MA_fall, low = HA_Low_MA_fall, close = HA_Close_MA_fall,
+    type = ChartType.CANDLE);
+
+#Green Candlesticks ---------------------------------------------------------------|
+
+def HA_Open_MA_rise  = if HA_Open_MA &lt;  HA_Close_MA then HA_Close_MA else double.nan;
+def HA_High_MA_rise  = if HA_Open_MA &lt;= HA_Close_MA then HA_High_MA  else double.nan;
+def HA_Low_MA_rise   = if HA_Open_MA &lt;= HA_Close_MA then HA_Low_MA   else double.nan;
+def HA_Close_MA_rise = if HA_Open_MA &lt;= HA_Close_MA then HA_Open_MA  else double.nan;
+
+AddChart(growColor = GlobalColor(&quot;RoyalBlue&quot;), fallColor = Color.plum, neutralColor = Color.current,
+    open = HA_Open_MA_rise, high = HA_High_MA_rise, low = HA_Low_MA_rise, close = HA_Close_MA_rise,
+    type = ChartType.CANDLE);
+
+def HA_bullish = HA_Close_MA &gt; HA_Open_MA and (HA_Close_MA - HA_Open_MA) &gt; (HA_Close_MA[1] - HA_Open_MA[1]);
+def HA_bearish = HA_Open_MA &gt; HA_Close_MA and (HA_Open_MA - HA_Close_MA) &gt; (HA_Open_MA[1] - HA_Close_MA[1]);
+
+#####################################
+#### END of Smoothed Heiken Ashi ####
+#####################################
+
+####
+# Bravo9
+# [URL]https://www.tradingview.com/script/1YCYP3Jq-Original-Bravo-Swing/[/URL]
+# [URL]https://www.tradingview.com/script/127zASU6-JBravo-Swing/[/URL]
+####
+
+input bravoFastLength = 9;
+input bravoFastType   = AverageType.SIMPLE;
+input bravoSlowLength = 20;
+input bravoSlowType   = AverageType.EXPONENTIAL;
+
+def bravoFast = MovingAverage(bravoFastType, src, bravoFastLength);
+def bravoSlow = MovingAverage(bravoSlowType, src, bravoSlowLength);
+
+def bravoBullish = (
+    bravoFast &lt; bravoSlow # beatdown
+    and 
+    Min(O, C) &gt; bravoFast # one-candle close above
+);
+
+def bravoBearish = (
+    bravoFast &gt; bravoSlow
+    and 
+    Max(O, C) &lt; bravoFast # one-candle close below
+);
+
+#######################
+#### END of Bravo9 ####
+#######################
+
+####
+# RSI
+####
+
+input RSI_Length   = 14;
+input RSI_Avg_Type = AverageType.WILDERS;
+
+def NetChgAvg = MovingAverage(RSI_Avg_Type, src - src[1], RSI_Length);
+def TotChgAvg = MovingAverage(RSI_Avg_Type, AbsValue(src - src[1]), RSI_Length);
+def ChgRatio  = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
+
+def RSI = 50 * (ChgRatio + 1);
+
+input smoothed_RSI_Length   = 200;
+input smoothed_RSI_Avg_Type = AverageType.SIMPLE;
+
+def smoothed_RSI = MovingAverage(smoothed_RSI_Avg_Type, RSI, smoothed_RSI_Length);
+
+input RSI_Lookback = 3;
+
+def RSI_bullish = RSI &gt; smoothed_RSI;
+def RSI_bearish = RSI &lt; smoothed_RSI;
+
+addlabel(yes, &quot;           &quot;, color.BLACK);
+AddLabel(yes, 
+    &quot; RSI: &quot;+Round(RSI, 0)+&quot; and &quot;+(if IsAscending(RSI, RSI_Lookback) then &quot;rising&quot; else if IsDescending(RSI, RSI_Lookback) then &quot;falling&quot; else &quot;steady&quot;),
+    if IsAscending(RSI, RSI_Lookback) then
+        if RSI &gt; smoothed_RSI then Color.GREEN else if RSI &lt; smoothed_RSI then Color.LIGHT_GREEN else Color.LIGHT_GRAY
+    else if IsDescending(RSI, RSI_Lookback) then
+        if RSI &lt; smoothed_RSI then Color.RED   else if RSI &gt; smoothed_RSI then Color.LIGHT_RED   else Color.LIGHT_GRAY
+    else
+        Color.LIGHT_GRAY
+);
+
+# Stochastic of the RSI
+
+input K_Period      = 14;
+input D_Period      = 3;
+input slowingPeriod = 3;
+input StochAvgType  = AverageType.SIMPLE;
+
+def lowest_k = Lowest(RSI, K_Period);
+def c1 = RSI - lowest_k;
+def c2 = Highest(RSI, K_Period) - lowest_k;
+def FastK = if c2 != 0 then c1 / c2 * 100 else 0;
+
+def FullK = MovingAverage(StochAvgType, FastK, slowingPeriod);
+def FullD = MovingAverage(StochAvgType, FullK, D_Period);
+
+####################
+#### END of RSI ####
+####################
+
+####
+# TMO ((T)rue (M)omentum (O)scilator)
+# Mobius
+# V01.05.2018
+# hint: TMO calculates momentum using the delta of price. Giving a much better picture of trend, tend reversals and divergence than momentum oscillators using price.
+# [URL]https://usethinkscript.com/threads/tmo-true-momentum-oscillator-for-thinkorswim.9413/[/URL]
+####
+
+input tmoLength       = 14;
+input tmoCalcLength   = 5;
+input tmoSmoothLength = 3;
+
+def tmoData = fold i = 0 to tmoLength with s do 
+    s + (
+        if C &gt; getValue(O, i) then 
+            1
+        else if C &lt; getValue(O, i) then 
+            -1
+        else 
+            0
+    );
+def tmo_EMA   = ExpAverage(tmoData, tmoCalcLength);
+def tmoMain   = ExpAverage(tmo_EMA, tmoSmoothLength);
+def tmoSignal = ExpAverage(tmoMain, tmoSmoothLength);
+
+input tmoOutOfBounds = 0.7;
+
+def TMO_Bullish = tmoMain &gt; tmoSignal and tmoMain &lt;  round(tmoLength * tmoOutOfBounds);
+def TMO_Bearish = tmoMain &lt; tmoSignal and tmoMain &gt; -round(tmoLength * tmoOutOfBounds);
+
+##############################################
+#### END of (T)rue (M)omentum (O)scilator ####
+##############################################
+
+####
+# Z-Score
+# [URL]https://usethinkscript.com/threads/z-score-upper-indicator-for-thinkorswim.3896/[/URL]
+####
+
+input zscoreLength    = 20;
+input zscoreAvgLength = 17;
+
+def zscore_One_SD = StDev(src, zscoreLength);
+def zscoreAvgPrice = Average(src, zscoreLength);
+def zscoreValue = (src - zscoreAvgPrice) / zscore_One_SD;
+def zscoreAverage = Average(zscoreValue, zscoreAvgLength);
+
+def zscoreBullish = zscoreValue &gt; zscoreAverage; # zscoreValue crosses above zscoreAverage and zscoreAverage &lt; -.75
+def zscoreBearish = zscoreValue &lt; zscoreAverage; # zscoreValue crosses below zscoreAverage and zscoreAverage &gt; .75
+
+########################
+#### END of Z-Score ####
+########################
+
+####
+# // @author LazyBear 
+# // List of all my indicators: 
+# // https://docs.google.com/document/d/15AGCufJZ8CIUvwFJ9W-IKns88gkWOKBCvByMEvm5MLo/edit?usp=sharing
+# // 
+# study(&quot;Anchored Momentum [LazyBear]&quot;, shorttitle=&quot;AMOM_LB&quot;)
+# thinkscript conversion by mashume 2022.10
+####
+
+# l=input(10, title=&quot;Momentum Period&quot;)
+input amomPeriod = 10;
+
+# p=2*l+1
+def amom_p = 2 * amomPeriod + 1;
+
+# sm=input(false, title=&quot;Smooth Momentum&quot;)
+input SmoothAmom = no;
+
+# smp=input(7, title=&quot;Smoothing Period&quot;)
+input amomSmoothingPeriod = 7;
+
+# amom=100*(((sm?ema(src,smp):src)/(sma(src,p)) - 1))
+def t_amom = if SmoothAmom == yes then ExpAverage(src, amomSmoothingPeriod) else src;
+def amom = 100 * ((t_amom / (Average(src, amom_p)) - 1));
+
+# sl=input(8, title=&quot;Signal Period&quot;)
+input amomSignalPeriod = 8;
+
+# amoms=sma(amom, sl)
+def amomSignal = Average(amom, amomSignalPeriod);
+
+def amomBullish = amom &gt;  amomSignal and amom &gt;= 0;
+def amomBearish = amom &lt;= amomSignal and amom &lt;  0;
+
+##################################
+#### END of Anchored Momentum ####
+##################################
+
+#############################################################
+###   Determine a flat market
+#############################################################
+
+input TradeInFlatRange = yes;
+input BarsForFlatRange = 15;
+input BarsReqToStayInRange = 13;
+
+def HH = Highest(high[1], BarsForFlatRange);
+def LL = Lowest(low[1], BarsForFlatRange);
+def maxH = Highest(HH, BarsReqToStayInRange);
+def maxL = Lowest(LL, BarsReqToStayInRange);
+def HHn = if maxH == maxH[1] or maxL == maxL then maxH else HHn[1];
+def LLn = if maxH == maxH[1] or maxL == maxL then maxL else LLn[1];
+def Bh = if high &lt;= HHn and HHn == HHn[1] then HHn else Double.NaN;
+def Bl = if low &gt;= LLn and LLn == LLn[1] then LLn else Double.NaN;
+def CountH = if IsNaN(Bh) or IsNaN(Bl) then 2 else CountH[1] + 1;
+def CountL = if IsNaN(Bh) or IsNaN(Bl) then 2 else CountL[1] + 1;
+def ExpH = if BarNumber() == 1 then Double.NaN else
+    if CountH[-BarsReqToStayInRange] &gt;= BarsReqToStayInRange then HHn[-BarsReqToStayInRange] else
+    if high &lt;= ExpH[1] then ExpH[1] else Double.NaN;
+def ExpL = if BarNumber() == 1 then Double.NaN else
+    if CountL[-BarsReqToStayInRange] &gt;= BarsReqToStayInRange then LLn[-BarsReqToStayInRange] else
+    if low &gt;= ExpL[1] then ExpL[1] else Double.NaN;
+
+def BoxHigh = if !isnan(expL) and !isnan(ExpH) then ExpH else double.nan;
+def BoxLow = if !isnan(expL) and !isnan(ExpH) then ExpL else double.nan;
+
+addcloud(BoxHigh, BoxLow, Color.GRAY, Color.GRAY, yes);
+
+def Flat = if (!isNan(BoxHigh[1]) and !isNan(BoxLow[1])) and !TradeInFlatRange then 1 else 0;
+
+############################
+#### END of Flat Market ####
+############################
+
+####
+# The conditions below are for possible entries for longs and shorts
+####
+
+def bullishSignal = (
+    trendBullish
+    &amp;&amp;
+    HA_bullish
+    &amp;&amp;
+    RSI_bullish
+    &amp;&amp;
+    TMO_Bullish
+    &amp;&amp;
+    zscoreBullish
+    &amp;&amp;
+    amomBullish
+    &amp;&amp;
+    ehlersBullish
+    #&amp;&amp;
+    #!Flat    
+);
+
+input takeShorts = no;
+
+def bearishSignal = takeShorts &amp;&amp; (
+    trendBearish
+    &amp;&amp;
+    HA_bearish
+    &amp;&amp;
+    RSI_bearish
+    &amp;&amp;
+    TMO_Bearish
+    &amp;&amp;
+    zscoreBearish
+    &amp;&amp;
+    amomBearish
+    &amp;&amp;
+    ehlersBearish
+    #&amp;&amp;
+    #!Flat
+);
+
+########################
+#### End of Entries ####
+########################
+
+####
+# The conditions below are for stop losses
+# Inspired by the Accurate Swing Trading System
+####
+
+input useStops = yes;
+
+def UT9X = compoundValue(1, if (C &gt; C[4]) then UT9X[1] + 1 else 0, 0);
+plot UT9 = (
+    if (UT9X == 1 &amp;&amp; !isNaN(UT9X[-8]) &amp;&amp; UT9X[-8] == 9) then UT9X
+    else if (UT9X == 2 &amp;&amp; !isNaN(UT9X[-7]) &amp;&amp; UT9X[-7] == 9) then UT9X
+    else if (UT9X == 3 &amp;&amp; !isNaN(UT9X[-6]) &amp;&amp; UT9X[-6] == 9) then UT9X
+    else if (UT9X == 4 &amp;&amp; !isNaN(UT9X[-5]) &amp;&amp; UT9X[-5] == 9) then UT9X
+    else if (UT9X == 5 &amp;&amp; !isNaN(UT9X[-4]) &amp;&amp; UT9X[-4] == 9) then UT9X
+    else if (UT9X == 6 &amp;&amp; !isNaN(UT9X[-3]) &amp;&amp; UT9X[-3] == 9) then UT9X
+    else if (UT9X == 7 &amp;&amp; !isNaN(UT9X[-2]) &amp;&amp; UT9X[-2] == 9) then UT9X
+    else if (UT9X == 8 &amp;&amp; !isNaN(UT9X[-1]) &amp;&amp; UT9X[-1] == 9) then UT9X
+    else if (UT9X &gt;= 9) then UT9X
+    else Double.NaN
+);
+UT9.SetPaintingStrategy(PaintingStrategy.Values_Above);
+UT9.AssignValueColor(if UT9 &lt; 9 then Color.CYAN else Color.MAGENTA);
+
+def DT9X = compoundValue(1, if (C &lt; C[4]) then DT9X[1] + 1 else 0, 0);
+plot DT9 = (
+    if (DT9X == 1 &amp;&amp; !isNaN(DT9X[-8]) &amp;&amp; DT9X[-8] == 9) then DT9X
+    else if (DT9X == 2 &amp;&amp; !isNaN(DT9X[-7]) &amp;&amp; DT9X[-7] == 9) then DT9X
+    else if (DT9X == 3 &amp;&amp; !isNaN(DT9X[-6]) &amp;&amp; DT9X[-6] == 9) then DT9X
+    else if (DT9X == 4 &amp;&amp; !isNaN(DT9X[-5]) &amp;&amp; DT9X[-5] == 9) then DT9X
+    else if (DT9X == 5 &amp;&amp; !isNaN(DT9X[-4]) &amp;&amp; DT9X[-4] == 9) then DT9X
+    else if (DT9X == 6 &amp;&amp; !isNaN(DT9X[-3]) &amp;&amp; DT9X[-3] == 9) then DT9X
+    else if (DT9X == 7 &amp;&amp; !isNaN(DT9X[-2]) &amp;&amp; DT9X[-2] == 9) then DT9X
+    else if (DT9X == 8 &amp;&amp; !isNaN(DT9X[-1]) &amp;&amp; DT9X[-1] == 9) then DT9X
+    else if (DT9X &gt;= 9) then DT9X
+    else Double.NaN
+);
+DT9.SetPaintingStrategy(PaintingStrategy.Values_Below);
+DT9.AssignValueColor(if DT9 &lt; 9 then Color.MAGENTA else Color.CYAN);
+
+####
+
+def bullstp = (
+    countSell &gt; 0
+    or
+    HA_Close_MA &lt; HA_Open_MA
+    or
+    tmoMain &lt; tmoSignal
+    or
+    C &lt; ehlers
+);
+
+def bearstp = (
+    countBuy &gt; 0
+    or
+    HA_Close_MA &gt; HA_Open_MA
+    or
+    tmoMain &gt; tmoSignal
+    or
+    C &gt; ehlers
+);
+
+####
+
+input use_ATR_Trail = yes;
+input trailType     = {default modified, unmodified};
+input ATR_Period    = 20;
+input ATR_Factor    = 2.01;
+input ATR_Avg_Type  = AverageType.WILDERS;
+
+Assert(ATR_Factor &gt; 0, &quot;'atr factor' must be positive: &quot; + ATR_Factor);
+
+def HiLo = Min(H - L, 1.5 * Average(H - L, ATR_Period));
+def HRef = if L &lt;= H[1]
+    then H - C[1]
+    else (H - C[1]) - 0.5 * (L - H[1]);
+def LRef = if H &gt;= L[1]
+    then C[1] - L
+    else (C[1] - L) - 0.5 * (L[1] - H);
+
+def trueRange;
+switch (trailType) {
+    case modified:
+        trueRange = Max(HiLo, Max(HRef, LRef));
+    case unmodified:
+        trueRange = TrueRange(H, C, L);
+}
+def loss = ATR_Factor * MovingAverage(ATR_Avg_Type, trueRange, ATR_Period);
+
+######################
+#### END of Stops ####
+######################
+
+#######################################
+##  Maintain the position of trades
+#######################################
+
+def CurrentPosition;  # holds whether flat = 0 long = 1 short = -1
+def trail;
+
+if ((BarNumber() == 1) OR isNaN(CurrentPosition[1])) {
+    CurrentPosition = 0;
+    trail = Double.NaN;
+} else {
+    if (CurrentPosition[1] == 0) {               # FLAT
+        if (bullishSignal) {
+            CurrentPosition = 1;
+            trail = C - loss;
+        } else if (bearishSignal){
+            CurrentPosition = -1;
+            trail = C + loss;
+        } else {
+            CurrentPosition = CurrentPosition[1];
+            trail = trail[1];
+        }
+    } else if (CurrentPosition[1] == 1) {        # LONG
+        if (bearishSignal){
+            CurrentPosition = -1;
+            trail = C + loss;
+        } else if ((useStops and bullstp) or (use_ATR_Trail and C &lt; trail[1])) {
+            CurrentPosition = 0;
+            trail = Double.NaN;
+        } else {
+            CurrentPosition = CurrentPosition[1];
+            trail = Max(trail[1], C - loss);
+        }
+    } else if (CurrentPosition[1] == -1) {       # SHORT
+        if (bullishSignal){
+            CurrentPosition = 1;
+            trail = C - loss;
+        } else if ((useStops and bearstp) or (use_ATR_Trail and C &gt; trail[1])) {
+            CurrentPosition = 0;
+            trail = Double.NaN;
+        } else {
+            CurrentPosition = CurrentPosition[1];
+            trail = Min(trail[1], C + loss);
+        }
+    } else {
+        CurrentPosition = CurrentPosition[1];
+        trail = trail[1];
+    }
+}
+
+def isLong  = if CurrentPosition == 1 then 1 else 0;
+def isShort = if CurrentPosition == -1 then 1 else 0;
+def isFlat  = if CurrentPosition == 0 then 1 else 0;
+
+plot TrailingStop = if use_ATR_Trail then trail else Double.NaN;
+TrailingStop.SetPaintingStrategy(PaintingStrategy.POINTS);
+TrailingStop.AssignValueColor(if isLong then Color.MAGENTA else if isShort then Color.CYAN else Color.GRAY);
+
+input useAlerts = no;
+
+# If not already long and get a BuySignal
+Plot BuySig = if (!isLong[1] and bullishSignal) then 1 else 0;
+BuySig.AssignValueColor(color.CYAN);
+BuySig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
+BuySig.SetLineWeight(5);
+
+Alert(BuySig and useAlerts, &quot;Buy Signal&quot;, Alert.bar, sound.Ding);
+Alert(BuySig and useAlerts, &quot;Buy Signal&quot;, Alert.bar, sound.Ding);
+
+# If not already short and get a SellSignal
+Plot SellSig = if (!isShort[1] and bearishSignal) then 1 else 0;
+SellSig.AssignValueColor(color.MAGENTA);
+SellSig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
+SellSig.SetLineWeight(5);
+
+Alert(SellSig and useAlerts, &quot;Sell Signal&quot;, Alert.bar, sound.Ding);
+Alert(SellSig and useAlerts, &quot;Sell Signal&quot;, Alert.bar, sound.Ding);
+
+# If long and get a BuyStop
+Plot BuyStpSig = if (((useStops and bullstp) or (use_ATR_Trail and C &lt; trail[1])) and isLong[1]) then 1 else 0;
+BuyStpSig.AssignValueColor(color.LIGHT_GRAY);
+BuyStpSig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
+BuyStpSig.SetLineWeight(3);
+
+# If short and get a SellStop
+Plot SellStpSig = if (((useStops and bearstp) or (use_ATR_Trail and C &gt; trail[1])) and isShort[1]) then 1 else 0;
+SellStpSig.AssignValueColor(color.LIGHT_GRAY);
+SellStpSig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
+SellStpSig.SetLineWeight(3);
+
+################
+#### Spacer ####
+################
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+addlabel(yes, &quot;            &quot;, color.BLACK);
+#######################
+#### END of Spacer ####
+#######################
+
+#######################################
+##  Orders
+#######################################
+
+def isOrder = if CurrentPosition == CurrentPosition[1] then 0 else 1; # Position changed so it's a new order
+
+# If there is an order to open, then the price is the next day's open
+def orderPrice = if (isOrder and (bullishSignal or bearishSignal)) then O[-1] else orderPrice[1];
+
+#######################################
+##  Price and Profit
+#######################################
+
+def profitLoss;
+
+if (!isOrder or orderPrice[1] == 0) {
+    profitLoss = 0;
+# If there is an order to close, 
+} else if ((isOrder and isLong[1]) and (SellSig or BuyStpSig)) {
+    profitLoss = (if (isNaN(O[-1])) then C else O[-1])  - orderPrice[1]; # then the price is the next day's open
+} else if ((isOrder and isShort[1]) and (BuySig or SellStpSig)) {
+    profitLoss = orderPrice[1] - (if (isNaN(O[-1])) then C else O[-1]); # then the price is the next day's open
+} else {
+    profitLoss = 0;
+}
+
+# Total Profit or Loss
+def profitLossSum = compoundValue(1, if isNaN(isOrder) or barnumber()==1 then 0 else if isOrder then profitLossSum[1] + profitLoss else profitLossSum[1], 0);
+
+# How many trades won or lost
+def profitWinners = compoundValue(1, if isNaN(profitWinners[1]) or barnumber()==1 then 0 else if isOrder and profitLoss &gt; 0  then profitWinners[1] + 1 else profitWinners[1], 0);
+def profitLosers  = compoundValue(1, if isNaN(profitLosers[1])  or barnumber()==1 then 0 else if isOrder and profitLoss &lt; 0  then profitLosers[1] + 1  else profitLosers[1],  0);
+def profitPush    = compoundValue(1, if isNaN(profitPush[1])    or barnumber()==1 then 0 else if isOrder and profitLoss == 0 then profitPush[1] + 1    else profitPush[1],    0);
+
+def orderCount = (profitWinners + profitLosers + profitPush) - 1;
+
+# Current Open Trade Profit or Loss
+def TradePL = If isLong then Round(((close - orderprice)/TickSize())*TickValue()) else if isShort then Round(((orderPrice - close)/TickSize())*TickValue()) else 0;
+
+# Convert to actual dollars based on Tick Value for bubbles
+def dollarProfitLoss = if orderPRice[1]==0 or isNaN(orderPrice[1]) then 0 else round((profitLoss/Ticksize())*Tickvalue());
+
+# Closed Orders dollar P/L
+def dollarPLSum = round((profitLossSum/Ticksize())*Tickvalue());
+
+# Split profits or losses by long and short trades
+def profitLong  = compoundValue(1, if isNan(profitLong[1])  or barnumber()==1 then 0 else if isOrder and isLong[1]  then profitLong[1]+dollarProfitLoss  else profitLong[1],  0);
+def profitShort = compoundValue(1, if isNan(profitShort[1]) or barnumber()==1 then 0 else if isOrder and isShort[1] then profitShort[1]+dollarProfitLoss else profitShort[1], 0);
+def countLong   = compoundValue(1, if isNaN(countLong[1])   or barnumber()==1 then 0 else if isOrder and isLong[1]  then countLong[1]+1                  else countLong[1],   0);
+def countShort  = compoundValue(1, if isNaN(countShort[1])  or barnumber()==1 then 0 else if isOrder and isShort[1] then countShort[1]+1                 else countShort[1],  0);
+
+# What was the biggest winning and losing trade
+def biggestWin  = compoundValue(1, if isNaN(biggestWin[1])  or barnumber()==1 then 0 else if isOrder and (dollarProfitLoss &gt; 0) and (dollarProfitLoss &gt; biggestWin[1])  then dollarProfitLoss else biggestWin[1],  0);
+def biggestLoss = compoundValue(1, if isNaN(biggestLoss[1]) or barnumber()==1 then 0 else if isOrder and (dollarProfitLoss &lt; 0) and (dollarProfitLoss &lt; biggestLoss[1]) then dollarProfitLoss else biggestLoss[1], 0);
+
+# What percent were winners
+def PCTWin = round((profitWinners / orderCount) * 100, 2);
+
+# Average trade
+def avgTrade = round((dollarPLSum / orderCount), 2);
+
+#######################################
+##  Create Labels
+#######################################
+
+input showLabels = yes;
+
+AddLabel(showLabels, GetSymbol()+&quot; Tick Size: &quot;+TickSize()+&quot; Value: &quot;+TickValue()+&quot; HODL: &quot;+AsDollars(C-First(O)), color.white);
+AddLabel(showLabels, &quot;Closed Orders: &quot; + orderCount + &quot; P/L: &quot; + AsDollars(dollarPLSum), if dollarPLSum &gt; 0 then Color.GREEN else if dollarPLSum&lt; 0 then Color.RED else Color.GRAY);
+AddLabel(if !IsNan(orderPrice) and showLabels then 1 else 0, &quot;Closed+Open P/L: &quot;+ AsDollars(TradePL+dollarPLSum), if ((TradePL+dollarPLSum) &gt; 0) then color.green else if ((TradePL+dollarPLSum) &lt; 0) then color.red else color.gray);
+
+AddLabel(showLabels, &quot;Avg per Trade: &quot;+ AsDollars(avgTrade), if avgTrade &gt; 0 then Color.Green else if avgTrade &lt; 0 then Color.RED else Color.GRAY);
+AddLabel(showLabels, &quot;Winners: &quot;+ PCTWin +&quot;%&quot;,if PCTWin &gt; 50 then color.green else if PCTWin &gt; 40 then color.yellow else color.gray);
+
+AddLabel(showLabels, &quot;MaxUp: &quot;+ AsDollars(biggestWin) +&quot; MaxDown: &quot;+AsDollars(biggestLoss), color.white);
+AddLabel(showLabels, &quot;Long Profit: &quot; +AsDollars(profitLong), if profitLong &gt; 0 then color.green else if profitLong &lt; 0 then color.red else color.gray);
+AddLabel(showLabels, &quot;Short Profit: &quot; +AsDollars(profitShort), if profitShort &gt; 0 then color.green else if profitShort &lt; 0 then color.red else color.gray);
+AddLabel(if !IsNan(CurrentPosition) and showLabels then 1 else 0, &quot;Open: &quot;+ (If isLong then &quot;Bought&quot; else &quot;Sold&quot;) + &quot; @ &quot;+orderPrice, color.white);
+AddLabel(if !IsNan(orderPrice) and showLabels then 1 else 0, &quot;Open Trade P/L: &quot;+ AsDollars(TradePL), if (TradePL &gt; 0) then color.green else if (TradePl &lt; 0) then color.red else color.gray);
+
+#######################################
+##  Chart Bubbles for Profit/Loss
+#######################################
+
+input showBubbles = yes;
+
+AddChartBubble(showBubbles and isOrder and isLong[1],  low,  &quot;$&quot;+dollarProfitLoss, if dollarProfitLoss == 0 then Color.LIGHT_GRAY else if dollarProfitLoss &gt; 0 then Color.GREEN else color.Red, 0);
+AddChartBubble(showBubbles and isOrder and isShort[1], high, &quot;$&quot;+dollarProfitLoss, if dollarProfitLoss == 0 then Color.LIGHT_GRAY else if dollarProfitLoss &gt; 0 then Color.GREEN else color.Red, 1);
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br><span class="line-number">85</span><br><span class="line-number">86</span><br><span class="line-number">87</span><br><span class="line-number">88</span><br><span class="line-number">89</span><br><span class="line-number">90</span><br><span class="line-number">91</span><br><span class="line-number">92</span><br><span class="line-number">93</span><br><span class="line-number">94</span><br><span class="line-number">95</span><br><span class="line-number">96</span><br><span class="line-number">97</span><br><span class="line-number">98</span><br><span class="line-number">99</span><br><span class="line-number">100</span><br><span class="line-number">101</span><br><span class="line-number">102</span><br><span class="line-number">103</span><br><span class="line-number">104</span><br><span class="line-number">105</span><br><span class="line-number">106</span><br><span class="line-number">107</span><br><span class="line-number">108</span><br><span class="line-number">109</span><br><span class="line-number">110</span><br><span class="line-number">111</span><br><span class="line-number">112</span><br><span class="line-number">113</span><br><span class="line-number">114</span><br><span class="line-number">115</span><br><span class="line-number">116</span><br><span class="line-number">117</span><br><span class="line-number">118</span><br><span class="line-number">119</span><br><span class="line-number">120</span><br><span class="line-number">121</span><br><span class="line-number">122</span><br><span class="line-number">123</span><br><span class="line-number">124</span><br><span class="line-number">125</span><br><span class="line-number">126</span><br><span class="line-number">127</span><br><span class="line-number">128</span><br><span class="line-number">129</span><br><span class="line-number">130</span><br><span class="line-number">131</span><br><span class="line-number">132</span><br><span class="line-number">133</span><br><span class="line-number">134</span><br><span class="line-number">135</span><br><span class="line-number">136</span><br><span class="line-number">137</span><br><span class="line-number">138</span><br><span class="line-number">139</span><br><span class="line-number">140</span><br><span class="line-number">141</span><br><span class="line-number">142</span><br><span class="line-number">143</span><br><span class="line-number">144</span><br><span class="line-number">145</span><br><span class="line-number">146</span><br><span class="line-number">147</span><br><span class="line-number">148</span><br><span class="line-number">149</span><br><span class="line-number">150</span><br><span class="line-number">151</span><br><span class="line-number">152</span><br><span class="line-number">153</span><br><span class="line-number">154</span><br><span class="line-number">155</span><br><span class="line-number">156</span><br><span class="line-number">157</span><br><span class="line-number">158</span><br><span class="line-number">159</span><br><span class="line-number">160</span><br><span class="line-number">161</span><br><span class="line-number">162</span><br><span class="line-number">163</span><br><span class="line-number">164</span><br><span class="line-number">165</span><br><span class="line-number">166</span><br><span class="line-number">167</span><br><span class="line-number">168</span><br><span class="line-number">169</span><br><span class="line-number">170</span><br><span class="line-number">171</span><br><span class="line-number">172</span><br><span class="line-number">173</span><br><span class="line-number">174</span><br><span class="line-number">175</span><br><span class="line-number">176</span><br><span class="line-number">177</span><br><span class="line-number">178</span><br><span class="line-number">179</span><br><span class="line-number">180</span><br><span class="line-number">181</span><br><span class="line-number">182</span><br><span class="line-number">183</span><br><span class="line-number">184</span><br><span class="line-number">185</span><br><span class="line-number">186</span><br><span class="line-number">187</span><br><span class="line-number">188</span><br><span class="line-number">189</span><br><span class="line-number">190</span><br><span class="line-number">191</span><br><span class="line-number">192</span><br><span class="line-number">193</span><br><span class="line-number">194</span><br><span class="line-number">195</span><br><span class="line-number">196</span><br><span class="line-number">197</span><br><span class="line-number">198</span><br><span class="line-number">199</span><br><span class="line-number">200</span><br><span class="line-number">201</span><br><span class="line-number">202</span><br><span class="line-number">203</span><br><span class="line-number">204</span><br><span class="line-number">205</span><br><span class="line-number">206</span><br><span class="line-number">207</span><br><span class="line-number">208</span><br><span class="line-number">209</span><br><span class="line-number">210</span><br><span class="line-number">211</span><br><span class="line-number">212</span><br><span class="line-number">213</span><br><span class="line-number">214</span><br><span class="line-number">215</span><br><span class="line-number">216</span><br><span class="line-number">217</span><br><span class="line-number">218</span><br><span class="line-number">219</span><br><span class="line-number">220</span><br><span class="line-number">221</span><br><span class="line-number">222</span><br><span class="line-number">223</span><br><span class="line-number">224</span><br><span class="line-number">225</span><br><span class="line-number">226</span><br><span class="line-number">227</span><br><span class="line-number">228</span><br><span class="line-number">229</span><br><span class="line-number">230</span><br><span class="line-number">231</span><br><span class="line-number">232</span><br><span class="line-number">233</span><br><span class="line-number">234</span><br><span class="line-number">235</span><br><span class="line-number">236</span><br><span class="line-number">237</span><br><span class="line-number">238</span><br><span class="line-number">239</span><br><span class="line-number">240</span><br><span class="line-number">241</span><br><span class="line-number">242</span><br><span class="line-number">243</span><br><span class="line-number">244</span><br><span class="line-number">245</span><br><span class="line-number">246</span><br><span class="line-number">247</span><br><span class="line-number">248</span><br><span class="line-number">249</span><br><span class="line-number">250</span><br><span class="line-number">251</span><br><span class="line-number">252</span><br><span class="line-number">253</span><br><span class="line-number">254</span><br><span class="line-number">255</span><br><span class="line-number">256</span><br><span class="line-number">257</span><br><span class="line-number">258</span><br><span class="line-number">259</span><br><span class="line-number">260</span><br><span class="line-number">261</span><br><span class="line-number">262</span><br><span class="line-number">263</span><br><span class="line-number">264</span><br><span class="line-number">265</span><br><span class="line-number">266</span><br><span class="line-number">267</span><br><span class="line-number">268</span><br><span class="line-number">269</span><br><span class="line-number">270</span><br><span class="line-number">271</span><br><span class="line-number">272</span><br><span class="line-number">273</span><br><span class="line-number">274</span><br><span class="line-number">275</span><br><span class="line-number">276</span><br><span class="line-number">277</span><br><span class="line-number">278</span><br><span class="line-number">279</span><br><span class="line-number">280</span><br><span class="line-number">281</span><br><span class="line-number">282</span><br><span class="line-number">283</span><br><span class="line-number">284</span><br><span class="line-number">285</span><br><span class="line-number">286</span><br><span class="line-number">287</span><br><span class="line-number">288</span><br><span class="line-number">289</span><br><span class="line-number">290</span><br><span class="line-number">291</span><br><span class="line-number">292</span><br><span class="line-number">293</span><br><span class="line-number">294</span><br><span class="line-number">295</span><br><span class="line-number">296</span><br><span class="line-number">297</span><br><span class="line-number">298</span><br><span class="line-number">299</span><br><span class="line-number">300</span><br><span class="line-number">301</span><br><span class="line-number">302</span><br><span class="line-number">303</span><br><span class="line-number">304</span><br><span class="line-number">305</span><br><span class="line-number">306</span><br><span class="line-number">307</span><br><span class="line-number">308</span><br><span class="line-number">309</span><br><span class="line-number">310</span><br><span class="line-number">311</span><br><span class="line-number">312</span><br><span class="line-number">313</span><br><span class="line-number">314</span><br><span class="line-number">315</span><br><span class="line-number">316</span><br><span class="line-number">317</span><br><span class="line-number">318</span><br><span class="line-number">319</span><br><span class="line-number">320</span><br><span class="line-number">321</span><br><span class="line-number">322</span><br><span class="line-number">323</span><br><span class="line-number">324</span><br><span class="line-number">325</span><br><span class="line-number">326</span><br><span class="line-number">327</span><br><span class="line-number">328</span><br><span class="line-number">329</span><br><span class="line-number">330</span><br><span class="line-number">331</span><br><span class="line-number">332</span><br><span class="line-number">333</span><br><span class="line-number">334</span><br><span class="line-number">335</span><br><span class="line-number">336</span><br><span class="line-number">337</span><br><span class="line-number">338</span><br><span class="line-number">339</span><br><span class="line-number">340</span><br><span class="line-number">341</span><br><span class="line-number">342</span><br><span class="line-number">343</span><br><span class="line-number">344</span><br><span class="line-number">345</span><br><span class="line-number">346</span><br><span class="line-number">347</span><br><span class="line-number">348</span><br><span class="line-number">349</span><br><span class="line-number">350</span><br><span class="line-number">351</span><br><span class="line-number">352</span><br><span class="line-number">353</span><br><span class="line-number">354</span><br><span class="line-number">355</span><br><span class="line-number">356</span><br><span class="line-number">357</span><br><span class="line-number">358</span><br><span class="line-number">359</span><br><span class="line-number">360</span><br><span class="line-number">361</span><br><span class="line-number">362</span><br><span class="line-number">363</span><br><span class="line-number">364</span><br><span class="line-number">365</span><br><span class="line-number">366</span><br><span class="line-number">367</span><br><span class="line-number">368</span><br><span class="line-number">369</span><br><span class="line-number">370</span><br><span class="line-number">371</span><br><span class="line-number">372</span><br><span class="line-number">373</span><br><span class="line-number">374</span><br><span class="line-number">375</span><br><span class="line-number">376</span><br><span class="line-number">377</span><br><span class="line-number">378</span><br><span class="line-number">379</span><br><span class="line-number">380</span><br><span class="line-number">381</span><br><span class="line-number">382</span><br><span class="line-number">383</span><br><span class="line-number">384</span><br><span class="line-number">385</span><br><span class="line-number">386</span><br><span class="line-number">387</span><br><span class="line-number">388</span><br><span class="line-number">389</span><br><span class="line-number">390</span><br><span class="line-number">391</span><br><span class="line-number">392</span><br><span class="line-number">393</span><br><span class="line-number">394</span><br><span class="line-number">395</span><br><span class="line-number">396</span><br><span class="line-number">397</span><br><span class="line-number">398</span><br><span class="line-number">399</span><br><span class="line-number">400</span><br><span class="line-number">401</span><br><span class="line-number">402</span><br><span class="line-number">403</span><br><span class="line-number">404</span><br><span class="line-number">405</span><br><span class="line-number">406</span><br><span class="line-number">407</span><br><span class="line-number">408</span><br><span class="line-number">409</span><br><span class="line-number">410</span><br><span class="line-number">411</span><br><span class="line-number">412</span><br><span class="line-number">413</span><br><span class="line-number">414</span><br><span class="line-number">415</span><br><span class="line-number">416</span><br><span class="line-number">417</span><br><span class="line-number">418</span><br><span class="line-number">419</span><br><span class="line-number">420</span><br><span class="line-number">421</span><br><span class="line-number">422</span><br><span class="line-number">423</span><br><span class="line-number">424</span><br><span class="line-number">425</span><br><span class="line-number">426</span><br><span class="line-number">427</span><br><span class="line-number">428</span><br><span class="line-number">429</span><br><span class="line-number">430</span><br><span class="line-number">431</span><br><span class="line-number">432</span><br><span class="line-number">433</span><br><span class="line-number">434</span><br><span class="line-number">435</span><br><span class="line-number">436</span><br><span class="line-number">437</span><br><span class="line-number">438</span><br><span class="line-number">439</span><br><span class="line-number">440</span><br><span class="line-number">441</span><br><span class="line-number">442</span><br><span class="line-number">443</span><br><span class="line-number">444</span><br><span class="line-number">445</span><br><span class="line-number">446</span><br><span class="line-number">447</span><br><span class="line-number">448</span><br><span class="line-number">449</span><br><span class="line-number">450</span><br><span class="line-number">451</span><br><span class="line-number">452</span><br><span class="line-number">453</span><br><span class="line-number">454</span><br><span class="line-number">455</span><br><span class="line-number">456</span><br><span class="line-number">457</span><br><span class="line-number">458</span><br><span class="line-number">459</span><br><span class="line-number">460</span><br><span class="line-number">461</span><br><span class="line-number">462</span><br><span class="line-number">463</span><br><span class="line-number">464</span><br><span class="line-number">465</span><br><span class="line-number">466</span><br><span class="line-number">467</span><br><span class="line-number">468</span><br><span class="line-number">469</span><br><span class="line-number">470</span><br><span class="line-number">471</span><br><span class="line-number">472</span><br><span class="line-number">473</span><br><span class="line-number">474</span><br><span class="line-number">475</span><br><span class="line-number">476</span><br><span class="line-number">477</span><br><span class="line-number">478</span><br><span class="line-number">479</span><br><span class="line-number">480</span><br><span class="line-number">481</span><br><span class="line-number">482</span><br><span class="line-number">483</span><br><span class="line-number">484</span><br><span class="line-number">485</span><br><span class="line-number">486</span><br><span class="line-number">487</span><br><span class="line-number">488</span><br><span class="line-number">489</span><br><span class="line-number">490</span><br><span class="line-number">491</span><br><span class="line-number">492</span><br><span class="line-number">493</span><br><span class="line-number">494</span><br><span class="line-number">495</span><br><span class="line-number">496</span><br><span class="line-number">497</span><br><span class="line-number">498</span><br><span class="line-number">499</span><br><span class="line-number">500</span><br><span class="line-number">501</span><br><span class="line-number">502</span><br><span class="line-number">503</span><br><span class="line-number">504</span><br><span class="line-number">505</span><br><span class="line-number">506</span><br><span class="line-number">507</span><br><span class="line-number">508</span><br><span class="line-number">509</span><br><span class="line-number">510</span><br><span class="line-number">511</span><br><span class="line-number">512</span><br><span class="line-number">513</span><br><span class="line-number">514</span><br><span class="line-number">515</span><br><span class="line-number">516</span><br><span class="line-number">517</span><br><span class="line-number">518</span><br><span class="line-number">519</span><br><span class="line-number">520</span><br><span class="line-number">521</span><br><span class="line-number">522</span><br><span class="line-number">523</span><br><span class="line-number">524</span><br><span class="line-number">525</span><br><span class="line-number">526</span><br><span class="line-number">527</span><br><span class="line-number">528</span><br><span class="line-number">529</span><br><span class="line-number">530</span><br><span class="line-number">531</span><br><span class="line-number">532</span><br><span class="line-number">533</span><br><span class="line-number">534</span><br><span class="line-number">535</span><br><span class="line-number">536</span><br><span class="line-number">537</span><br><span class="line-number">538</span><br><span class="line-number">539</span><br><span class="line-number">540</span><br><span class="line-number">541</span><br><span class="line-number">542</span><br><span class="line-number">543</span><br><span class="line-number">544</span><br><span class="line-number">545</span><br><span class="line-number">546</span><br><span class="line-number">547</span><br><span class="line-number">548</span><br><span class="line-number">549</span><br><span class="line-number">550</span><br><span class="line-number">551</span><br><span class="line-number">552</span><br><span class="line-number">553</span><br><span class="line-number">554</span><br><span class="line-number">555</span><br><span class="line-number">556</span><br><span class="line-number">557</span><br><span class="line-number">558</span><br><span class="line-number">559</span><br><span class="line-number">560</span><br><span class="line-number">561</span><br><span class="line-number">562</span><br><span class="line-number">563</span><br><span class="line-number">564</span><br><span class="line-number">565</span><br><span class="line-number">566</span><br><span class="line-number">567</span><br><span class="line-number">568</span><br><span class="line-number">569</span><br><span class="line-number">570</span><br><span class="line-number">571</span><br><span class="line-number">572</span><br><span class="line-number">573</span><br><span class="line-number">574</span><br><span class="line-number">575</span><br><span class="line-number">576</span><br><span class="line-number">577</span><br><span class="line-number">578</span><br><span class="line-number">579</span><br><span class="line-number">580</span><br><span class="line-number">581</span><br><span class="line-number">582</span><br><span class="line-number">583</span><br><span class="line-number">584</span><br><span class="line-number">585</span><br><span class="line-number">586</span><br><span class="line-number">587</span><br><span class="line-number">588</span><br><span class="line-number">589</span><br><span class="line-number">590</span><br><span class="line-number">591</span><br><span class="line-number">592</span><br><span class="line-number">593</span><br><span class="line-number">594</span><br><span class="line-number">595</span><br><span class="line-number">596</span><br><span class="line-number">597</span><br><span class="line-number">598</span><br><span class="line-number">599</span><br><span class="line-number">600</span><br><span class="line-number">601</span><br><span class="line-number">602</span><br><span class="line-number">603</span><br><span class="line-number">604</span><br><span class="line-number">605</span><br><span class="line-number">606</span><br><span class="line-number">607</span><br><span class="line-number">608</span><br><span class="line-number">609</span><br><span class="line-number">610</span><br><span class="line-number">611</span><br><span class="line-number">612</span><br><span class="line-number">613</span><br><span class="line-number">614</span><br><span class="line-number">615</span><br><span class="line-number">616</span><br><span class="line-number">617</span><br><span class="line-number">618</span><br><span class="line-number">619</span><br><span class="line-number">620</span><br><span class="line-number">621</span><br><span class="line-number">622</span><br><span class="line-number">623</span><br><span class="line-number">624</span><br><span class="line-number">625</span><br><span class="line-number">626</span><br><span class="line-number">627</span><br><span class="line-number">628</span><br><span class="line-number">629</span><br><span class="line-number">630</span><br><span class="line-number">631</span><br><span class="line-number">632</span><br><span class="line-number">633</span><br><span class="line-number">634</span><br><span class="line-number">635</span><br><span class="line-number">636</span><br><span class="line-number">637</span><br><span class="line-number">638</span><br><span class="line-number">639</span><br><span class="line-number">640</span><br><span class="line-number">641</span><br><span class="line-number">642</span><br><span class="line-number">643</span><br><span class="line-number">644</span><br><span class="line-number">645</span><br><span class="line-number">646</span><br><span class="line-number">647</span><br><span class="line-number">648</span><br><span class="line-number">649</span><br><span class="line-number">650</span><br><span class="line-number">651</span><br><span class="line-number">652</span><br><span class="line-number">653</span><br><span class="line-number">654</span><br><span class="line-number">655</span><br><span class="line-number">656</span><br><span class="line-number">657</span><br><span class="line-number">658</span><br><span class="line-number">659</span><br><span class="line-number">660</span><br><span class="line-number">661</span><br><span class="line-number">662</span><br><span class="line-number">663</span><br><span class="line-number">664</span><br><span class="line-number">665</span><br><span class="line-number">666</span><br><span class="line-number">667</span><br><span class="line-number">668</span><br><span class="line-number">669</span><br><span class="line-number">670</span><br><span class="line-number">671</span><br><span class="line-number">672</span><br><span class="line-number">673</span><br><span class="line-number">674</span><br><span class="line-number">675</span><br><span class="line-number">676</span><br><span class="line-number">677</span><br><span class="line-number">678</span><br><span class="line-number">679</span><br><span class="line-number">680</span><br><span class="line-number">681</span><br><span class="line-number">682</span><br><span class="line-number">683</span><br><span class="line-number">684</span><br><span class="line-number">685</span><br><span class="line-number">686</span><br><span class="line-number">687</span><br><span class="line-number">688</span><br><span class="line-number">689</span><br><span class="line-number">690</span><br><span class="line-number">691</span><br><span class="line-number">692</span><br><span class="line-number">693</span><br><span class="line-number">694</span><br><span class="line-number">695</span><br><span class="line-number">696</span><br><span class="line-number">697</span><br><span class="line-number">698</span><br><span class="line-number">699</span><br><span class="line-number">700</span><br><span class="line-number">701</span><br><span class="line-number">702</span><br><span class="line-number">703</span><br><span class="line-number">704</span><br><span class="line-number">705</span><br><span class="line-number">706</span><br><span class="line-number">707</span><br><span class="line-number">708</span><br><span class="line-number">709</span><br><span class="line-number">710</span><br><span class="line-number">711</span><br><span class="line-number">712</span><br><span class="line-number">713</span><br><span class="line-number">714</span><br><span class="line-number">715</span><br><span class="line-number">716</span><br><span class="line-number">717</span><br><span class="line-number">718</span><br><span class="line-number">719</span><br><span class="line-number">720</span><br><span class="line-number">721</span><br><span class="line-number">722</span><br><span class="line-number">723</span><br><span class="line-number">724</span><br><span class="line-number">725</span><br><span class="line-number">726</span><br><span class="line-number">727</span><br><span class="line-number">728</span><br><span class="line-number">729</span><br><span class="line-number">730</span><br><span class="line-number">731</span><br><span class="line-number">732</span><br><span class="line-number">733</span><br><span class="line-number">734</span><br><span class="line-number">735</span><br><span class="line-number">736</span><br><span class="line-number">737</span><br><span class="line-number">738</span><br><span class="line-number">739</span><br><span class="line-number">740</span><br><span class="line-number">741</span><br><span class="line-number">742</span><br><span class="line-number">743</span><br><span class="line-number">744</span><br><span class="line-number">745</span><br><span class="line-number">746</span><br><span class="line-number">747</span><br><span class="line-number">748</span><br><span class="line-number">749</span><br><span class="line-number">750</span><br><span class="line-number">751</span><br><span class="line-number">752</span><br><span class="line-number">753</span><br><span class="line-number">754</span><br><span class="line-number">755</span><br><span class="line-number">756</span><br><span class="line-number">757</span><br><span class="line-number">758</span><br><span class="line-number">759</span><br><span class="line-number">760</span><br><span class="line-number">761</span><br><span class="line-number">762</span><br><span class="line-number">763</span><br><span class="line-number">764</span><br><span class="line-number">765</span><br><span class="line-number">766</span><br><span class="line-number">767</span><br><span class="line-number">768</span><br><span class="line-number">769</span><br><span class="line-number">770</span><br><span class="line-number">771</span><br><span class="line-number">772</span><br><span class="line-number">773</span><br><span class="line-number">774</span><br><span class="line-number">775</span><br><span class="line-number">776</span><br><span class="line-number">777</span><br><span class="line-number">778</span><br><span class="line-number">779</span><br><span class="line-number">780</span><br><span class="line-number">781</span><br><span class="line-number">782</span><br><span class="line-number">783</span><br><span class="line-number">784</span><br><span class="line-number">785</span><br><span class="line-number">786</span><br><span class="line-number">787</span><br><span class="line-number">788</span><br><span class="line-number">789</span><br><span class="line-number">790</span><br><span class="line-number">791</span><br><span class="line-number">792</span><br><span class="line-number">793</span><br><span class="line-number">794</span><br><span class="line-number">795</span><br><span class="line-number">796</span><br><span class="line-number">797</span><br><span class="line-number">798</span><br><span class="line-number">799</span><br><span class="line-number">800</span><br><span class="line-number">801</span><br><span class="line-number">802</span><br><span class="line-number">803</span><br><span class="line-number">804</span><br><span class="line-number">805</span><br><span class="line-number">806</span><br><span class="line-number">807</span><br><span class="line-number">808</span><br><span class="line-number">809</span><br><span class="line-number">810</span><br><span class="line-number">811</span><br><span class="line-number">812</span><br><span class="line-number">813</span><br><span class="line-number">814</span><br><span class="line-number">815</span><br><span class="line-number">816</span><br><span class="line-number">817</span><br><span class="line-number">818</span><br><span class="line-number">819</span><br><span class="line-number">820</span><br><span class="line-number">821</span><br><span class="line-number">822</span><br><span class="line-number">823</span><br><span class="line-number">824</span><br><span class="line-number">825</span><br><span class="line-number">826</span><br><span class="line-number">827</span><br><span class="line-number">828</span><br><span class="line-number">829</span><br><span class="line-number">830</span><br><span class="line-number">831</span><br><span class="line-number">832</span><br><span class="line-number">833</span><br><span class="line-number">834</span><br><span class="line-number">835</span><br><span class="line-number">836</span><br><span class="line-number">837</span><br><span class="line-number">838</span><br><span class="line-number">839</span><br><span class="line-number">840</span><br><span class="line-number">841</span><br><span class="line-number">842</span><br><span class="line-number">843</span><br><span class="line-number">844</span><br><span class="line-number">845</span><br><span class="line-number">846</span><br><span class="line-number">847</span><br><span class="line-number">848</span><br><span class="line-number">849</span><br><span class="line-number">850</span><br><span class="line-number">851</span><br><span class="line-number">852</span><br><span class="line-number">853</span><br><span class="line-number">854</span><br><span class="line-number">855</span><br><span class="line-number">856</span><br><span class="line-number">857</span><br><span class="line-number">858</span><br><span class="line-number">859</span><br><span class="line-number">860</span><br><span class="line-number">861</span><br><span class="line-number">862</span><br><span class="line-number">863</span><br><span class="line-number">864</span><br><span class="line-number">865</span><br><span class="line-number">866</span><br><span class="line-number">867</span><br><span class="line-number">868</span><br><span class="line-number">869</span><br><span class="line-number">870</span><br><span class="line-number">871</span><br><span class="line-number">872</span><br><span class="line-number">873</span><br><span class="line-number">874</span><br><span class="line-number">875</span><br><span class="line-number">876</span><br><span class="line-number">877</span><br><span class="line-number">878</span><br><span class="line-number">879</span><br><span class="line-number">880</span><br><span class="line-number">881</span><br><span class="line-number">882</span><br><span class="line-number">883</span><br><span class="line-number">884</span><br><span class="line-number">885</span><br><span class="line-number">886</span><br><span class="line-number">887</span><br><span class="line-number">888</span><br><span class="line-number">889</span><br><span class="line-number">890</span><br><span class="line-number">891</span><br><span class="line-number">892</span><br><span class="line-number">893</span><br><span class="line-number">894</span><br><span class="line-number">895</span><br><span class="line-number">896</span><br><span class="line-number">897</span><br><span class="line-number">898</span><br><span class="line-number">899</span><br><span class="line-number">900</span><br><span class="line-number">901</span><br><span class="line-number">902</span><br><span class="line-number">903</span><br><span class="line-number">904</span><br><span class="line-number">905</span><br><span class="line-number">906</span><br><span class="line-number">907</span><br><span class="line-number">908</span><br><span class="line-number">909</span><br><span class="line-number">910</span><br><span class="line-number">911</span><br><span class="line-number">912</span><br><span class="line-number">913</span><br><span class="line-number">914</span><br><span class="line-number">915</span><br><span class="line-number">916</span><br><span class="line-number">917</span><br><span class="line-number">918</span><br><span class="line-number">919</span><br><span class="line-number">920</span><br><span class="line-number">921</span><br><span class="line-number">922</span><br><span class="line-number">923</span><br><span class="line-number">924</span><br><span class="line-number">925</span><br><span class="line-number">926</span><br><span class="line-number">927</span><br><span class="line-number">928</span><br><span class="line-number">929</span><br><span class="line-number">930</span><br><span class="line-number">931</span><br><span class="line-number">932</span><br><span class="line-number">933</span><br><span class="line-number">934</span><br><span class="line-number">935</span><br><span class="line-number">936</span><br><span class="line-number">937</span><br><span class="line-number">938</span><br><span class="line-number">939</span><br><span class="line-number">940</span><br><span class="line-number">941</span><br><span class="line-number">942</span><br><span class="line-number">943</span><br><span class="line-number">944</span><br><span class="line-number">945</span><br><span class="line-number">946</span><br><span class="line-number">947</span><br><span class="line-number">948</span><br><span class="line-number">949</span><br><span class="line-number">950</span><br><span class="line-number">951</span><br><span class="line-number">952</span><br><span class="line-number">953</span><br><span class="line-number">954</span><br><span class="line-number">955</span><br><span class="line-number">956</span><br><span class="line-number">957</span><br><span class="line-number">958</span><br><span class="line-number">959</span><br></div></div></div></div></div> <footer class="footer" data-v-23f1517d><div class="footer-left-wrap" data-v-23f1517d><ul class="contact" data-v-23f1517d><li class="contact-item" data-v-23f1517d><a href="https://a.webull.com/TfjteFx13oyvRL6SfX" title="Join me on Webull" target="_blank" rel="noopener noreferrer" class="nav-link external" data-v-23f1517d><svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-gift" data-v-23f1517d><polyline points="20 12 20 22 4 22 4 12" data-v-23f1517d></polyline><rect x="2" y="7" width="20" height="5" data-v-23f1517d></rect><line x1="12" y1="22" x2="12" y2="7" data-v-23f1517d></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" data-v-23f1517d></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" data-v-23f1517d></path></svg>
+          
+        </a></li></ul></div> <div class="footer-right-wrap" data-v-23f1517d><ul class="copyright" data-v-23f1517d></ul></div></footer></div><div class="global-ui"></div></div>
+    <script src="/equities-voyage-chronicle/assets/js/app.294a5fd1.js" defer></script><script src="/equities-voyage-chronicle/assets/js/4.f1784a08.js" defer></script><script src="/equities-voyage-chronicle/assets/js/8.bfd7c6b6.js" defer></script><script src="/equities-voyage-chronicle/assets/js/22.45890281.js" defer></script>
+  </body>
+</html>

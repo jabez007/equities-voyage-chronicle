@@ -1,0 +1,959 @@
+###
+#
+# [URL]https://usethinkscript.com/threads/why-using-different-types-of-indicators-is-important-to-successful-trading-in-thinkorswim.6114/[/URL]
+###
+
+DefineGlobalColor("RoyalBlue", createColor(65, 105, 225));
+
+###
+# Trend Advisor Market Phases
+# [URL]https://usethinkscript.com/threads/market-phases-indicator-for-thinkorswim.1025[/URL]
+# Credits
+#  - Chuck Dukas for creating the Market Phases system
+#  - the author of VolumeTrendLabels whose study was use to create this indicator.
+#
+### 
+
+#Ensure you set the correct aggregation period to then chart, this helps calculate the correct volume and price action.
+input vPeriod = AggregationPeriod.DAY; #hint vPeriod: Enter the chart time you use here. Required to properly caluclate volume and price strength.
+
+def O = open(period = vPeriod);
+def H = high(period = vPeriod);
+def C = close(period = vPeriod);
+def L = low(period = vPeriod);
+def V = volume(period = vPeriod);
+
+def SV = V * (H - C) / (H - L);
+def BV = V * (C - L) / (H - L);
+
+####
+# below determines if volume supports the move, adds conviction
+####
+
+def buyerVol = high > high[1] and low > low[1] and BV*1.05 > SV;
+AddLabel(buyerVol, " Buyer Vol Strong ", if buyerVol then Color.GREEN else Color.BLACK);
+
+def sellerVol = high < high[1] and low < low[1] and SV*1.05 > BV;
+AddLabel(sellerVol, " Seller Vol Strong ", if sellerVol then Color.MAGENTA else Color.BLACK);
+
+####
+# below determines if price supports the move
+####
+
+def strongPrice = high > high[1] and high[1] > high[2] and low > low[1] and low[1] > low[2];
+AddLabel(strongPrice, " Price Strong ", if strongPrice then Color.GREEN else Color.BLACK);
+
+def weakPrice = high < high[1] and high[1] < high[2] and low < low[1] and low[1] < low[2];
+AddLabel(weakPrice, " Price Weak ", if weakPrice then Color.MAGENTA else Color.BLACK);
+
+####
+# Moving Averages used to determine Bullish or Bearish
+####
+
+input price = FundamentalType.CLOSE; #hint price: which value to use for the moving averages
+def src = Fundamental(FundamentalType = price, Period = vPeriod);
+
+####
+
+input fastAvgLength = 50;
+input fastAvgType   = AverageType.SIMPLE;
+
+plot fastMA = MovingAverage(fastAvgType, src, fastAvgLength);
+fastMA.SetDefaultColor(Color.DARK_ORANGE);
+fastMA.SetLineWeight(3);
+
+def Fast_MA_Height = fastMA - fastMA[1];
+def Fast_MA_Angle  = Atan(Fast_MA_Height) * 180 / Double.Pi;
+
+####
+
+input slowAvgLength = 200;
+input slowAvgType   = AverageType.SIMPLE;
+
+plot slowMA = MovingAverage(slowAvgType, src, slowAvgLength);
+slowMA.SetDefaultColor(Color.YELLOW);
+slowMA.SetLineWeight(5);
+
+def Slow_MA_Height = slowMA - slowMA[1];
+def Slow_MA_Angle  = Atan(Slow_MA_Height) * 180 / Double.Pi;
+
+####
+# Bullish criteria define below
+####
+
+# Define criteria for Bullish Phase : close > 50 SMA, close > 200 SMA, 50 SMA > 200 SMA
+# Higher highs and higher lows
+# Buy the dips, volume expands on breakouts, new highs
+# Accelerating momentum and volume
+def bullphase = (
+    fastMA > slowMA
+    #&&
+    #((Fast_MA_Angle > 0) and (Slow_MA_Angle > 0))
+    &&
+    src > fastMA 
+    &&
+    src > slowMA
+);
+
+# Define criteria for Accumulation Phase : close > 50 SMA, close > 200 SMA, 50 SMA < 200 SMA
+# Begin to see new 60 period HH
+def accphase = (
+    fastMA < slowMA
+    #&&
+    #((Fast_MA_Angle > 0) and (Slow_MA_Angle >= 0))
+    &&
+    src > fastMA
+    &&
+    src > slowMA
+);
+
+# Define criteria for Recovery Phase : close > 50 SMA, close < 200 SMA, 50 SMA < 200 SMA
+
+def recphase = (
+    fastMA < slowMA
+    #&&
+    #((Fast_MA_Angle >= 0) and (Slow_MA_Angle < 0))
+    &&
+    src < slowMA
+    &&
+    src > fastMA
+);
+
+####
+# Bearish Criteria define below
+####
+
+# Define criteria for Bearish Phase : close < 50 SMA, close < 200 SMA, 50 SMA < 200 SMA
+
+def bearphase = (
+    fastMA < slowMA
+    #&&
+    #((Fast_MA_Angle < 0) and (Slow_MA_Angle < 0))
+    &&
+    src < fastMA
+    &&
+    src < slowMA
+);
+
+# Define criteria for Distribution Phase : close < 50 SMA, close < 200 SMA, 50 SMA > 200 SMA
+
+def distphase = (
+    fastMA > slowMA
+    #&&
+    #((Fast_MA_Angle < 0) and (Slow_MA_Angle <= 0))
+    &&
+    src < fastMA
+    &&
+    src < slowMA
+);
+
+# Define criteria for Warning Phase : close < 50 SMA, close > 200 SMA, 50 SMA > 200 SMA
+
+def warnphase = (
+    fastMA > slowMA
+    #&&
+    #((Fast_MA_Angle <= 0) and (Slow_MA_Angle > 0))
+    &&
+    src > slowMA
+    &&
+    src < fastMA
+);
+
+####
+#plot buphase = bullphase is true;
+#plot acphase = accphase is true;
+#plot rephase = recphase is true;
+####
+#plot bephase = bearphase is true;
+#plot dphase = distphase is true;
+#plot wphase = warnphase is true;
+####
+
+####
+# Below adds labels to the chart to identify what phase the underlying is in
+####
+
+AddLabel(bullphase, " Bull Phase " , if bullphase is true then Color.GREEN else Color.BLACK);
+
+AddLabel(accphase, " Accumation Phase ", if accphase is true then Color.LIGHT_GREEN else Color.BLACK);
+
+AddLabel(recphase, " Recovery Phase ", if recphase is true then Color.LIGHT_ORANGE else Color.BLACK);
+
+AddLabel(warnphase, " Warning Phase ", if warnphase is true then Color.ORANGE else Color.BLACK);
+
+AddLabel(distphase, " Distribution Phase ", if distphase is true then Color.LIGHT_RED else Color.BLACK);
+
+AddLabel(bearphase, " Bear Phase ", if bearphase is true then Color.RED else Color.BLACK);
+
+assignPriceColor(if bullphase then Color.GREEN else if bearphase then Color.RED else if (accphase or distphase or recphase or warnphase) then Color.ORANGE else Color.GRAY);
+
+############################################
+#### END of Trend Advisor Market Phases ####
+############################################
+
+###
+# Bull Market Support Band
+# [URL]https://www.tradingview.com/script/uSBR7cFa-Bull-Market-Support-Band-20w-SMA-21w-EMA/[/URL]
+###
+
+input bullPeriod      = AggregationPeriod.WEEK;
+input bull_MA1_Length = 20;
+input bull_MA1_Type   = AverageType.SIMPLE;
+input bull_MA2_Length = 21;
+input bull_MA2_Type   = AverageType.EXPONENTIAL;
+
+def bullSrc = fundamental(price, period = bullPeriod);
+
+plot bull_MA1 = MovingAverage(bull_MA1_Type, bullSrc, bull_MA1_Length);
+bull_MA1.DefineColor("UpTrend", Color.LIME);
+bull_MA1.DefineColor("DownTrend", Color.PINK);
+def bull_MA1_Trend = compoundValue(1, 
+    if (bull_MA1 > bull_MA1[1]) then 1 else if (bull_MA1 < bull_MA1[1]) then -1 else bull_MA1_Trend[1],
+    if (bull_MA1 > bull_MA1[1]) then 1 else -1);
+bull_MA1.AssignValueColor(if (bull_MA1_Trend == 1) then bull_MA1.Color("UpTrend") else if (bull_MA1_Trend == -1) then bull_MA1.Color("DownTrend") else Color.ORANGE);
+
+plot bull_MA2 = MovingAverage(bull_MA2_Type, bullSrc, bull_MA2_Length);
+bull_MA2.DefineColor("UpTrend", Color.LIME);
+bull_MA2.DefineColor("DownTrend", Color.PINK);
+def bull_MA2_Trend = compoundValue(1,
+    if (bull_MA2 > bull_MA2[1]) then 1 else if (bull_MA2 < bull_MA2[1]) then -1 else bull_MA2_Trend[1],
+    if (bull_MA2 > bull_MA2[1]) then 1 else -1);
+bull_MA2.AssignValueColor(if (bull_MA2_Trend == 1) then bull_MA2.Color("UpTrend") else if (bull_MA2_Trend == -1) then bull_MA2.Color("DownTrend") else Color.ORANGE);
+
+addCloud(
+    bull_MA1,
+    bull_MA2,
+    Color.LIGHT_ORANGE,
+    Color.LIGHT_ORANGE
+);
+
+#########################################
+#### END of Bull Market Support Band ####
+#########################################
+
+####
+# Ehler's Distance Coefficient Filter
+####
+
+input ehlersLength = 34;
+input ehlersPrice  = FundamentalType.HL2;
+
+def ehlersSrc = Fundamental(ehlersPrice, Period = vPeriod);
+def ehlersCoeff = ehlersLength * ehlersSrc * ehlersSrc - 2 * ehlersSrc * Sum(ehlersSrc, ehlersLength)[1] + Sum(ehlersSrc * ehlersSrc, ehlersLength)[1];
+plot ehlers = Sum(ehlersCoeff * ehlersSrc, ehlersLength) / Sum(ehlersCoeff, ehlersLength);
+ehlers.SetDefaultColor(Color.ORANGE);
+ehlers.SetStyle(Curve.MEDIUM_DASH);
+ehlers.SetLineWeight(2);
+
+def ehlersBullish = C > ehlers;
+def ehlersBearish = C < ehlers;
+
+####################################################
+#### END of Ehler's Distance Coefficient Filter ####
+####################################################
+
+####
+#// This source code is subject to the terms of the Mozilla Public License 2.0 a
+#// © btc_charlie / @TheParagonGrp
+#indicator('[@btc_charlie] Trader XO Macro Trend Scanner', overlay=true)
+# -- Converted by Sam4Cok@Samer800    - 01/2024
+# updated MTF option by Sam4Cok@Samer800    - 01/2024
+####
+
+input TrendAvgType        = AverageType.EXPONENTIAL;
+input TrendFastLength     = 11;#, title='Fast EMA')
+input TrendSlowLength     = 29;#, title='Slow EMA')
+input showBothMovAvg      = no;#(title='Show Both EMAs', defval=true)
+input ConsolidatedLength  = 23;#, title='Consolidated EMA')
+
+def na = Double.NaN;
+
+#// Define the MAs
+def v_fastMA = MovingAverage(TrendAvgType, src, TrendFastLength);
+def v_slowMA = MovingAverage(TrendAvgType, src, TrendSlowLength);
+def v_biasMA = MovingAverage(TrendAvgType, src, ConsolidatedLength);
+
+#// Color the MAs
+def TrendColor = if v_fastMA > v_slowMA then  1 else
+                 if v_fastMA < v_slowMA then -1 else 0;
+
+#// Plot the MAs
+plot ConsMA        = if showBothMovAvg then na       else v_biasMA; # 'Consolidated EMA'
+plot TrendFastLine = if showBothMovAvg then v_fastMA else na;#, title='Fast EMA', color=emaColor)
+plot TrendSlowLine = if showBothMovAvg then v_slowMA else na;#, title='Slow EMA', color=emaColor)
+ConsMA.SetLineWeight(2);
+ConsMA.AssignValueColor(if TrendColor > 0 then Color.LIGHT_GREEN else
+                        if TrendColor < 0 then Color.LIGHT_RED   else Color.GRAY);
+TrendFastLine.AssignValueColor(if TrendColor > 0 then Color.LIGHT_GREEN else
+                               if TrendColor < 0 then Color.LIGHT_RED   else Color.GRAY);
+TrendSlowLine.AssignValueColor(if TrendColor > 0 then Color.LIGHT_GREEN else
+                               if TrendColor < 0 then Color.LIGHT_RED   else Color.GRAY);
+#// Colour the bars
+def buy = v_fastMA > v_slowMA;
+def sell = v_fastMA < v_slowMA;
+
+#// Variables
+def countBuy;
+def countSell;
+
+if buy {
+    countBuy  = countBuy[1] + 1;
+    countSell = 0;
+ } else if sell {
+    countSell = countSell[1] + 1;
+    countBuy  = 0;
+} else {
+    countBuy  = countBuy[1];
+    countSell = countSell[1];
+}
+
+def trendBullish = countBuy  > 0 and countSell < 1 and buy;
+def trendBearish = countSell > 0 and countBuy  < 1 and sell;
+
+def buysignal  = trendBullish and countBuy  < 2 and !buy[1];
+def sellsignal = trendBearish and countSell < 2 and !sell[1];
+
+#// Plot Bull/Bear
+
+#AddChartBubble(buysignal, low, "Bull", Color.GREEN, no);
+#AddChartBubble(sellsignal, high, "Bear", Color.RED);
+
+input highlightBackground = no;
+
+def bull = countBuy  > 1 and highlightBackground;
+def bear = countSell > 1 and highlightBackground;
+def pos = Double.POSITIVE_INFINITY;
+def neg = Double.NEGATIVE_INFINITY;
+
+AddCloud(if (bull) then pos else na, neg, Color.DARK_GREEN);
+AddCloud(if (bear) then pos else na, neg, Color.DARK_RED);
+
+###########################
+### END of Macro Trend ####
+###########################
+
+####
+# Smoothed Heiken Ashi
+# [URL]https://usethinkscript.com/threads/smoothed-heikin-ashi-with-atr-trail-for-thinkorswim.9992/[/URL]
+#
+# Moving Average of Heikin Ashi Values:
+#     * This approach involves calculating the Heikin Ashi values first and then taking a moving average of these values.
+#     * It smooths out the Heikin Ashi data even further, potentially filtering out more noise and providing a clearer trend indication.
+#     * It may be useful if you're looking for smoother trend signals or want to reduce the impact of short-term fluctuations.
+#
+# Heikin Ashi of the Moving Average:
+#     * This approach involves taking a moving average of the open, high, low, and close prices first and then calculating Heikin Ashi values based on these smoothed prices.
+#     * It applies the Heikin Ashi calculation to already smoothed data, potentially preserving more of the original price action while still benefiting from the smoothing effect of the moving average.
+#     * It may be useful if you want to maintain a balance between smoothing and responsiveness to price movements.
+####
+
+input OpenAvgLength  = 20;
+input OpenAvgType    = AverageType.EXPONENTIAL;
+input HighAvgLength  = 20;
+input HighAvgType    = AverageType.EXPONENTIAL;
+input LowAvgLength   = 20;
+input LowAvgType     = AverageType.EXPONENTIAL;
+input CloseAvgLength = 20;
+input CloseAvgType   = AverageType.EXPONENTIAL;
+
+####
+
+def Open_MA  = MovingAverage(OpenAvgType,  O, OpenAvgLength);
+def High_MA  = MovingAverage(HighAvgType,  H, HighAvgLength);
+def Low_MA   = MovingAverage(LowAvgType,   L, LowAvgLength);
+def Close_MA = MovingAverage(CloseAvgType, C, CloseAvgLength);
+
+def HA_Close_MA = (Open_MA + High_MA + Low_MA + Close_MA) / 4.0;
+def HA_Open_MA  = compoundValue(1, (HA_Open_MA[1] + HA_Close_MA[1]) / 2.0, (Open_MA + Close_MA) / 2.0);
+def HA_High_MA  = Max(High_MA, Max(HA_Open_MA, HA_Close_MA));
+def HA_Low_MA   = Min(Low_MA,  Min(HA_Open_MA, HA_Close_MA));
+
+#Red Candlesticks -----------------------------------------------------------------|
+
+def HA_Open_MA_fall  = if HA_Open_MA >  HA_Close_MA then HA_Open_MA  else double.nan;
+def HA_High_MA_fall  = if HA_Open_MA >= HA_Close_MA then HA_High_MA  else double.nan;
+def HA_Low_MA_fall   = if HA_Open_MA >= HA_Close_MA then HA_Low_MA   else double.nan;
+def HA_Close_MA_fall = if HA_Open_MA >= HA_Close_MA then HA_Close_MA else double.nan;
+
+AddChart(growColor = Color.plum, fallColor = GlobalColor("RoyalBlue"), neutralColor = Color.current,
+    open = HA_Open_MA_fall, high = HA_High_MA_fall, low = HA_Low_MA_fall, close = HA_Close_MA_fall,
+    type = ChartType.CANDLE);
+
+#Green Candlesticks ---------------------------------------------------------------|
+
+def HA_Open_MA_rise  = if HA_Open_MA <  HA_Close_MA then HA_Close_MA else double.nan;
+def HA_High_MA_rise  = if HA_Open_MA <= HA_Close_MA then HA_High_MA  else double.nan;
+def HA_Low_MA_rise   = if HA_Open_MA <= HA_Close_MA then HA_Low_MA   else double.nan;
+def HA_Close_MA_rise = if HA_Open_MA <= HA_Close_MA then HA_Open_MA  else double.nan;
+
+AddChart(growColor = GlobalColor("RoyalBlue"), fallColor = Color.plum, neutralColor = Color.current,
+    open = HA_Open_MA_rise, high = HA_High_MA_rise, low = HA_Low_MA_rise, close = HA_Close_MA_rise,
+    type = ChartType.CANDLE);
+
+def HA_bullish = HA_Close_MA > HA_Open_MA and (HA_Close_MA - HA_Open_MA) > (HA_Close_MA[1] - HA_Open_MA[1]);
+def HA_bearish = HA_Open_MA > HA_Close_MA and (HA_Open_MA - HA_Close_MA) > (HA_Open_MA[1] - HA_Close_MA[1]);
+
+#####################################
+#### END of Smoothed Heiken Ashi ####
+#####################################
+
+####
+# Bravo9
+# [URL]https://www.tradingview.com/script/1YCYP3Jq-Original-Bravo-Swing/[/URL]
+# [URL]https://www.tradingview.com/script/127zASU6-JBravo-Swing/[/URL]
+####
+
+input bravoFastLength = 9;
+input bravoFastType   = AverageType.SIMPLE;
+input bravoSlowLength = 20;
+input bravoSlowType   = AverageType.EXPONENTIAL;
+
+def bravoFast = MovingAverage(bravoFastType, src, bravoFastLength);
+def bravoSlow = MovingAverage(bravoSlowType, src, bravoSlowLength);
+
+def bravoBullish = (
+    bravoFast < bravoSlow # beatdown
+    and 
+    Min(O, C) > bravoFast # one-candle close above
+);
+
+def bravoBearish = (
+    bravoFast > bravoSlow
+    and 
+    Max(O, C) < bravoFast # one-candle close below
+);
+
+#######################
+#### END of Bravo9 ####
+#######################
+
+####
+# RSI
+####
+
+input RSI_Length   = 14;
+input RSI_Avg_Type = AverageType.WILDERS;
+
+def NetChgAvg = MovingAverage(RSI_Avg_Type, src - src[1], RSI_Length);
+def TotChgAvg = MovingAverage(RSI_Avg_Type, AbsValue(src - src[1]), RSI_Length);
+def ChgRatio  = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
+
+def RSI = 50 * (ChgRatio + 1);
+
+input smoothed_RSI_Length   = 200;
+input smoothed_RSI_Avg_Type = AverageType.SIMPLE;
+
+def smoothed_RSI = MovingAverage(smoothed_RSI_Avg_Type, RSI, smoothed_RSI_Length);
+
+input RSI_Lookback = 3;
+
+def RSI_bullish = RSI > smoothed_RSI;
+def RSI_bearish = RSI < smoothed_RSI;
+
+addlabel(yes, "           ", color.BLACK);
+AddLabel(yes, 
+    " RSI: "+Round(RSI, 0)+" and "+(if IsAscending(RSI, RSI_Lookback) then "rising" else if IsDescending(RSI, RSI_Lookback) then "falling" else "steady"),
+    if IsAscending(RSI, RSI_Lookback) then
+        if RSI > smoothed_RSI then Color.GREEN else if RSI < smoothed_RSI then Color.LIGHT_GREEN else Color.LIGHT_GRAY
+    else if IsDescending(RSI, RSI_Lookback) then
+        if RSI < smoothed_RSI then Color.RED   else if RSI > smoothed_RSI then Color.LIGHT_RED   else Color.LIGHT_GRAY
+    else
+        Color.LIGHT_GRAY
+);
+
+# Stochastic of the RSI
+
+input K_Period      = 14;
+input D_Period      = 3;
+input slowingPeriod = 3;
+input StochAvgType  = AverageType.SIMPLE;
+
+def lowest_k = Lowest(RSI, K_Period);
+def c1 = RSI - lowest_k;
+def c2 = Highest(RSI, K_Period) - lowest_k;
+def FastK = if c2 != 0 then c1 / c2 * 100 else 0;
+
+def FullK = MovingAverage(StochAvgType, FastK, slowingPeriod);
+def FullD = MovingAverage(StochAvgType, FullK, D_Period);
+
+####################
+#### END of RSI ####
+####################
+
+####
+# TMO ((T)rue (M)omentum (O)scilator)
+# Mobius
+# V01.05.2018
+# hint: TMO calculates momentum using the delta of price. Giving a much better picture of trend, tend reversals and divergence than momentum oscillators using price.
+# [URL]https://usethinkscript.com/threads/tmo-true-momentum-oscillator-for-thinkorswim.9413/[/URL]
+####
+
+input tmoLength       = 14;
+input tmoCalcLength   = 5;
+input tmoSmoothLength = 3;
+
+def tmoData = fold i = 0 to tmoLength with s do 
+    s + (
+        if C > getValue(O, i) then 
+            1
+        else if C < getValue(O, i) then 
+            -1
+        else 
+            0
+    );
+def tmo_EMA   = ExpAverage(tmoData, tmoCalcLength);
+def tmoMain   = ExpAverage(tmo_EMA, tmoSmoothLength);
+def tmoSignal = ExpAverage(tmoMain, tmoSmoothLength);
+
+input tmoOutOfBounds = 0.7;
+
+def TMO_Bullish = tmoMain > tmoSignal and tmoMain <  round(tmoLength * tmoOutOfBounds);
+def TMO_Bearish = tmoMain < tmoSignal and tmoMain > -round(tmoLength * tmoOutOfBounds);
+
+##############################################
+#### END of (T)rue (M)omentum (O)scilator ####
+##############################################
+
+####
+# Z-Score
+# [URL]https://usethinkscript.com/threads/z-score-upper-indicator-for-thinkorswim.3896/[/URL]
+####
+
+input zscoreLength    = 20;
+input zscoreAvgLength = 17;
+
+def zscore_One_SD = StDev(src, zscoreLength);
+def zscoreAvgPrice = Average(src, zscoreLength);
+def zscoreValue = (src - zscoreAvgPrice) / zscore_One_SD;
+def zscoreAverage = Average(zscoreValue, zscoreAvgLength);
+
+def zscoreBullish = zscoreValue > zscoreAverage; # zscoreValue crosses above zscoreAverage and zscoreAverage < -.75
+def zscoreBearish = zscoreValue < zscoreAverage; # zscoreValue crosses below zscoreAverage and zscoreAverage > .75
+
+########################
+#### END of Z-Score ####
+########################
+
+####
+# // @author LazyBear 
+# // List of all my indicators: 
+# // https://docs.google.com/document/d/15AGCufJZ8CIUvwFJ9W-IKns88gkWOKBCvByMEvm5MLo/edit?usp=sharing
+# // 
+# study("Anchored Momentum [LazyBear]", shorttitle="AMOM_LB")
+# thinkscript conversion by mashume 2022.10
+####
+
+# l=input(10, title="Momentum Period")
+input amomPeriod = 10;
+
+# p=2*l+1
+def amom_p = 2 * amomPeriod + 1;
+
+# sm=input(false, title="Smooth Momentum")
+input SmoothAmom = no;
+
+# smp=input(7, title="Smoothing Period")
+input amomSmoothingPeriod = 7;
+
+# amom=100*(((sm?ema(src,smp):src)/(sma(src,p)) - 1))
+def t_amom = if SmoothAmom == yes then ExpAverage(src, amomSmoothingPeriod) else src;
+def amom = 100 * ((t_amom / (Average(src, amom_p)) - 1));
+
+# sl=input(8, title="Signal Period")
+input amomSignalPeriod = 8;
+
+# amoms=sma(amom, sl)
+def amomSignal = Average(amom, amomSignalPeriod);
+
+def amomBullish = amom >  amomSignal and amom >= 0;
+def amomBearish = amom <= amomSignal and amom <  0;
+
+##################################
+#### END of Anchored Momentum ####
+##################################
+
+#############################################################
+###   Determine a flat market
+#############################################################
+
+input TradeInFlatRange = yes;
+input BarsForFlatRange = 15;
+input BarsReqToStayInRange = 13;
+
+def HH = Highest(high[1], BarsForFlatRange);
+def LL = Lowest(low[1], BarsForFlatRange);
+def maxH = Highest(HH, BarsReqToStayInRange);
+def maxL = Lowest(LL, BarsReqToStayInRange);
+def HHn = if maxH == maxH[1] or maxL == maxL then maxH else HHn[1];
+def LLn = if maxH == maxH[1] or maxL == maxL then maxL else LLn[1];
+def Bh = if high <= HHn and HHn == HHn[1] then HHn else Double.NaN;
+def Bl = if low >= LLn and LLn == LLn[1] then LLn else Double.NaN;
+def CountH = if IsNaN(Bh) or IsNaN(Bl) then 2 else CountH[1] + 1;
+def CountL = if IsNaN(Bh) or IsNaN(Bl) then 2 else CountL[1] + 1;
+def ExpH = if BarNumber() == 1 then Double.NaN else
+    if CountH[-BarsReqToStayInRange] >= BarsReqToStayInRange then HHn[-BarsReqToStayInRange] else
+    if high <= ExpH[1] then ExpH[1] else Double.NaN;
+def ExpL = if BarNumber() == 1 then Double.NaN else
+    if CountL[-BarsReqToStayInRange] >= BarsReqToStayInRange then LLn[-BarsReqToStayInRange] else
+    if low >= ExpL[1] then ExpL[1] else Double.NaN;
+
+def BoxHigh = if !isnan(expL) and !isnan(ExpH) then ExpH else double.nan;
+def BoxLow = if !isnan(expL) and !isnan(ExpH) then ExpL else double.nan;
+
+addcloud(BoxHigh, BoxLow, Color.GRAY, Color.GRAY, yes);
+
+def Flat = if (!isNan(BoxHigh[1]) and !isNan(BoxLow[1])) and !TradeInFlatRange then 1 else 0;
+
+############################
+#### END of Flat Market ####
+############################
+
+####
+# The conditions below are for possible entries for longs and shorts
+####
+
+def bullishSignal = (
+    trendBullish
+    &&
+    HA_bullish
+    &&
+    RSI_bullish
+    &&
+    TMO_Bullish
+    &&
+    zscoreBullish
+    &&
+    amomBullish
+    &&
+    ehlersBullish
+    #&&
+    #!Flat    
+);
+
+input takeShorts = no;
+
+def bearishSignal = takeShorts && (
+    trendBearish
+    &&
+    HA_bearish
+    &&
+    RSI_bearish
+    &&
+    TMO_Bearish
+    &&
+    zscoreBearish
+    &&
+    amomBearish
+    &&
+    ehlersBearish
+    #&&
+    #!Flat
+);
+
+########################
+#### End of Entries ####
+########################
+
+####
+# The conditions below are for stop losses
+# Inspired by the Accurate Swing Trading System
+####
+
+input useStops = yes;
+
+def UT9X = compoundValue(1, if (C > C[4]) then UT9X[1] + 1 else 0, 0);
+plot UT9 = (
+    if (UT9X == 1 && !isNaN(UT9X[-8]) && UT9X[-8] == 9) then UT9X
+    else if (UT9X == 2 && !isNaN(UT9X[-7]) && UT9X[-7] == 9) then UT9X
+    else if (UT9X == 3 && !isNaN(UT9X[-6]) && UT9X[-6] == 9) then UT9X
+    else if (UT9X == 4 && !isNaN(UT9X[-5]) && UT9X[-5] == 9) then UT9X
+    else if (UT9X == 5 && !isNaN(UT9X[-4]) && UT9X[-4] == 9) then UT9X
+    else if (UT9X == 6 && !isNaN(UT9X[-3]) && UT9X[-3] == 9) then UT9X
+    else if (UT9X == 7 && !isNaN(UT9X[-2]) && UT9X[-2] == 9) then UT9X
+    else if (UT9X == 8 && !isNaN(UT9X[-1]) && UT9X[-1] == 9) then UT9X
+    else if (UT9X >= 9) then UT9X
+    else Double.NaN
+);
+UT9.SetPaintingStrategy(PaintingStrategy.Values_Above);
+UT9.AssignValueColor(if UT9 < 9 then Color.CYAN else Color.MAGENTA);
+
+def DT9X = compoundValue(1, if (C < C[4]) then DT9X[1] + 1 else 0, 0);
+plot DT9 = (
+    if (DT9X == 1 && !isNaN(DT9X[-8]) && DT9X[-8] == 9) then DT9X
+    else if (DT9X == 2 && !isNaN(DT9X[-7]) && DT9X[-7] == 9) then DT9X
+    else if (DT9X == 3 && !isNaN(DT9X[-6]) && DT9X[-6] == 9) then DT9X
+    else if (DT9X == 4 && !isNaN(DT9X[-5]) && DT9X[-5] == 9) then DT9X
+    else if (DT9X == 5 && !isNaN(DT9X[-4]) && DT9X[-4] == 9) then DT9X
+    else if (DT9X == 6 && !isNaN(DT9X[-3]) && DT9X[-3] == 9) then DT9X
+    else if (DT9X == 7 && !isNaN(DT9X[-2]) && DT9X[-2] == 9) then DT9X
+    else if (DT9X == 8 && !isNaN(DT9X[-1]) && DT9X[-1] == 9) then DT9X
+    else if (DT9X >= 9) then DT9X
+    else Double.NaN
+);
+DT9.SetPaintingStrategy(PaintingStrategy.Values_Below);
+DT9.AssignValueColor(if DT9 < 9 then Color.MAGENTA else Color.CYAN);
+
+####
+
+def bullstp = (
+    countSell > 0
+    or
+    HA_Close_MA < HA_Open_MA
+    or
+    tmoMain < tmoSignal
+    or
+    C < ehlers
+);
+
+def bearstp = (
+    countBuy > 0
+    or
+    HA_Close_MA > HA_Open_MA
+    or
+    tmoMain > tmoSignal
+    or
+    C > ehlers
+);
+
+####
+
+input use_ATR_Trail = yes;
+input trailType     = {default modified, unmodified};
+input ATR_Period    = 20;
+input ATR_Factor    = 2.01;
+input ATR_Avg_Type  = AverageType.WILDERS;
+
+Assert(ATR_Factor > 0, "'atr factor' must be positive: " + ATR_Factor);
+
+def HiLo = Min(H - L, 1.5 * Average(H - L, ATR_Period));
+def HRef = if L <= H[1]
+    then H - C[1]
+    else (H - C[1]) - 0.5 * (L - H[1]);
+def LRef = if H >= L[1]
+    then C[1] - L
+    else (C[1] - L) - 0.5 * (L[1] - H);
+
+def trueRange;
+switch (trailType) {
+    case modified:
+        trueRange = Max(HiLo, Max(HRef, LRef));
+    case unmodified:
+        trueRange = TrueRange(H, C, L);
+}
+def loss = ATR_Factor * MovingAverage(ATR_Avg_Type, trueRange, ATR_Period);
+
+######################
+#### END of Stops ####
+######################
+
+#######################################
+##  Maintain the position of trades
+#######################################
+
+def CurrentPosition;  # holds whether flat = 0 long = 1 short = -1
+def trail;
+
+if ((BarNumber() == 1) OR isNaN(CurrentPosition[1])) {
+    CurrentPosition = 0;
+    trail = Double.NaN;
+} else {
+    if (CurrentPosition[1] == 0) {               # FLAT
+        if (bullishSignal) {
+            CurrentPosition = 1;
+            trail = C - loss;
+        } else if (bearishSignal){
+            CurrentPosition = -1;
+            trail = C + loss;
+        } else {
+            CurrentPosition = CurrentPosition[1];
+            trail = trail[1];
+        }
+    } else if (CurrentPosition[1] == 1) {        # LONG
+        if (bearishSignal){
+            CurrentPosition = -1;
+            trail = C + loss;
+        } else if ((useStops and bullstp) or (use_ATR_Trail and C < trail[1])) {
+            CurrentPosition = 0;
+            trail = Double.NaN;
+        } else {
+            CurrentPosition = CurrentPosition[1];
+            trail = Max(trail[1], C - loss);
+        }
+    } else if (CurrentPosition[1] == -1) {       # SHORT
+        if (bullishSignal){
+            CurrentPosition = 1;
+            trail = C - loss;
+        } else if ((useStops and bearstp) or (use_ATR_Trail and C > trail[1])) {
+            CurrentPosition = 0;
+            trail = Double.NaN;
+        } else {
+            CurrentPosition = CurrentPosition[1];
+            trail = Min(trail[1], C + loss);
+        }
+    } else {
+        CurrentPosition = CurrentPosition[1];
+        trail = trail[1];
+    }
+}
+
+def isLong  = if CurrentPosition == 1 then 1 else 0;
+def isShort = if CurrentPosition == -1 then 1 else 0;
+def isFlat  = if CurrentPosition == 0 then 1 else 0;
+
+plot TrailingStop = if use_ATR_Trail then trail else Double.NaN;
+TrailingStop.SetPaintingStrategy(PaintingStrategy.POINTS);
+TrailingStop.AssignValueColor(if isLong then Color.MAGENTA else if isShort then Color.CYAN else Color.GRAY);
+
+input useAlerts = no;
+
+# If not already long and get a BuySignal
+Plot BuySig = if (!isLong[1] and bullishSignal) then 1 else 0;
+BuySig.AssignValueColor(color.CYAN);
+BuySig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
+BuySig.SetLineWeight(5);
+
+Alert(BuySig and useAlerts, "Buy Signal", Alert.bar, sound.Ding);
+Alert(BuySig and useAlerts, "Buy Signal", Alert.bar, sound.Ding);
+
+# If not already short and get a SellSignal
+Plot SellSig = if (!isShort[1] and bearishSignal) then 1 else 0;
+SellSig.AssignValueColor(color.MAGENTA);
+SellSig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
+SellSig.SetLineWeight(5);
+
+Alert(SellSig and useAlerts, "Sell Signal", Alert.bar, sound.Ding);
+Alert(SellSig and useAlerts, "Sell Signal", Alert.bar, sound.Ding);
+
+# If long and get a BuyStop
+Plot BuyStpSig = if (((useStops and bullstp) or (use_ATR_Trail and C < trail[1])) and isLong[1]) then 1 else 0;
+BuyStpSig.AssignValueColor(color.LIGHT_GRAY);
+BuyStpSig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
+BuyStpSig.SetLineWeight(3);
+
+# If short and get a SellStop
+Plot SellStpSig = if (((useStops and bearstp) or (use_ATR_Trail and C > trail[1])) and isShort[1]) then 1 else 0;
+SellStpSig.AssignValueColor(color.LIGHT_GRAY);
+SellStpSig.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
+SellStpSig.SetLineWeight(3);
+
+################
+#### Spacer ####
+################
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+addlabel(yes, "            ", color.BLACK);
+#######################
+#### END of Spacer ####
+#######################
+
+#######################################
+##  Orders
+#######################################
+
+def isOrder = if CurrentPosition == CurrentPosition[1] then 0 else 1; # Position changed so it's a new order
+
+# If there is an order to open, then the price is the next day's open
+def orderPrice = if (isOrder and (bullishSignal or bearishSignal)) then O[-1] else orderPrice[1];
+
+#######################################
+##  Price and Profit
+#######################################
+
+def profitLoss;
+
+if (!isOrder or orderPrice[1] == 0) {
+    profitLoss = 0;
+# If there is an order to close, 
+} else if ((isOrder and isLong[1]) and (SellSig or BuyStpSig)) {
+    profitLoss = (if (isNaN(O[-1])) then C else O[-1])  - orderPrice[1]; # then the price is the next day's open
+} else if ((isOrder and isShort[1]) and (BuySig or SellStpSig)) {
+    profitLoss = orderPrice[1] - (if (isNaN(O[-1])) then C else O[-1]); # then the price is the next day's open
+} else {
+    profitLoss = 0;
+}
+
+# Total Profit or Loss
+def profitLossSum = compoundValue(1, if isNaN(isOrder) or barnumber()==1 then 0 else if isOrder then profitLossSum[1] + profitLoss else profitLossSum[1], 0);
+
+# How many trades won or lost
+def profitWinners = compoundValue(1, if isNaN(profitWinners[1]) or barnumber()==1 then 0 else if isOrder and profitLoss > 0  then profitWinners[1] + 1 else profitWinners[1], 0);
+def profitLosers  = compoundValue(1, if isNaN(profitLosers[1])  or barnumber()==1 then 0 else if isOrder and profitLoss < 0  then profitLosers[1] + 1  else profitLosers[1],  0);
+def profitPush    = compoundValue(1, if isNaN(profitPush[1])    or barnumber()==1 then 0 else if isOrder and profitLoss == 0 then profitPush[1] + 1    else profitPush[1],    0);
+
+def orderCount = (profitWinners + profitLosers + profitPush) - 1;
+
+# Current Open Trade Profit or Loss
+def TradePL = If isLong then Round(((close - orderprice)/TickSize())*TickValue()) else if isShort then Round(((orderPrice - close)/TickSize())*TickValue()) else 0;
+
+# Convert to actual dollars based on Tick Value for bubbles
+def dollarProfitLoss = if orderPRice[1]==0 or isNaN(orderPrice[1]) then 0 else round((profitLoss/Ticksize())*Tickvalue());
+
+# Closed Orders dollar P/L
+def dollarPLSum = round((profitLossSum/Ticksize())*Tickvalue());
+
+# Split profits or losses by long and short trades
+def profitLong  = compoundValue(1, if isNan(profitLong[1])  or barnumber()==1 then 0 else if isOrder and isLong[1]  then profitLong[1]+dollarProfitLoss  else profitLong[1],  0);
+def profitShort = compoundValue(1, if isNan(profitShort[1]) or barnumber()==1 then 0 else if isOrder and isShort[1] then profitShort[1]+dollarProfitLoss else profitShort[1], 0);
+def countLong   = compoundValue(1, if isNaN(countLong[1])   or barnumber()==1 then 0 else if isOrder and isLong[1]  then countLong[1]+1                  else countLong[1],   0);
+def countShort  = compoundValue(1, if isNaN(countShort[1])  or barnumber()==1 then 0 else if isOrder and isShort[1] then countShort[1]+1                 else countShort[1],  0);
+
+# What was the biggest winning and losing trade
+def biggestWin  = compoundValue(1, if isNaN(biggestWin[1])  or barnumber()==1 then 0 else if isOrder and (dollarProfitLoss > 0) and (dollarProfitLoss > biggestWin[1])  then dollarProfitLoss else biggestWin[1],  0);
+def biggestLoss = compoundValue(1, if isNaN(biggestLoss[1]) or barnumber()==1 then 0 else if isOrder and (dollarProfitLoss < 0) and (dollarProfitLoss < biggestLoss[1]) then dollarProfitLoss else biggestLoss[1], 0);
+
+# What percent were winners
+def PCTWin = round((profitWinners / orderCount) * 100, 2);
+
+# Average trade
+def avgTrade = round((dollarPLSum / orderCount), 2);
+
+#######################################
+##  Create Labels
+#######################################
+
+input showLabels = yes;
+
+AddLabel(showLabels, GetSymbol()+" Tick Size: "+TickSize()+" Value: "+TickValue()+" HODL: "+AsDollars(C-First(O)), color.white);
+AddLabel(showLabels, "Closed Orders: " + orderCount + " P/L: " + AsDollars(dollarPLSum), if dollarPLSum > 0 then Color.GREEN else if dollarPLSum< 0 then Color.RED else Color.GRAY);
+AddLabel(if !IsNan(orderPrice) and showLabels then 1 else 0, "Closed+Open P/L: "+ AsDollars(TradePL+dollarPLSum), if ((TradePL+dollarPLSum) > 0) then color.green else if ((TradePL+dollarPLSum) < 0) then color.red else color.gray);
+
+AddLabel(showLabels, "Avg per Trade: "+ AsDollars(avgTrade), if avgTrade > 0 then Color.Green else if avgTrade < 0 then Color.RED else Color.GRAY);
+AddLabel(showLabels, "Winners: "+ PCTWin +"%",if PCTWin > 50 then color.green else if PCTWin > 40 then color.yellow else color.gray);
+
+AddLabel(showLabels, "MaxUp: "+ AsDollars(biggestWin) +" MaxDown: "+AsDollars(biggestLoss), color.white);
+AddLabel(showLabels, "Long Profit: " +AsDollars(profitLong), if profitLong > 0 then color.green else if profitLong < 0 then color.red else color.gray);
+AddLabel(showLabels, "Short Profit: " +AsDollars(profitShort), if profitShort > 0 then color.green else if profitShort < 0 then color.red else color.gray);
+AddLabel(if !IsNan(CurrentPosition) and showLabels then 1 else 0, "Open: "+ (If isLong then "Bought" else "Sold") + " @ "+orderPrice, color.white);
+AddLabel(if !IsNan(orderPrice) and showLabels then 1 else 0, "Open Trade P/L: "+ AsDollars(TradePL), if (TradePL > 0) then color.green else if (TradePl < 0) then color.red else color.gray);
+
+#######################################
+##  Chart Bubbles for Profit/Loss
+#######################################
+
+input showBubbles = yes;
+
+AddChartBubble(showBubbles and isOrder and isLong[1],  low,  "$"+dollarProfitLoss, if dollarProfitLoss == 0 then Color.LIGHT_GRAY else if dollarProfitLoss > 0 then Color.GREEN else color.Red, 0);
+AddChartBubble(showBubbles and isOrder and isShort[1], high, "$"+dollarProfitLoss, if dollarProfitLoss == 0 then Color.LIGHT_GRAY else if dollarProfitLoss > 0 then Color.GREEN else color.Red, 1);
